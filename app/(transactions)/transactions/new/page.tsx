@@ -1,0 +1,391 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import Sidebar from '@/components/sidebar'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { formatCurrency, parseCurrencyInput } from '@/lib/validators'
+import { ArrowLeft, Save } from 'lucide-react'
+
+interface ReferenceData {
+  txTypes: Array<{ id: number; code: string; name: string }>
+  categories: Array<{ id: number; name: string; txTypeId: number }>
+  paymentMethods: Array<{ id: number; name: string }>
+  accounts: Array<{ id: number; name: string; bank: { name: string }; currency: { code: string } }>
+  creditCards: Array<{ id: number; name: string; bank: { name: string }; currency: { code: string } }>
+  currencies: Array<{ id: number; code: string; name: string }>
+}
+
+export default function NewTransactionPage() {
+  const router = useRouter()
+  const [referenceData, setReferenceData] = useState<ReferenceData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  
+  const [formData, setFormData] = useState({
+    txTypeId: 0,
+    categoryId: 0,
+    paymentMethodId: 0,
+    accountId: 0,
+    creditCardId: 0,
+    amount: '',
+    currencyId: 0,
+    transactionDate: new Date().toISOString().split('T')[0],
+    description: '',
+    tags: ''
+  })
+
+  useEffect(() => {
+    async function fetchReferenceData() {
+      try {
+        const response = await fetch('/api/reference-data')
+        if (response.ok) {
+          const data = await response.json()
+          setReferenceData(data)
+          
+          // Varsayılan değerleri set et
+          if (data.txTypes.length > 0) {
+            setFormData(prev => ({ ...prev, txTypeId: data.txTypes[0].id }))
+          }
+          if (data.currencies.length > 0) {
+            const tryCurrency = data.currencies.find((c: any) => c.code === 'TRY')
+            if (tryCurrency) {
+              setFormData(prev => ({ ...prev, currencyId: tryCurrency.id }))
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Referans verileri alınamadı:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchReferenceData()
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSaving(true)
+
+    try {
+      const submitData = {
+        ...formData,
+        amount: parseCurrencyInput(formData.amount),
+        accountId: formData.accountId || undefined,
+        creditCardId: formData.creditCardId || undefined,
+        tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()) : []
+      }
+
+      const response = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submitData),
+      })
+
+      if (response.ok) {
+        router.push('/transactions')
+      } else {
+        const error = await response.json()
+        alert(`Hata: ${error.error}`)
+      }
+    } catch (error) {
+      console.error('İşlem kaydedilemedi:', error)
+      alert('İşlem kaydedilemedi')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const filteredCategories = referenceData?.categories.filter(
+    cat => cat.txTypeId === formData.txTypeId
+  ) || []
+
+  if (loading) {
+    return (
+      <div className="flex h-screen">
+        <Sidebar />
+        <main className="flex-1 overflow-auto flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p>Yükleniyor...</p>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex h-screen">
+      <Sidebar />
+      <main className="flex-1 overflow-auto">
+        <div className="p-6">
+          <div className="flex items-center gap-4 mb-6">
+            <button
+              onClick={() => router.back()}
+              className="p-2 hover:bg-gray-100 rounded-lg"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            <div>
+              <h1 className="text-3xl font-bold">Yeni İşlem</h1>
+              <p className="text-muted-foreground">
+                Gelir veya gider işlemi ekleyin
+              </p>
+            </div>
+          </div>
+
+          <Card className="max-w-2xl">
+            <CardHeader>
+              <CardTitle>İşlem Bilgileri</CardTitle>
+              <CardDescription>
+                İşlem detaylarını doldurun
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      İşlem Türü *
+                    </label>
+                    <select
+                      value={formData.txTypeId}
+                      onChange={(e) => setFormData(prev => ({ 
+                        ...prev, 
+                        txTypeId: parseInt(e.target.value),
+                        categoryId: 0 // Kategoriyi sıfırla
+                      }))}
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      required
+                    >
+                      <option value={0}>Seçiniz</option>
+                      {referenceData?.txTypes.map((type) => (
+                        <option key={type.id} value={type.id}>
+                          {type.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Kategori *
+                    </label>
+                    <select
+                      value={formData.categoryId}
+                      onChange={(e) => setFormData(prev => ({ 
+                        ...prev, 
+                        categoryId: parseInt(e.target.value) 
+                      }))}
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      required
+                    >
+                      <option value={0}>Seçiniz</option>
+                      {filteredCategories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Tutar *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.amount}
+                      onChange={(e) => setFormData(prev => ({ 
+                        ...prev, 
+                        amount: e.target.value 
+                      }))}
+                      placeholder="0,00"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Para Birimi *
+                    </label>
+                    <select
+                      value={formData.currencyId}
+                      onChange={(e) => setFormData(prev => ({ 
+                        ...prev, 
+                        currencyId: parseInt(e.target.value) 
+                      }))}
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      required
+                    >
+                      <option value={0}>Seçiniz</option>
+                      {referenceData?.currencies.map((currency) => (
+                        <option key={currency.id} value={currency.id}>
+                          {currency.code} - {currency.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Ödeme Yöntemi *
+                    </label>
+                    <select
+                      value={formData.paymentMethodId}
+                      onChange={(e) => setFormData(prev => ({ 
+                        ...prev, 
+                        paymentMethodId: parseInt(e.target.value) 
+                      }))}
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      required
+                    >
+                      <option value={0}>Seçiniz</option>
+                      {referenceData?.paymentMethods.map((method) => (
+                        <option key={method.id} value={method.id}>
+                          {method.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Tarih *
+                    </label>
+                    <input
+                      type="date"
+                      value={formData.transactionDate}
+                      onChange={(e) => setFormData(prev => ({ 
+                        ...prev, 
+                        transactionDate: e.target.value 
+                      }))}
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Hesap
+                    </label>
+                    <select
+                      value={formData.accountId}
+                      onChange={(e) => setFormData(prev => ({ 
+                        ...prev, 
+                        accountId: parseInt(e.target.value),
+                        creditCardId: 0 // Kredi kartını sıfırla
+                      }))}
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                    >
+                      <option value={0}>Seçiniz</option>
+                      {referenceData?.accounts.map((account) => (
+                        <option key={account.id} value={account.id}>
+                          {account.name} ({account.bank.name} - {account.currency.code})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Kredi Kartı
+                    </label>
+                    <select
+                      value={formData.creditCardId}
+                      onChange={(e) => setFormData(prev => ({ 
+                        ...prev, 
+                        creditCardId: parseInt(e.target.value),
+                        accountId: 0 // Hesabı sıfırla
+                      }))}
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                    >
+                      <option value={0}>Seçiniz</option>
+                      {referenceData?.creditCards.map((card) => (
+                        <option key={card.id} value={card.id}>
+                          {card.name} ({card.bank.name} - {card.currency.code})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Açıklama
+                  </label>
+                  <textarea
+                    value={formData.description}
+                    onChange={(e) => setFormData(prev => ({ 
+                      ...prev, 
+                      description: e.target.value 
+                    }))}
+                    rows={3}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="İşlem açıklaması..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Etiketler
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.tags}
+                    onChange={(e) => setFormData(prev => ({ 
+                      ...prev, 
+                      tags: e.target.value 
+                    }))}
+                    placeholder="etiket1, etiket2, etiket3"
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Etiketleri virgülle ayırın
+                  </p>
+                </div>
+
+                <div className="flex justify-end gap-4">
+                  <button
+                    type="button"
+                    onClick={() => router.back()}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
+                  >
+                    İptal
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md disabled:opacity-50"
+                  >
+                    {saving ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Kaydediliyor...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="mr-2 h-4 w-4" />
+                        Kaydet
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+    </div>
+  )
+}

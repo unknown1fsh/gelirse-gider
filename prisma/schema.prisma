@@ -1,0 +1,297 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Reference Tables
+
+model RefCurrency {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique @db.VarChar(3)
+  name      String   @db.VarChar(50)
+  symbol    String   @db.VarChar(5)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  accounts         Account[]
+  creditCards      CreditCard[]
+  transactions     Transaction[]
+  autoPayments     AutoPayment[]
+  fxRatesFrom      FxRate[] @relation("FromCurrency")
+  fxRatesTo        FxRate[] @relation("ToCurrency")
+
+  @@map("ref_currency")
+}
+
+model RefAccountType {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique @db.VarChar(20)
+  name        String   @db.VarChar(50)
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  accounts Account[]
+
+  @@map("ref_account_type")
+}
+
+model RefTxType {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique @db.VarChar(10)
+  name      String   @db.VarChar(20)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  categories   RefTxCategory[]
+  transactions Transaction[]
+
+  @@map("ref_tx_type")
+}
+
+model RefTxCategory {
+  id         Int      @id @default(autoincrement())
+  txTypeId   Int      @map("tx_type_id")
+  code       String   @db.VarChar(30)
+  name       String   @db.VarChar(50)
+  description String?
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  txType       RefTxType      @relation(fields: [txTypeId], references: [id])
+  transactions Transaction[]
+  autoPayments AutoPayment[]
+
+  @@unique([txTypeId, code])
+  @@map("ref_tx_category")
+}
+
+model RefPaymentMethod {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique @db.VarChar(20)
+  name        String   @db.VarChar(50)
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  transactions Transaction[]
+  autoPayments AutoPayment[]
+
+  @@map("ref_payment_method")
+}
+
+model RefGoldType {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique @db.VarChar(20)
+  name        String   @db.VarChar(50)
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  goldItems GoldItem[]
+
+  @@map("ref_gold_type")
+}
+
+model RefGoldPurity {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique @db.VarChar(10)
+  name      String   @db.VarChar(20)
+  purity    Decimal  @db.Decimal(3, 1)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  goldItems GoldItem[]
+
+  @@map("ref_gold_purity")
+}
+
+model RefBank {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  asciiName String   @unique @map("ascii_name") @db.VarChar(100)
+  swiftBic  String?  @map("swift_bic") @db.VarChar(11)
+  bankCode  String?  @map("bank_code") @db.VarChar(10)
+  website   String?  @db.VarChar(100)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  accounts    Account[]
+  creditCards CreditCard[]
+
+  @@map("ref_bank")
+}
+
+// Main Tables
+
+model Account {
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(100)
+  accountTypeId Int      @map("account_type_id")
+  bankId        Int      @map("bank_id")
+  currencyId    Int      @map("currency_id")
+  balance       Decimal  @default(0) @db.Decimal(15, 2)
+  accountNumber String?  @map("account_number") @db.VarChar(50)
+  iban          String?  @db.VarChar(34)
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  accountType RefAccountType @relation(fields: [accountTypeId], references: [id])
+  bank        RefBank         @relation(fields: [bankId], references: [id])
+  currency    RefCurrency     @relation(fields: [currencyId], references: [id])
+  transactions Transaction[]
+  autoPayments AutoPayment[]
+
+  @@map("account")
+}
+
+model CreditCard {
+  id                Int      @id @default(autoincrement())
+  name              String   @db.VarChar(100)
+  bankId            Int      @map("bank_id")
+  currencyId        Int      @map("currency_id")
+  limitAmount       Decimal  @map("limit_amount") @db.Decimal(15, 2)
+  availableLimit    Decimal  @map("available_limit") @db.Decimal(15, 2)
+  statementDay      Int      @map("statement_day")
+  dueDay            Int      @map("due_day")
+  minPaymentPercent Decimal  @default(3.0) @map("min_payment_percent") @db.Decimal(5, 2)
+  active            Boolean  @default(true)
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  bank         RefBank         @relation(fields: [bankId], references: [id])
+  currency     RefCurrency     @relation(fields: [currencyId], references: [id])
+  transactions Transaction[]
+  autoPayments AutoPayment[]
+
+  @@map("credit_card")
+}
+
+model Transaction {
+  id              Int      @id @default(autoincrement())
+  txTypeId        Int      @map("tx_type_id")
+  categoryId      Int      @map("category_id")
+  paymentMethodId Int      @map("payment_method_id")
+  accountId       Int?     @map("account_id")
+  creditCardId    Int?     @map("credit_card_id")
+  amount          Decimal  @db.Decimal(15, 2)
+  currencyId      Int      @map("currency_id")
+  transactionDate DateTime @map("transaction_date") @db.Date
+  description     String?
+  tags            String[]
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  txType       RefTxType       @relation(fields: [txTypeId], references: [id])
+  category     RefTxCategory   @relation(fields: [categoryId], references: [id])
+  paymentMethod RefPaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  account     Account?         @relation(fields: [accountId], references: [id])
+  creditCard  CreditCard?      @relation(fields: [creditCardId], references: [id])
+  currency    RefCurrency      @relation(fields: [currencyId], references: [id])
+
+  @@map("transaction")
+}
+
+model AutoPayment {
+  id              Int      @id @default(autoincrement())
+  name            String   @db.VarChar(100)
+  amount          Decimal  @db.Decimal(15, 2)
+  currencyId      Int      @map("currency_id")
+  accountId       Int?     @map("account_id")
+  creditCardId    Int?     @map("credit_card_id")
+  paymentMethodId Int      @map("payment_method_id")
+  categoryId      Int      @map("category_id")
+  cronSchedule    String   @map("cron_schedule") @db.VarChar(100)
+  nextPaymentDate DateTime? @map("next_payment_date") @db.Date
+  active          Boolean  @default(true)
+  description     String?
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  currency      RefCurrency      @relation(fields: [currencyId], references: [id])
+  account       Account?         @relation(fields: [accountId], references: [id])
+  creditCard    CreditCard?      @relation(fields: [creditCardId], references: [id])
+  paymentMethod RefPaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  category      RefTxCategory    @relation(fields: [categoryId], references: [id])
+
+  @@map("auto_payment")
+}
+
+model GoldItem {
+  id              Int      @id @default(autoincrement())
+  name            String   @db.VarChar(100)
+  goldTypeId      Int      @map("gold_type_id")
+  goldPurityId    Int      @map("gold_purity_id")
+  weightGrams     Decimal  @map("weight_grams") @db.Decimal(8, 3)
+  purchasePrice   Decimal  @map("purchase_price") @db.Decimal(15, 2)
+  purchaseDate    DateTime @map("purchase_date") @db.Date
+  currentValueTry Decimal? @map("current_value_try") @db.Decimal(15, 2)
+  description     String?
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  goldType   RefGoldType   @relation(fields: [goldTypeId], references: [id])
+  goldPurity RefGoldPurity @relation(fields: [goldPurityId], references: [id])
+
+  @@map("gold_item")
+}
+
+model FxRate {
+  id              Int      @id @default(autoincrement())
+  fromCurrencyId  Int      @map("from_currency_id")
+  toCurrencyId    Int      @map("to_currency_id")
+  rate            Decimal  @db.Decimal(15, 6)
+  rateDate        DateTime @map("rate_date") @db.Date
+  source          String   @default("TCMB") @db.VarChar(50)
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  // Relations
+  fromCurrency RefCurrency @relation("FromCurrency", fields: [fromCurrencyId], references: [id])
+  toCurrency   RefCurrency @relation("ToCurrency", fields: [toCurrencyId], references: [id])
+
+  @@unique([fromCurrencyId, toCurrencyId, rateDate])
+  @@map("fx_rate")
+}
+
+model PortfolioSnapshot {
+  id               Int      @id @default(autoincrement())
+  snapshotDate     DateTime @map("snapshot_date") @db.Date
+  totalAssets      Decimal  @map("total_assets") @db.Decimal(15, 2)
+  totalLiabilities Decimal  @map("total_liabilities") @db.Decimal(15, 2)
+  netWorth         Decimal  @map("net_worth") @db.Decimal(15, 2)
+  breakdown        Json
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@unique([snapshotDate])
+  @@map("portfolio_snapshot")
+}
+
