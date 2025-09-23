@@ -32,7 +32,7 @@ Modern kişisel finans yönetim platformu
 
 ```bash
 # Projeyi klonlayın
-git clone <repository-url>
+git clone https://github.com/unknown1fsh/gelirse-gider.git
 cd gelirse-gider
 
 # Bağımlılıkları yükleyin
