@@ -13,11 +13,13 @@ import {
   Coins,
   Calendar,
   DollarSign,
-  Sparkles
+  Sparkles,
+  PieChart
 } from 'lucide-react'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home, color: 'text-blue-500' },
+  { name: 'Toplam Varlık', href: '/portfolio', icon: PieChart, color: 'text-emerald-500' },
   { name: 'İşlemler', href: '/transactions', icon: Plus, color: 'text-green-500' },
   { name: 'Hesaplar', href: '/accounts', icon: Wallet, color: 'text-purple-500' },
   { name: 'Kredi Kartları', href: '/cards', icon: CreditCard, color: 'text-orange-500' },

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Sidebar from '@/components/sidebar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatCurrency, parseCurrencyInput } from '@/lib/validators'
 import { ArrowLeft, Save } from 'lucide-react'
@@ -105,23 +104,17 @@ export default function NewTransactionPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen">
-        <Sidebar />
-        <main className="flex-1 overflow-auto flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <p>Yükleniyor...</p>
-          </div>
-        </main>
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p>Yükleniyor...</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="flex h-screen">
-      <Sidebar />
-      <main className="flex-1 overflow-auto">
-        <div className="p-6">
+    <div>
           <div className="flex items-center gap-4 mb-6">
             <button
               onClick={() => router.back()}
@@ -158,7 +151,7 @@ export default function NewTransactionPage() {
                         txTypeId: parseInt(e.target.value),
                         categoryId: 0 // Kategoriyi sıfırla
                       }))}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
                       <option value={0}>Seçiniz</option>
@@ -180,7 +173,7 @@ export default function NewTransactionPage() {
                         ...prev, 
                         categoryId: parseInt(e.target.value) 
                       }))}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
                       <option value={0}>Seçiniz</option>
@@ -206,7 +199,7 @@ export default function NewTransactionPage() {
                         amount: e.target.value 
                       }))}
                       placeholder="0,00"
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     />
                   </div>
@@ -221,7 +214,7 @@ export default function NewTransactionPage() {
                         ...prev, 
                         currencyId: parseInt(e.target.value) 
                       }))}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
                       <option value={0}>Seçiniz</option>
@@ -245,7 +238,7 @@ export default function NewTransactionPage() {
                         ...prev, 
                         paymentMethodId: parseInt(e.target.value) 
                       }))}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
                       <option value={0}>Seçiniz</option>
@@ -268,7 +261,7 @@ export default function NewTransactionPage() {
                         ...prev, 
                         transactionDate: e.target.value 
                       }))}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     />
                   </div>
@@ -286,7 +279,7 @@ export default function NewTransactionPage() {
                         accountId: parseInt(e.target.value),
                         creditCardId: 0 // Kredi kartını sıfırla
                       }))}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
                       <option value={0}>Seçiniz</option>
                       {referenceData?.accounts.map((account) => (
@@ -308,7 +301,7 @@ export default function NewTransactionPage() {
                         creditCardId: parseInt(e.target.value),
                         accountId: 0 // Hesabı sıfırla
                       }))}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
                       <option value={0}>Seçiniz</option>
                       {referenceData?.creditCards.map((card) => (
@@ -366,7 +359,7 @@ export default function NewTransactionPage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md disabled:opacity-50"
+                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md disabled:opacity-50"
                   >
                     {saving ? (
                       <>
@@ -385,7 +378,5 @@ export default function NewTransactionPage() {
             </CardContent>
           </Card>
         </div>
-      </main>
-    </div>
   )
 }

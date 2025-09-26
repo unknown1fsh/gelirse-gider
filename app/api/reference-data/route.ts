@@ -13,6 +13,8 @@ export async function GET() {
       prisma.refPaymentMethod.findMany({ where: { active: true } }),
       prisma.refBank.findMany({ where: { active: true }, orderBy: { name: 'asc' } }),
       prisma.refCurrency.findMany({ where: { active: true } }),
+      prisma.refGoldType.findMany({ where: { active: true } }),
+      prisma.refGoldPurity.findMany({ where: { active: true } }),
       prisma.account.findMany({ 
         include: { bank: true, currency: true },
         where: { active: true },
@@ -25,7 +27,7 @@ export async function GET() {
       })
     ])
 
-    const [txTypes, categories, paymentMethods, banks, currencies, accounts, creditCards] = refData
+    const [txTypes, categories, paymentMethods, banks, currencies, goldTypes, goldPurities, accounts, creditCards] = refData
 
     return NextResponse.json({
       txTypes,
@@ -33,6 +35,8 @@ export async function GET() {
       paymentMethods,
       banks,
       currencies,
+      goldTypes,
+      goldPurities,
       accounts,
       creditCards
     })
