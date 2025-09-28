@@ -58,7 +58,9 @@ export default function AccountsPage() {
   useEffect(() => {
     async function fetchAccounts() {
       try {
-        const response = await fetch('/api/accounts')
+        const response = await fetch('/api/accounts', {
+          credentials: 'include'
+        })
         if (response.ok) {
           const data = await response.json()
           setAllAccounts(data)

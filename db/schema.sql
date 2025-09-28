@@ -1,4 +1,4 @@
--- GelirSE-Gider PostgreSQL Schema
+-- GiderSE-Gelir PostgreSQL Schema
 -- DB-First yaklaşımı ile oluşturulmuştur
 
 -- Extensions

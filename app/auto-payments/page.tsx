@@ -52,7 +52,9 @@ export default function AutoPaymentsPage() {
   useEffect(() => {
     async function fetchAutoPayments() {
       try {
-        const response = await fetch('/api/auto-payments')
+        const response = await fetch('/api/auto-payments', {
+          credentials: 'include'
+        })
         if (response.ok) {
           const data = await response.json()
           setAutoPayments(data)

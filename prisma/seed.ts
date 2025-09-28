@@ -422,75 +422,16 @@ async function main() {
   const ziraatBank = banks.find(b => b.name === 'Ziraat Bankası')!
   const garantiBank = banks.find(b => b.name === 'Garanti BBVA')!
 
-  // Demo hesaplar
-  const demoAccount1 = await prisma.account.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
-      name: 'Ana Hesap',
-      accountTypeId: vadesizType.id,
-      bankId: ziraatBank.id,
-      currencyId: tryCurrency.id,
-      balance: 15000.00,
-      accountNumber: '1234567890',
-      iban: 'TR1234567890123456789012345'
-    }
-  })
-
-  const demoAccount2 = await prisma.account.upsert({
-    where: { id: 2 },
-    update: {},
-    create: {
-      name: 'USD Hesabı',
-      accountTypeId: dovizType.id,
-      bankId: garantiBank.id,
-      currencyId: usdCurrency.id,
-      balance: 500.00,
-      accountNumber: '9876543210',
-      iban: 'TR9876543210987654321098765'
-    }
-  })
+  // Demo hesaplar (sadece reference data için, user-specific değil)
+  console.log('✅ Demo hesaplar atlandı (user-specific olacak)')
 
   console.log('✅ Demo hesaplar eklendi')
 
-  // Demo kredi kartı
-  const demoCreditCard = await prisma.creditCard.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
-      name: 'Garanti BBVA World Card',
-      bankId: garantiBank.id,
-      currencyId: tryCurrency.id,
-      limitAmount: 25000.00,
-      availableLimit: 18000.00,
-      statementDay: 15,
-      dueDay: 5,
-      minPaymentPercent: 3.0
-    }
-  })
+  // Demo kredi kartı (sadece reference data için, user-specific değil)
+  console.log('✅ Demo kredi kartları atlandı (user-specific olacak)')
 
-  console.log('✅ Demo kredi kartı eklendi')
-
-  // Demo altın eşyası
-  const bilezikType = goldTypes.find(t => t.code === 'BILEZIK')!
-  const purity22k = goldPurities.find(p => p.code === '22K')!
-
-  const demoGoldItem = await prisma.goldItem.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
-      name: '22K Altın Bilezik',
-      goldTypeId: bilezikType.id,
-      goldPurityId: purity22k.id,
-      weightGrams: 25.5,
-      purchasePrice: 45000.00,
-      purchaseDate: new Date('2023-06-15'),
-      currentValueTry: 52000.00,
-      description: 'Geleneksel altın bilezik'
-    }
-  })
-
-  console.log('✅ Demo altın eşyası eklendi')
+  // Demo altın eşyası (sadece reference data için, user-specific değil)
+  console.log('✅ Demo altın eşyaları atlandı (user-specific olacak)')
 
   // Demo işlemler
   const maasCategory = gelirCategories.find(c => c.code === 'MAAS')!
@@ -498,49 +439,8 @@ async function main() {
   const havaleMethod = paymentMethods.find(m => m.code === 'HAVALE_EFT')!
   const krediKartiMethod = paymentMethods.find(m => m.code === 'KREDI_KARTI')!
 
-  await Promise.all([
-    prisma.transaction.create({
-      data: {
-        txTypeId: txTypes[0].id, // Gelir
-        categoryId: maasCategory.id,
-        paymentMethodId: havaleMethod.id,
-        accountId: demoAccount1.id,
-        amount: 25000.00,
-        currencyId: tryCurrency.id,
-        transactionDate: new Date('2024-01-01'),
-        description: 'Ocak ayı maaşı',
-        tags: ['maaş', 'ocak']
-      }
-    }),
-    prisma.transaction.create({
-      data: {
-        txTypeId: txTypes[1].id, // Gider
-        categoryId: marketCategory.id,
-        paymentMethodId: krediKartiMethod.id,
-        creditCardId: demoCreditCard.id,
-        amount: 450.00,
-        currencyId: tryCurrency.id,
-        transactionDate: new Date('2024-01-15'),
-        description: 'Market alışverişi',
-        tags: ['market', 'gıda']
-      }
-    }),
-    prisma.transaction.create({
-      data: {
-        txTypeId: txTypes[0].id, // Gelir
-        categoryId: gelirCategories.find(c => c.code === 'EK_GELIR')!.id,
-        paymentMethodId: havaleMethod.id,
-        accountId: demoAccount1.id,
-        amount: 1500.00,
-        currencyId: tryCurrency.id,
-        transactionDate: new Date('2024-01-20'),
-        description: 'Freelance proje geliri',
-        tags: ['freelance', 'ek-gelir']
-      }
-    })
-  ])
-
-  console.log('✅ Demo işlemler eklendi')
+  // Demo işlemler (sadece reference data için, user-specific değil)
+  console.log('✅ Demo işlemler atlandı (user-specific olacak)')
 
   // Demo döviz kurları
   await Promise.all([

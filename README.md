@@ -1,4 +1,4 @@
-# GelirSE-Gider
+# GiderSE-Gelir
 
 Modern kişisel finans yönetim platformu
 

@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getCurrentUser } from '@/lib/auth'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // Son 30 gün KPI'larını al
+    // Kullanıcı doğrulama
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Oturum bulunamadı' },
+        { status: 401 }
+      )
+    }
+
+    // Son 30 gün KPI'larını al (kullanıcı bazlı)
     const kpiData = await prisma.$queryRaw`
       SELECT 
         COALESCE(SUM(CASE WHEN tt.code = 'GELIR' THEN t.amount ELSE 0 END), 0) as total_income,
@@ -13,10 +23,11 @@ export async function GET() {
         COUNT(CASE WHEN tt.code = 'GIDER' THEN 1 END) as expense_count
       FROM transaction t
       JOIN ref_tx_type tt ON t.tx_type_id = tt.id
-      WHERE t.transaction_date >= CURRENT_DATE - INTERVAL '30 days'
+      WHERE t.user_id = ${user.id}
+        AND t.transaction_date >= CURRENT_DATE - INTERVAL '30 days'
     `
 
-    // Yaklaşan kart ödemeleri
+    // Yaklaşan kart ödemeleri (kullanıcı bazlı)
     const upcomingPayments = await prisma.$queryRaw`
       SELECT 
         cc.id,
@@ -34,10 +45,11 @@ export async function GET() {
         ((cc.limit_amount - cc.available_limit) * cc.min_payment_percent / 100) as min_payment
       FROM credit_card cc
       JOIN ref_bank b ON cc.bank_id = b.id
-      WHERE cc.active = true
+      WHERE cc.user_id = ${user.id}
+        AND cc.active = true
     `
 
-    // Kategori bazlı dağılım
+    // Kategori bazlı dağılım (kullanıcı bazlı)
     const categoryBreakdown = await prisma.$queryRaw`
       SELECT 
         tc.name as category_name,
@@ -47,7 +59,8 @@ export async function GET() {
       FROM transaction t
       JOIN ref_tx_category tc ON t.category_id = tc.id
       JOIN ref_tx_type tt ON t.tx_type_id = tt.id
-      WHERE t.transaction_date >= CURRENT_DATE - INTERVAL '30 days'
+      WHERE t.user_id = ${user.id}
+        AND t.transaction_date >= CURRENT_DATE - INTERVAL '30 days'
       GROUP BY tc.name, tt.name, tc.id
       ORDER BY total_amount DESC
     `

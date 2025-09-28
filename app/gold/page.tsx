@@ -35,7 +35,9 @@ export default function GoldPage() {
   useEffect(() => {
     async function fetchGoldItems() {
       try {
-        const response = await fetch('/api/gold')
+        const response = await fetch('/api/gold', {
+          credentials: 'include'
+        })
         if (response.ok) {
           const data = await response.json()
           setGoldItems(data)

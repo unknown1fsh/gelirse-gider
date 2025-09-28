@@ -1,5 +1,10 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatCurrency } from '@/lib/validators'
+import UserWelcomeSection from '@/components/user-welcome'
+import { useUser } from '@/lib/user-context'
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -7,7 +12,11 @@ import {
   CreditCard, 
   Calendar,
   AlertCircle,
-  BarChart3
+  BarChart3,
+  Crown,
+  Sparkles,
+  Award,
+  Star
 } from 'lucide-react'
 
 interface DashboardData {
@@ -37,20 +46,59 @@ interface DashboardData {
   }>
 }
 
-async function getDashboardData(): Promise<DashboardData> {
-  const response = await fetch('http://localhost:3000/api/dashboard', {
-    cache: 'no-store'
-  })
-  
-  if (!response.ok) {
-    throw new Error('Dashboard verileri alınamadı')
-  }
-  
-  return response.json()
-}
+export default function DashboardPage() {
+  const { user, loading } = useUser()
+  const [data, setData] = useState<DashboardData | null>(null)
+  const [dataLoading, setDataLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-export default async function DashboardPage() {
-  const data = await getDashboardData()
+  useEffect(() => {
+    async function fetchDashboardData() {
+      if (loading || !user) return
+
+      try {
+        setDataLoading(true)
+        setError(null)
+        
+        const response = await fetch('/api/dashboard', {
+          credentials: 'include'
+        })
+        
+        if (!response.ok) {
+          throw new Error('Dashboard verileri alınamadı')
+        }
+        
+        const dashboardData = await response.json()
+        setData(dashboardData)
+      } catch (err) {
+        console.error('Dashboard data fetch error:', err)
+        setError('Dashboard verileri yüklenirken bir hata oluştu')
+      } finally {
+        setDataLoading(false)
+      }
+    }
+
+    fetchDashboardData()
+  }, [user, loading])
+
+  if (loading || dataLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+      </div>
+    )
+  }
+
+  if (error || !data) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 flex items-center justify-center">
+        <div className="text-center">
+          <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
+          <p className="text-red-600 font-semibold">{error || 'Dashboard verileri yüklenemedi'}</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
@@ -66,13 +114,46 @@ export default async function DashboardPage() {
                 Finansal durumunuzun genel görünümü
               </p>
             </div>
-            <div className="flex items-center space-x-3">
-              <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
-              <span className="text-sm text-slate-600">Canlı veri</span>
+            <div className="flex items-center space-x-4">
+              {/* Premium Badge */}
+              {user && user.plan !== 'free' && (
+                <div className={`flex items-center space-x-2 px-3 py-1.5 rounded-full text-xs font-semibold ${
+                  user.plan === 'enterprise_premium'
+                    ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-700 border border-amber-500/30'
+                    : user.plan === 'enterprise'
+                    ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-700 border border-emerald-500/30'
+                    : 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-700 border border-purple-500/30'
+                }`}>
+                  {user.plan === 'enterprise_premium' ? (
+                    <>
+                      <Award className="h-3 w-3" />
+                      <span>Kurumsal Premium</span>
+                    </>
+                  ) : user.plan === 'enterprise' ? (
+                    <>
+                      <Star className="h-3 w-3" />
+                      <span>Kurumsal</span>
+                    </>
+                  ) : (
+                    <>
+                      <Crown className="h-3 w-3" />
+                      <span>Premium</span>
+                    </>
+                  )}
+                </div>
+              )}
+              
+              <div className="flex items-center space-x-3">
+                <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+                <span className="text-sm text-slate-600">Canlı veri</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* User Welcome Section */}
+      <UserWelcomeSection />
 
       <div className="p-8 space-y-8">
 

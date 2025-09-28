@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getCurrentUser } from '@/lib/auth'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // Kullanıcı doğrulama
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Oturum bulunamadı' },
+        { status: 401 }
+      )
+    }
+
     const autoPayments = await prisma.autoPayment.findMany({
       include: {
         account: {
@@ -20,6 +30,7 @@ export async function GET() {
         category: true
       },
       where: {
+        userId: user.id,
         active: true
       },
       orderBy: {
@@ -39,6 +50,15 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Kullanıcı doğrulama
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Oturum bulunamadı' },
+        { status: 401 }
+      )
+    }
+
     const body = await request.json()
     
     // Frequency'den cron schedule oluştur
@@ -53,6 +73,7 @@ export async function POST(request: NextRequest) {
 
     const autoPayment = await prisma.autoPayment.create({
       data: {
+        userId: user.id,
         name: body.name,
         description: body.description || null,
         amount: body.amount || 0,

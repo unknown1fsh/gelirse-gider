@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getCurrentUser } from '@/lib/auth'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // Kullanıcı doğrulama
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Oturum bulunamadı' },
+        { status: 401 }
+      )
+    }
+
     // Tüm hesap türlerini paralel olarak çek
     const [accounts, creditCards, goldItems] = await Promise.all([
       prisma.account.findMany({
@@ -12,6 +22,7 @@ export async function GET() {
           currency: true
         },
         where: {
+          userId: user.id,
           active: true
         },
         orderBy: {
@@ -24,6 +35,7 @@ export async function GET() {
           currency: true
         },
         where: {
+          userId: user.id,
           active: true
         },
         orderBy: {
@@ -34,6 +46,9 @@ export async function GET() {
         include: {
           goldType: true,
           goldPurity: true
+        },
+        where: {
+          userId: user.id
         },
         orderBy: {
           name: 'asc'
@@ -60,12 +75,22 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Kullanıcı doğrulama
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Oturum bulunamadı' },
+        { status: 401 }
+      )
+    }
+
     const body = await request.json()
     
     // Hesap türüne göre farklı işlemler
     if (body.accountType === 'bank') {
       const account = await prisma.account.create({
         data: {
+          userId: user.id,
           name: body.name,
           bankId: body.bankId,
           accountTypeId: body.accountTypeId,
@@ -87,6 +112,7 @@ export async function POST(request: NextRequest) {
     if (body.accountType === 'credit_card') {
       const creditCard = await prisma.creditCard.create({
         data: {
+          userId: user.id,
           name: body.name,
           bankId: body.bankId,
           currencyId: body.currencyId,
@@ -107,6 +133,7 @@ export async function POST(request: NextRequest) {
     if (body.accountType === 'gold') {
       const goldItem = await prisma.goldItem.create({
         data: {
+          userId: user.id,
           name: body.name,
           goldTypeId: body.goldTypeId,
           goldPurityId: body.goldPurityId,

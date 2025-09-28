@@ -145,10 +145,87 @@ model RefBank {
   @@map("ref_bank")
 }
 
+// User Management Tables
+
+model User {
+  id                Int      @id @default(autoincrement())
+  email             String   @unique @db.VarChar(255)
+  name              String   @db.VarChar(100)
+  phone             String?  @db.VarChar(20)
+  passwordHash      String   @map("password_hash") @db.VarChar(255)
+  emailVerified     Boolean  @default(false) @map("email_verified")
+  phoneVerified     Boolean  @default(false) @map("phone_verified")
+  avatar            String?  @db.VarChar(500)
+  timezone          String   @default("Europe/Istanbul") @db.VarChar(50)
+  language          String   @default("tr") @db.VarChar(5)
+  currency          String   @default("TRY") @db.VarChar(3)
+  dateFormat        String   @default("DD/MM/YYYY") @map("date_format") @db.VarChar(20)
+  numberFormat      String   @default("1.234,56") @map("number_format") @db.VarChar(20)
+  theme             String   @default("light") @db.VarChar(20)
+  notifications     Json     @default("{}")
+  settings          Json     @default("{}")
+  lastLoginAt       DateTime? @map("last_login_at")
+  isActive          Boolean  @default(true) @map("is_active")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  sessions          UserSession[]
+  subscriptions     UserSubscription[]
+  accounts          Account[]
+  creditCards       CreditCard[]
+  transactions      Transaction[]
+  autoPayments      AutoPayment[]
+  goldItems         GoldItem[]
+  portfolioSnapshots PortfolioSnapshot[]
+
+  @@map("user")
+}
+
+model UserSession {
+  id        String   @id @default(cuid())
+  userId    Int      @map("user_id")
+  token     String   @unique @db.VarChar(500)
+  expiresAt DateTime @map("expires_at")
+  userAgent String?  @map("user_agent") @db.Text
+  ipAddress String?  @map("ip_address") @db.VarChar(45)
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_session")
+}
+
+model UserSubscription {
+  id                Int      @id @default(autoincrement())
+  userId            Int      @map("user_id")
+  planId            String   @map("plan_id") @db.VarChar(50)
+  status            String   @db.VarChar(20) // active, cancelled, expired, pending
+  startDate         DateTime @map("start_date")
+  endDate           DateTime @map("end_date")
+  amount            Decimal  @db.Decimal(10, 2)
+  currency          String   @db.VarChar(3)
+  paymentMethod     String?  @map("payment_method") @db.VarChar(50)
+  transactionId     String?  @map("transaction_id") @db.VarChar(100)
+  autoRenew         Boolean  @default(true) @map("auto_renew")
+  cancelledAt       DateTime? @map("cancelled_at")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_subscription")
+}
+
 // Main Tables
 
 model Account {
   id            Int      @id @default(autoincrement())
+  userId        Int      @map("user_id")
   name          String   @db.VarChar(100)
   accountTypeId Int      @map("account_type_id")
   bankId        Int      @map("bank_id")
@@ -161,6 +238,7 @@ model Account {
   updatedAt     DateTime @updatedAt @map("updated_at")
 
   // Relations
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   accountType RefAccountType @relation(fields: [accountTypeId], references: [id])
   bank        RefBank         @relation(fields: [bankId], references: [id])
   currency    RefCurrency     @relation(fields: [currencyId], references: [id])
@@ -172,6 +250,7 @@ model Account {
 
 model CreditCard {
   id                Int      @id @default(autoincrement())
+  userId            Int      @map("user_id")
   name              String   @db.VarChar(100)
   bankId            Int      @map("bank_id")
   currencyId        Int      @map("currency_id")
@@ -185,8 +264,9 @@ model CreditCard {
   updatedAt         DateTime @updatedAt @map("updated_at")
 
   // Relations
-  bank         RefBank         @relation(fields: [bankId], references: [id])
-  currency     RefCurrency     @relation(fields: [currencyId], references: [id])
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bank        RefBank         @relation(fields: [bankId], references: [id])
+  currency    RefCurrency     @relation(fields: [currencyId], references: [id])
   transactions Transaction[]
   autoPayments AutoPayment[]
 
@@ -195,6 +275,7 @@ model CreditCard {
 
 model Transaction {
   id              Int      @id @default(autoincrement())
+  userId          Int      @map("user_id")
   txTypeId        Int      @map("tx_type_id")
   categoryId      Int      @map("category_id")
   paymentMethodId Int      @map("payment_method_id")
@@ -209,18 +290,20 @@ model Transaction {
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   // Relations
-  txType       RefTxType       @relation(fields: [txTypeId], references: [id])
-  category     RefTxCategory   @relation(fields: [categoryId], references: [id])
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  txType        RefTxType       @relation(fields: [txTypeId], references: [id])
+  category      RefTxCategory   @relation(fields: [categoryId], references: [id])
   paymentMethod RefPaymentMethod @relation(fields: [paymentMethodId], references: [id])
-  account     Account?         @relation(fields: [accountId], references: [id])
-  creditCard  CreditCard?      @relation(fields: [creditCardId], references: [id])
-  currency    RefCurrency      @relation(fields: [currencyId], references: [id])
+  account       Account?        @relation(fields: [accountId], references: [id])
+  creditCard    CreditCard?     @relation(fields: [creditCardId], references: [id])
+  currency      RefCurrency     @relation(fields: [currencyId], references: [id])
 
   @@map("transaction")
 }
 
 model AutoPayment {
   id              Int      @id @default(autoincrement())
+  userId          Int      @map("user_id")
   name            String   @db.VarChar(100)
   amount          Decimal  @db.Decimal(15, 2)
   currencyId      Int      @map("currency_id")
@@ -236,17 +319,19 @@ model AutoPayment {
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   // Relations
-  currency      RefCurrency      @relation(fields: [currencyId], references: [id])
-  account       Account?         @relation(fields: [accountId], references: [id])
-  creditCard    CreditCard?      @relation(fields: [creditCardId], references: [id])
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currency      RefCurrency     @relation(fields: [currencyId], references: [id])
+  account       Account?        @relation(fields: [accountId], references: [id])
+  creditCard    CreditCard?     @relation(fields: [creditCardId], references: [id])
   paymentMethod RefPaymentMethod @relation(fields: [paymentMethodId], references: [id])
-  category      RefTxCategory    @relation(fields: [categoryId], references: [id])
+  category      RefTxCategory   @relation(fields: [categoryId], references: [id])
 
   @@map("auto_payment")
 }
 
 model GoldItem {
   id              Int      @id @default(autoincrement())
+  userId          Int      @map("user_id")
   name            String   @db.VarChar(100)
   goldTypeId      Int      @map("gold_type_id")
   goldPurityId    Int      @map("gold_purity_id")
@@ -259,7 +344,8 @@ model GoldItem {
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   // Relations
-  goldType   RefGoldType   @relation(fields: [goldTypeId], references: [id])
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goldType  RefGoldType @relation(fields: [goldTypeId], references: [id])
   goldPurity RefGoldPurity @relation(fields: [goldPurityId], references: [id])
 
   @@map("gold_item")
@@ -284,6 +370,7 @@ model FxRate {
 
 model PortfolioSnapshot {
   id               Int      @id @default(autoincrement())
+  userId           Int      @map("user_id")
   snapshotDate     DateTime @map("snapshot_date") @db.Date
   totalAssets      Decimal  @map("total_assets") @db.Decimal(15, 2)
   totalLiabilities Decimal  @map("total_liabilities") @db.Decimal(15, 2)
@@ -291,7 +378,10 @@ model PortfolioSnapshot {
   breakdown        Json
   createdAt        DateTime @default(now()) @map("created_at")
 
-  @@unique([snapshotDate])
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, snapshotDate])
   @@map("portfolio_snapshot")
 }
 

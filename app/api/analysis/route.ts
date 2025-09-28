@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getCurrentUser } from '@/lib/auth'
 
 export async function GET(request: NextRequest) {
   try {
+    // Kullanıcı doğrulama
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Oturum bulunamadı' },
+        { status: 401 }
+      )
+    }
+
     const { searchParams } = new URL(request.url)
     const period = searchParams.get('period') || '30d'
 
@@ -38,6 +48,7 @@ export async function GET(request: NextRequest) {
       // Bu dönem işlemleri
       prisma.transaction.findMany({
         where: {
+          userId: user.id,
           transactionDate: {
             gte: startDate,
             lte: now
@@ -54,7 +65,10 @@ export async function GET(request: NextRequest) {
       }),
       // Hesaplar
       prisma.account.findMany({
-        where: { active: true },
+        where: { 
+          userId: user.id,
+          active: true 
+        },
         include: {
           currency: true,
           bank: true
@@ -62,7 +76,10 @@ export async function GET(request: NextRequest) {
       }),
       // Kredi kartları
       prisma.creditCard.findMany({
-        where: { active: true },
+        where: { 
+          userId: user.id,
+          active: true 
+        },
         include: {
           currency: true,
           bank: true
@@ -70,6 +87,9 @@ export async function GET(request: NextRequest) {
       }),
       // Altın eşyalar
       prisma.goldItem.findMany({
+        where: {
+          userId: user.id
+        },
         include: {
           goldType: true,
           goldPurity: true
@@ -78,6 +98,7 @@ export async function GET(request: NextRequest) {
       // Geçen ay işlemleri (trend hesaplama için)
       prisma.transaction.findMany({
         where: {
+          userId: user.id,
           transactionDate: {
             gte: new Date(startDate.getTime() - (now.getTime() - startDate.getTime())),
             lt: startDate
@@ -207,9 +228,18 @@ export async function GET(request: NextRequest) {
       const monthStart = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1)
       const monthEnd = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0)
       
-      const monthTransactions = transactions.filter(t => {
-        const tDate = new Date(t.transactionDate)
-        return tDate >= monthStart && tDate <= monthEnd
+      // Her ay için ayrı veri çek
+      const monthTransactions = await prisma.transaction.findMany({
+        where: {
+          userId: user.id,
+          transactionDate: {
+            gte: monthStart,
+            lte: monthEnd
+          }
+        },
+        include: {
+          txType: true
+        }
       })
       
       const monthIncome = monthTransactions
@@ -230,9 +260,16 @@ export async function GET(request: NextRequest) {
 
     // Bu ay verileri
     const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1)
-    const thisMonthTransactions = transactions.filter(t => {
-      const tDate = new Date(t.transactionDate)
-      return tDate >= thisMonthStart
+    const thisMonthTransactions = await prisma.transaction.findMany({
+      where: {
+        userId: user.id,
+        transactionDate: {
+          gte: thisMonthStart
+        }
+      },
+      include: {
+        txType: true
+      }
     })
     
     const monthlyIncome = thisMonthTransactions

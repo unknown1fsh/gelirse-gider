@@ -60,7 +60,9 @@ export default function TransactionsPage() {
   useEffect(() => {
     async function fetchTransactions() {
       try {
-        const response = await fetch('/api/transactions')
+        const response = await fetch('/api/transactions', {
+          credentials: 'include'
+        })
         if (response.ok) {
           const data = await response.json()
           setTransactions(data)

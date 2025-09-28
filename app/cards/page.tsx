@@ -34,7 +34,9 @@ export default function CardsPage() {
   useEffect(() => {
     async function fetchCreditCards() {
       try {
-        const response = await fetch('/api/cards')
+        const response = await fetch('/api/cards', {
+          credentials: 'include'
+        })
         if (response.ok) {
           const data = await response.json()
           setCreditCards(data)

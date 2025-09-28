@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { transactionSchema } from '@/lib/validators'
+import { getCurrentUser } from '@/lib/auth'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // Kullanıcı doğrulama
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Oturum bulunamadı' },
+        { status: 401 }
+      )
+    }
+
     const transactions = await prisma.transaction.findMany({
       include: {
         txType: true,
@@ -23,6 +33,9 @@ export async function GET() {
         },
         currency: true
       },
+      where: {
+        userId: user.id
+      },
       orderBy: {
         transactionDate: 'desc'
       },
@@ -41,6 +54,15 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Kullanıcı doğrulama
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Oturum bulunamadı' },
+        { status: 401 }
+      )
+    }
+
     const body = await request.json()
     
     // Validasyon
@@ -50,7 +72,10 @@ export async function POST(request: NextRequest) {
     })
 
     const transaction = await prisma.transaction.create({
-      data: validatedData,
+      data: {
+        ...validatedData,
+        userId: user.id
+      },
       include: {
         txType: true,
         category: true,

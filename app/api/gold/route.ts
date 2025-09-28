@@ -1,12 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getCurrentUser } from '@/lib/auth'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // Kullanıcı doğrulama
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Oturum bulunamadı' },
+        { status: 401 }
+      )
+    }
+
     const goldItems = await prisma.goldItem.findMany({
       include: {
         goldType: true,
         goldPurity: true
+      },
+      where: {
+        userId: user.id
       },
       orderBy: {
         name: 'asc'
@@ -25,10 +38,20 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Kullanıcı doğrulama
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Oturum bulunamadı' },
+        { status: 401 }
+      )
+    }
+
     const body = await request.json()
     
     const goldItem = await prisma.goldItem.create({
       data: {
+        userId: user.id,
         name: body.name,
         goldTypeId: body.goldTypeId,
         goldPurityId: body.goldPurityId,

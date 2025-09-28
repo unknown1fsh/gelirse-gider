@@ -91,7 +91,9 @@ export default function AnalysisPage() {
   useEffect(() => {
     async function fetchAnalysisData() {
       try {
-        const response = await fetch(`/api/analysis?period=${selectedPeriod}`)
+        const response = await fetch(`/api/analysis?period=${selectedPeriod}`, {
+          credentials: 'include'
+        })
         if (response.ok) {
           const data = await response.json()
           setAnalysisData(data)
