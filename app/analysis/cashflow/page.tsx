@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { usePremium } from '@/lib/use-premium'
 import { useUser } from '@/lib/user-context'
+import PremiumUpgradeModal from '@/components/premium-upgrade-modal'
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -37,8 +38,6 @@ import {
   Crown,
   Bell,
   Download,
-  Auto,
-  Smart,
   Eye,
   Share2
 } from "lucide-react"
@@ -72,12 +71,38 @@ export default function CashFlowAnalysis() {
   const [isLoading, setIsLoading] = useState(true)
   const [cashFlowData, setCashFlowData] = useState<CashFlowData | null>(null)
   const [selectedFeature, setSelectedFeature] = useState<string | null>(null)
+  const [showPremiumModal, setShowPremiumModal] = useState(false)
+  const [premiumFeatureName, setPremiumFeatureName] = useState('')
   const { handlePremiumFeature } = usePremium()
   const { user } = useUser()
 
   // Kullanıcı tipi tespiti
   const isEnterpriseUser = user?.email?.includes('enterprise') || user?.plan === 'enterprise_premium'
   const isIndividualUser = user?.email?.includes('demo') || user?.plan === 'premium'
+
+  // Veri yükleme
+  useEffect(() => {
+    async function fetchCashFlowData() {
+      try {
+        const response = await fetch('/api/analysis/cashflow')
+        if (response.ok) {
+          const data = await response.json()
+          setCashFlowData(data)
+        } else if (response.status === 403) {
+          // Premium gerektiriyor
+          const error = await response.json()
+          setPremiumFeatureName('Gelişmiş Nakit Akışı Analizi')
+          setShowPremiumModal(true)
+        }
+      } catch (error) {
+        console.error('Nakit akışı verileri yüklenirken hata:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchCashFlowData()
+  }, [])
 
   const handleBack = () => {
     router.back()
@@ -563,6 +588,18 @@ export default function CashFlowAnalysis() {
 
       {/* Modal Render */}
       {renderModal()}
+
+      {/* Premium Upgrade Modal */}
+      <PremiumUpgradeModal
+        isOpen={showPremiumModal}
+        onClose={() => setShowPremiumModal(false)}
+        featureName={premiumFeatureName}
+        limitInfo={{
+          current: 0,
+          limit: 0,
+          type: 'analysis'
+        }}
+      />
     </div>
   )
 }

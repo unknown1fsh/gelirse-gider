@@ -208,6 +208,28 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Premium kontrolü - Export özelliği sadece premium kullanıcılar için
+    const subscription = await prisma.userSubscription.findFirst({
+      where: {
+        userId: user.id,
+        status: 'active'
+      },
+      orderBy: { createdAt: 'desc' }
+    })
+
+    const currentPlan = subscription?.planId || 'free'
+    
+    if (currentPlan === 'free') {
+      return NextResponse.json(
+        { 
+          error: 'Veri dışa aktarma özelliği Premium üyelik gerektirir. Premium plana geçerek gelişmiş raporları export edebilirsiniz.',
+          requiresPremium: true,
+          feature: 'Veri Dışa Aktarma'
+        },
+        { status: 403 }
+      )
+    }
+
     const body = await request.json()
     const { reportType, format, dateRange, includeCharts, includeForecasts, includeAIInsights } = body
 

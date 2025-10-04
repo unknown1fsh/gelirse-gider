@@ -63,6 +63,45 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Free plan limit kontrolü
+    const subscription = await prisma.userSubscription.findFirst({
+      where: {
+        userId: user.id,
+        status: 'active'
+      },
+      orderBy: { createdAt: 'desc' }
+    })
+
+    const currentPlan = subscription?.planId || 'free'
+    
+    // Free plan için aylık işlem limiti kontrolü
+    if (currentPlan === 'free') {
+      const currentMonth = new Date()
+      currentMonth.setDate(1) // Ayın başı
+      currentMonth.setHours(0, 0, 0, 0)
+      
+      const monthlyTransactionCount = await prisma.transaction.count({
+        where: {
+          userId: user.id,
+          createdAt: {
+            gte: currentMonth
+          }
+        }
+      })
+
+      if (monthlyTransactionCount >= 50) {
+        return NextResponse.json(
+          { 
+            error: 'Aylık işlem limitinize ulaştınız (50 işlem). Premium plana geçerek sınırsız işlem yapabilirsiniz.',
+            limitReached: true,
+            currentCount: monthlyTransactionCount,
+            limit: 50
+          },
+          { status: 403 }
+        )
+      }
+    }
+
     const body = await request.json()
     
     // Validasyon

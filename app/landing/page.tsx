@@ -138,7 +138,7 @@ export default function LandingPage() {
     },
     {
       name: 'Premium',
-      price: '100',
+      price: '250',
       period: 'ay',
       description: 'Bireysel kullanıcılar için',
       features: [

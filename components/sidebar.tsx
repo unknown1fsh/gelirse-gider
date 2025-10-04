@@ -18,7 +18,11 @@ import {
   PieChart,
   User,
   Crown,
-  LogOut
+  LogOut,
+  TrendingDown,
+  Building2,
+  Activity,
+  Layers
 } from 'lucide-react'
 
 const navigation = [
@@ -29,6 +33,7 @@ const navigation = [
   { name: 'Kredi Kartları', href: '/cards', icon: CreditCard, color: 'text-orange-500' },
   { name: 'Otomatik Ödemeler', href: '/auto-payments', icon: Calendar, color: 'text-pink-500' },
   { name: 'Altın ve Ziynet', href: '/gold', icon: Coins, color: 'text-yellow-500' },
+  { name: 'Diğer Yatırım Araçları', href: '/investments', icon: Building2, color: 'text-cyan-500' },
   { name: 'Analiz ve Raporlar', href: '/analysis', icon: BarChart3, color: 'text-indigo-500' },
 ]
 

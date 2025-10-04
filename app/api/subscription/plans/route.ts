@@ -31,7 +31,7 @@ export async function GET() {
     {
       id: 'premium',
       name: 'Premium',
-      price: 29,
+      price: 250,
       currency: 'TRY',
       period: 'month',
       description: 'Tüm premium özellikler',
@@ -89,7 +89,7 @@ export async function GET() {
     {
       id: 'enterprise_premium',
       name: 'Kurumsal Premium',
-      price: 99,
+      price: 450,
       currency: 'TRY',
       period: 'month',
       description: 'İşletmeler için ultra premium',

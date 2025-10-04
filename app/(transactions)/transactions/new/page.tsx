@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatCurrency, parseCurrencyInput } from '@/lib/validators'
+import PremiumUpgradeModal from '@/components/premium-upgrade-modal'
 import { ArrowLeft, Save } from 'lucide-react'
 
 interface ReferenceData {
@@ -20,6 +21,12 @@ export default function NewTransactionPage() {
   const [referenceData, setReferenceData] = useState<ReferenceData | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [showPremiumModal, setShowPremiumModal] = useState(false)
+  const [limitInfo, setLimitInfo] = useState<{
+    current: number
+    limit: number
+    type: 'transaction' | 'analysis' | 'export'
+  } | null>(null)
   
   const [formData, setFormData] = useState({
     txTypeId: 0,
@@ -88,7 +95,17 @@ export default function NewTransactionPage() {
         router.push('/transactions')
       } else {
         const error = await response.json()
-        alert(`Hata: ${error.error}`)
+        if (error.limitReached) {
+          // Limit aşıldığında çekici modal göster
+          setLimitInfo({
+            current: error.currentCount || 50,
+            limit: error.limit || 50,
+            type: 'transaction'
+          })
+          setShowPremiumModal(true)
+        } else {
+          alert(`Hata: ${error.error}`)
+        }
       }
     } catch (error) {
       console.error('İşlem kaydedilemedi:', error)
@@ -377,6 +394,14 @@ export default function NewTransactionPage() {
               </form>
             </CardContent>
           </Card>
+
+          {/* Premium Upgrade Modal */}
+          <PremiumUpgradeModal
+            isOpen={showPremiumModal}
+            onClose={() => setShowPremiumModal(false)}
+            featureName="Sınırsız İşlem"
+            limitInfo={limitInfo}
+          />
         </div>
-  )
-}
+      )
+    }

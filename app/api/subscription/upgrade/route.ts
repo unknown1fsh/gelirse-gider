@@ -37,8 +37,8 @@ export async function POST(request: NextRequest) {
     // Plan fiyatları
     const planPrices: { [key: string]: number } = {
       free: 0,
-      premium: 29,
-      enterprise: 99
+      premium: 250,
+      enterprise: 450
     }
 
     const amount = planPrices[planId]

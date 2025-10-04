@@ -816,7 +816,7 @@ export default function PremiumPage() {
     {
       id: 'premium',
       name: 'Premium',
-      price: '29',
+      price: '250',
       period: 'ay',
       description: 'Tüm premium özellikler',
       features: [
@@ -838,7 +838,7 @@ export default function PremiumPage() {
     {
       id: 'enterprise',
       name: 'Kurumsal Premium',
-      price: '99',
+      price: '450',
       period: 'ay',
       description: 'İşletmeler için',
       features: [

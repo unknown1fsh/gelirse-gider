@@ -1,0 +1,168 @@
+import { NextResponse } from 'next/server'
+
+export async function GET() {
+  const investmentTypes = [
+    {
+      id: 'stock',
+      name: 'Hisse Senetleri',
+      description: 'Borsa hisseleri ve şirket payları',
+      icon: 'trending-up',
+      color: 'from-green-500 to-emerald-600',
+      riskLevel: 'medium',
+      popularity: 95,
+      features: [
+        'Borsa İstanbul hisseleri',
+        'NYSE ve NASDAQ hisseleri',
+        'Sektörel analizler',
+        'Teknik analiz araçları'
+      ],
+      requirements: {
+        minAmount: 100,
+        currency: 'TRY',
+        tradingHours: '09:30 - 18:00'
+      }
+    },
+    {
+      id: 'fund',
+      name: 'Yatırım Fonları',
+      description: 'Profesyonel yönetilen yatırım fonları',
+      icon: 'pie-chart',
+      color: 'from-blue-500 to-indigo-600',
+      riskLevel: 'low',
+      popularity: 85,
+      features: [
+        'Hisse senedi fonları',
+        'Borçlanma araçları fonları',
+        'Karma fonlar',
+        'Endeks fonları'
+      ],
+      requirements: {
+        minAmount: 1000,
+        currency: 'TRY',
+        tradingHours: '24/7'
+      }
+    },
+    {
+      id: 'bond',
+      name: 'Tahvil ve Bonolar',
+      description: 'Devlet ve kurumsal tahvilleri',
+      icon: 'shield',
+      color: 'from-purple-500 to-violet-600',
+      riskLevel: 'low',
+      popularity: 70,
+      features: [
+        'Devlet tahvilleri',
+        'Kurumsal tahviller',
+        'Eurobond\'lar',
+        'Faiz hesaplama araçları'
+      ],
+      requirements: {
+        minAmount: 10000,
+        currency: 'TRY',
+        tradingHours: '09:30 - 18:00'
+      }
+    },
+    {
+      id: 'crypto',
+      name: 'Kripto Paralar',
+      description: 'Bitcoin, Ethereum ve diğer kripto paralar',
+      icon: 'coins',
+      color: 'from-yellow-500 to-orange-600',
+      riskLevel: 'high',
+      popularity: 90,
+      features: [
+        'Bitcoin (BTC)',
+        'Ethereum (ETH)',
+        'Altcoin\'ler',
+        'DeFi tokenları'
+      ],
+      requirements: {
+        minAmount: 100,
+        currency: 'TRY',
+        tradingHours: '24/7'
+      }
+    },
+    {
+      id: 'commodity',
+      name: 'Emtialar',
+      description: 'Altın, gümüş, petrol ve diğer emtialar',
+      icon: 'layers',
+      color: 'from-amber-500 to-yellow-600',
+      riskLevel: 'medium',
+      popularity: 75,
+      features: [
+        'Altın ve gümüş',
+        'Petrol ve doğalgaz',
+        'Tarım ürünleri',
+        'Endüstriyel metaller'
+      ],
+      requirements: {
+        minAmount: 500,
+        currency: 'TRY',
+        tradingHours: '24/7'
+      }
+    },
+    {
+      id: 'forex',
+      name: 'Döviz',
+      description: 'USD, EUR ve diğer döviz kurları',
+      icon: 'globe',
+      color: 'from-cyan-500 to-blue-600',
+      riskLevel: 'high',
+      popularity: 80,
+      features: [
+        'Major döviz çiftleri',
+        'Emerging market dövizleri',
+        'Forex analizleri',
+        'Hedge araçları'
+      ],
+      requirements: {
+        minAmount: 1000,
+        currency: 'USD',
+        tradingHours: '24/5'
+      }
+    },
+    {
+      id: 'real-estate',
+      name: 'Gayrimenkul',
+      description: 'Emlak yatırımları ve REIT\'ler',
+      icon: 'building-2',
+      color: 'from-red-500 to-rose-600',
+      riskLevel: 'medium',
+      popularity: 65,
+      features: [
+        'Konut yatırımları',
+        'Ticari emlak',
+        'REIT\'ler',
+        'Emlak analizleri'
+      ],
+      requirements: {
+        minAmount: 100000,
+        currency: 'TRY',
+        tradingHours: '09:00 - 18:00'
+      }
+    },
+    {
+      id: 'other',
+      name: 'Diğer Araçlar',
+      description: 'Vadeli işlemler, opsiyonlar ve diğer araçlar',
+      icon: 'star',
+      color: 'from-pink-500 to-purple-600',
+      riskLevel: 'high',
+      popularity: 45,
+      features: [
+        'Vadeli işlemler',
+        'Opsiyonlar',
+        'CFD\'ler',
+        'Structured products'
+      ],
+      requirements: {
+        minAmount: 5000,
+        currency: 'TRY',
+        tradingHours: 'Değişken'
+      }
+    }
+  ]
+
+  return NextResponse.json(investmentTypes)
+}

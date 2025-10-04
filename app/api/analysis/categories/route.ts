@@ -13,6 +13,28 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // Premium kontrolü - Gelişmiş kategori analizi sadece premium kullanıcılar için
+    const subscription = await prisma.userSubscription.findFirst({
+      where: {
+        userId: user.id,
+        status: 'active'
+      },
+      orderBy: { createdAt: 'desc' }
+    })
+
+    const currentPlan = subscription?.planId || 'free'
+    
+    if (currentPlan === 'free') {
+      return NextResponse.json(
+        { 
+          error: 'Gelişmiş kategori analizi Premium üyelik gerektirir. Premium plana geçerek detaylı kategori analizlerine erişebilirsiniz.',
+          requiresPremium: true,
+          feature: 'Gelişmiş Kategori Analizi'
+        },
+        { status: 403 }
+      )
+    }
+
     const { searchParams } = new URL(request.url)
     const period = searchParams.get('period') || '30d'
 

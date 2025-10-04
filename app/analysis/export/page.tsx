@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { usePremium } from '@/lib/use-premium'
 import { useUser } from '@/lib/user-context'
+import PremiumUpgradeModal from '@/components/premium-upgrade-modal'
 import { 
   Download, 
   FileText, 
