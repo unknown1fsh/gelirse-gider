@@ -60,7 +60,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function fetchDashboardData() {
-      if (loading || !user) return
+      if (loading || !user) {return}
 
       try {
         setDataLoading(true)

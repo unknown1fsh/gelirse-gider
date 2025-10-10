@@ -435,10 +435,10 @@ export default function ExportAnalysis() {
 
   // Modal render fonksiyonu
   const renderModal = () => {
-    if (!selectedFeature) return null
+    if (!selectedFeature) {return null}
 
     const feature = premiumFeatures.find(f => f.id === selectedFeature)
-    if (!feature) return null
+    if (!feature) {return null}
 
     return (
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">

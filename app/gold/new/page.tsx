@@ -40,7 +40,7 @@ export default function NewGoldItemPage() {
       try {
         const response = await fetch('/api/reference-data')
         if (response.ok) {
-          const data = await response.json()
+          const data = (await response.json()) as ReferenceData
           setReferenceData(data)
         }
       } catch (error) {
@@ -50,7 +50,7 @@ export default function NewGoldItemPage() {
       }
     }
 
-    fetchReferenceData()
+    void fetchReferenceData()
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -77,7 +77,7 @@ export default function NewGoldItemPage() {
       if (response.ok) {
         router.push('/gold')
       } else {
-        const errorData = await response.json()
+        const errorData = (await response.json()) as { error?: string }
         alert('Hata: ' + (errorData.error || 'Altın eşyası eklenemedi'))
       }
     } catch (error) {
@@ -126,7 +126,7 @@ export default function NewGoldItemPage() {
           <CardDescription>Altın veya ziynet eşyasının detaylarını girin</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={(e) => void handleSubmit(e)} className="space-y-6">
             <div>
               <label className="block text-sm font-medium mb-2">Eşya Adı *</label>
               <input

@@ -19,7 +19,7 @@ export default function UserWelcomeSection() {
     )
   }
 
-  if (!user) return null
+  if (!user) {return null}
 
   const isPremium = user.plan === 'premium'
   const isEnterprise = user.plan === 'enterprise'

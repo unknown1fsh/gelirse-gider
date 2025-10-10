@@ -22,7 +22,7 @@ async function verify() {
     })
 
     for (const user of users) {
-      if (user._count.transactions === 0 && user._count.accounts === 0) continue
+      if (user._count.transactions === 0 && user._count.accounts === 0) {continue}
 
       console.log(`\n\n👤 KULLANICI: ${user.email} (ID: ${user.id})`)
       console.log('-'.repeat(70))

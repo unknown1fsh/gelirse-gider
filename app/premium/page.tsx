@@ -856,7 +856,7 @@ export default function PremiumPage() {
   ]
 
   const handleUpgrade = async () => {
-    if (isAlreadyPremium) return
+    if (isAlreadyPremium) {return}
 
     setIsProcessing(true)
     try {

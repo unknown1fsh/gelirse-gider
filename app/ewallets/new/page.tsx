@@ -6,8 +6,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ArrowLeft, Save, Wallet, Mail, Phone } from 'lucide-react'
 import { parseCurrencyInput } from '@/lib/validators'
 
+interface Currency {
+  id: number
+  code: string
+  name: string
+  symbol: string
+}
+
 interface ReferenceData {
-  currencies: Array<{ id: number; code: string; name: string; symbol: string }>
+  currencies: Currency[]
 }
 
 export default function NewEWalletPage() {
@@ -34,7 +41,7 @@ export default function NewEWalletPage() {
           setReferenceData(data)
 
           // Varsayılan para birimini TRY yap
-          const tryCurrency = data.currencies.find((c: any) => c.code === 'TRY')
+          const tryCurrency = data.currencies.find((c: Currency) => c.code === 'TRY')
           if (tryCurrency) {
             setFormData(prev => ({ ...prev, currencyId: tryCurrency.id }))
           }
@@ -46,7 +53,7 @@ export default function NewEWalletPage() {
       }
     }
 
-    fetchReferenceData()
+    void fetchReferenceData()
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -97,7 +104,7 @@ export default function NewEWalletPage() {
         alert('E-cüzdan başarıyla eklendi')
         router.push('/ewallets')
       } else {
-        const errorData = await response.json()
+        const errorData = (await response.json()) as { error?: string }
         alert('Hata: ' + (errorData.error || 'E-cüzdan eklenemedi'))
       }
     } catch (error) {
@@ -135,7 +142,7 @@ export default function NewEWalletPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={(e) => void handleSubmit(e)} className="space-y-6">
             {/* Temel Bilgiler */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-slate-700 flex items-center gap-2">

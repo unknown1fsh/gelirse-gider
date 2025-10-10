@@ -13,7 +13,7 @@ export function usePremium() {
   const isFree = user?.plan === 'free'
 
   const requirePremium = (callback?: () => void) => {
-    if (loading) return false
+    if (loading) {return false}
 
     if (!isPremium && !isEnterprise && !isEnterprisePremium) {
       // Free kullanıcıyı premium sayfasına yönlendir
@@ -30,7 +30,7 @@ export function usePremium() {
   }
 
   const handlePremiumFeature = (featureName: string, callback?: () => void) => {
-    if (loading) return false
+    if (loading) {return false}
 
     if (!isPremium && !isEnterprise && !isEnterprisePremium) {
       // Free kullanıcıyı premium sayfasına yönlendir

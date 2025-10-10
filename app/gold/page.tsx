@@ -44,7 +44,7 @@ export default function GoldPage() {
           credentials: 'include',
         })
         if (response.ok) {
-          const data = await response.json()
+          const data = (await response.json()) as GoldItem[]
           setGoldItems(data)
         } else {
           setError('Altın eşyaları yüklenemedi')
@@ -57,11 +57,11 @@ export default function GoldPage() {
       }
     }
 
-    fetchGoldItems()
+    void fetchGoldItems()
   }, [])
 
   const handleEditName = async (newName: string) => {
-    if (!selectedGold) return
+    if (!selectedGold) {return}
 
     try {
       const response = await fetch(`/api/gold/${selectedGold.id}`, {
@@ -89,7 +89,7 @@ export default function GoldPage() {
   }
 
   const handleDelete = async () => {
-    if (!selectedGold) return
+    if (!selectedGold) {return}
 
     try {
       const response = await fetch(`/api/gold/${selectedGold.id}`, {
@@ -98,7 +98,7 @@ export default function GoldPage() {
       })
 
       if (response.ok) {
-        const result = await response.json()
+        const result = (await response.json()) as { message: string }
         alert(result.message)
         // Listeyi güncelle
         setGoldItems(prev => prev.filter(gold => gold.id !== selectedGold.id))

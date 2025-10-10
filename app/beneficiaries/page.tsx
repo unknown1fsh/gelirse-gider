@@ -55,7 +55,7 @@ export default function BeneficiariesPage() {
   }
 
   const handleEditName = async (newName: string) => {
-    if (!selectedBeneficiary) return
+    if (!selectedBeneficiary) {return}
 
     try {
       const response = await fetch(`/api/beneficiaries/${selectedBeneficiary.id}`, {
@@ -82,7 +82,7 @@ export default function BeneficiariesPage() {
   }
 
   const handleDelete = async () => {
-    if (!selectedBeneficiary) return
+    if (!selectedBeneficiary) {return}
 
     try {
       const response = await fetch(`/api/beneficiaries/${selectedBeneficiary.id}`, {

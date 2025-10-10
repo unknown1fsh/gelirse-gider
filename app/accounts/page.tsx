@@ -104,7 +104,7 @@ export default function AccountsPage() {
   }
 
   const confirmDelete = async () => {
-    if (!selectedItem) return
+    if (!selectedItem) {return}
 
     try {
       const endpoint = selectedItem.type === 'account' 
@@ -132,7 +132,7 @@ export default function AccountsPage() {
   }
 
   const handleSaveEdit = async (newName: string) => {
-    if (!selectedItem) return
+    if (!selectedItem) {return}
 
     const endpoint = selectedItem.type === 'account' 
       ? `/api/accounts/${selectedItem.id}` 

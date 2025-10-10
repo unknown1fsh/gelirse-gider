@@ -118,15 +118,15 @@ export default function NewExpensePage() {
 
   // Ödeme yöntemine göre hangi alanların gösterileceğini belirle
   const getPaymentFieldType = () => {
-    if (!selectedPaymentMethod) return null
+    if (!selectedPaymentMethod) {return null}
     
     const code = selectedPaymentMethod.code
-    if (code === 'BANK_TRANSFER') return 'account'
-    if (code === 'CREDIT_CARD') return 'creditCard'
-    if (code === 'NAKIT') return 'none'
-    if (code === 'HAVALE_EFT') return 'transferWithBeneficiary' // Hem hesap hem alıcı
-    if (code === 'DEBIT_KARTI') return 'account'
-    if (code === 'E_CUZDAN') return 'eWallet'
+    if (code === 'BANK_TRANSFER') {return 'account'}
+    if (code === 'CREDIT_CARD') {return 'creditCard'}
+    if (code === 'NAKIT') {return 'none'}
+    if (code === 'HAVALE_EFT') {return 'transferWithBeneficiary'} // Hem hesap hem alıcı
+    if (code === 'DEBIT_KARTI') {return 'account'}
+    if (code === 'E_CUZDAN') {return 'eWallet'}
     return null
   }
 
@@ -226,7 +226,7 @@ export default function NewExpensePage() {
 
   // Alıcı silme fonksiyonu
   const handleDeleteBeneficiary = async () => {
-    if (!deletingBeneficiary) return
+    if (!deletingBeneficiary) {return}
 
     try {
       const response = await fetch(`/api/beneficiaries/${deletingBeneficiary.id}`, {
@@ -255,7 +255,7 @@ export default function NewExpensePage() {
 
   // Alıcı düzenleme fonksiyonu
   const handleEditBeneficiary = async (newName: string) => {
-    if (!editingBeneficiary) return
+    if (!editingBeneficiary) {return}
 
     try {
       const response = await fetch(`/api/beneficiaries/${editingBeneficiary.id}`, {
@@ -334,11 +334,11 @@ export default function NewExpensePage() {
       }
 
       // Seçili alanlara göre ekle
-      if (formData.accountId > 0) submitData.accountId = formData.accountId
-      if (formData.creditCardId > 0) submitData.creditCardId = formData.creditCardId
-      if (formData.eWalletId > 0) submitData.eWalletId = formData.eWalletId
-      if (formData.beneficiaryId > 0) submitData.beneficiaryId = formData.beneficiaryId
-      if (formData.description) submitData.description = formData.description
+      if (formData.accountId > 0) {submitData.accountId = formData.accountId}
+      if (formData.creditCardId > 0) {submitData.creditCardId = formData.creditCardId}
+      if (formData.eWalletId > 0) {submitData.eWalletId = formData.eWalletId}
+      if (formData.beneficiaryId > 0) {submitData.beneficiaryId = formData.beneficiaryId}
+      if (formData.description) {submitData.description = formData.description}
 
       // İşlem oluştur
       const response = await fetch('/api/transactions', {
@@ -369,11 +369,11 @@ export default function NewExpensePage() {
           currencyId: formData.currencyId,
         }
 
-        if (recurringData.endDate) autoPaymentData.endDate = recurringData.endDate
-        if (formData.accountId > 0) autoPaymentData.accountId = formData.accountId
-        if (formData.creditCardId > 0) autoPaymentData.creditCardId = formData.creditCardId
-        if (formData.eWalletId > 0) autoPaymentData.eWalletId = formData.eWalletId
-        if (formData.beneficiaryId > 0) autoPaymentData.beneficiaryId = formData.beneficiaryId
+        if (recurringData.endDate) {autoPaymentData.endDate = recurringData.endDate}
+        if (formData.accountId > 0) {autoPaymentData.accountId = formData.accountId}
+        if (formData.creditCardId > 0) {autoPaymentData.creditCardId = formData.creditCardId}
+        if (formData.eWalletId > 0) {autoPaymentData.eWalletId = formData.eWalletId}
+        if (formData.beneficiaryId > 0) {autoPaymentData.beneficiaryId = formData.beneficiaryId}
 
         const autoResponse = await fetch('/api/auto-payments', {
           method: 'POST',

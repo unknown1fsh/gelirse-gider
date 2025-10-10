@@ -34,7 +34,7 @@ export default function EWalletsPage() {
   const [selectedWallet, setSelectedWallet] = useState<EWallet | null>(null)
 
   useEffect(() => {
-    fetchEWallets()
+    void fetchEWallets()
   }, [])
 
   const fetchEWallets = async () => {
@@ -43,7 +43,7 @@ export default function EWalletsPage() {
         credentials: 'include',
       })
       if (response.ok) {
-        const data = await response.json()
+        const data = (await response.json()) as EWallet[]
         setEWallets(data)
       } else {
         setError('E-cüzdanlar yüklenemedi')
@@ -57,7 +57,7 @@ export default function EWalletsPage() {
   }
 
   const handleEditName = async (newName: string) => {
-    if (!selectedWallet) return
+    if (!selectedWallet) {return}
 
     try {
       const response = await fetch(`/api/ewallets/${selectedWallet.id}`, {
@@ -84,7 +84,7 @@ export default function EWalletsPage() {
   }
 
   const handleDelete = async () => {
-    if (!selectedWallet) return
+    if (!selectedWallet) {return}
 
     try {
       const response = await fetch(`/api/ewallets/${selectedWallet.id}`, {
@@ -93,7 +93,7 @@ export default function EWalletsPage() {
       })
 
       if (response.ok) {
-        const result = await response.json()
+        const result = (await response.json()) as { message: string }
         alert(result.message)
         setEWallets(prev => prev.filter(wallet => wallet.id !== selectedWallet.id))
       } else {

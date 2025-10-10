@@ -147,7 +147,7 @@ export default function NewInvestmentPage() {
   const calculateProfitLossPercentage = () => {
     const purchasePrice = parseFloat(formData.purchasePrice) || 0
     const currentPrice = parseFloat(formData.currentPrice) || 0
-    if (purchasePrice === 0) return 0
+    if (purchasePrice === 0) {return 0}
     return ((currentPrice - purchasePrice) / purchasePrice) * 100
   }
 

@@ -60,7 +60,7 @@ export default function CardsPage() {
   }, [])
 
   const handleEditName = async (newName: string) => {
-    if (!selectedCard) return
+    if (!selectedCard) {return}
 
     try {
       const response = await fetch(`/api/cards/${selectedCard.id}`, {
@@ -88,7 +88,7 @@ export default function CardsPage() {
   }
 
   const handleDelete = async () => {
-    if (!selectedCard) return
+    if (!selectedCard) {return}
 
     try {
       const response = await fetch(`/api/cards/${selectedCard.id}`, {

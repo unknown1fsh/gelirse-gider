@@ -24,7 +24,7 @@ export function ConfirmationDialog({
   cancelText = 'İptal',
   confirmButtonClass = 'bg-red-600 hover:bg-red-700',
 }: ConfirmationDialogProps) {
-  if (!isOpen) return null
+  if (!isOpen) {return null}
 
   const handleConfirm = async () => {
     try {

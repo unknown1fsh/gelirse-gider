@@ -42,8 +42,8 @@ async function main() {
   }
 
   console.log('⚠️  İngilizce tipler tespit edildi:')
-  if (incomeType) console.log(`   INCOME → ID:${incomeType.id}`)
-  if (expenseType) console.log(`   EXPENSE → ID:${expenseType.id}`)
+  if (incomeType) {console.log(`   INCOME → ID:${incomeType.id}`)}
+  if (expenseType) {console.log(`   EXPENSE → ID:${expenseType.id}`)}
   console.log()
 
   // 4. İngilizce ID kullanan işlemleri Türkçe ID'ye güncelle

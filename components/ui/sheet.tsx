@@ -21,7 +21,7 @@ const Sheet = React.forwardRef<
     onOpenChange?.(newOpen)
   }
 
-  if (!isOpen) return null
+  if (!isOpen) {return null}
 
   return <div ref={ref} className={cn('fixed inset-0 z-50', className)} {...props} />
 })

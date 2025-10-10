@@ -262,7 +262,7 @@ export default function InvestmentsPage() {
 
   // Gerçek yatırım verilerini getir
   useEffect(() => {
-    if (userLoading) return
+    if (userLoading) {return}
 
     async function fetchInvestments() {
       if (userPlan === 'free') {

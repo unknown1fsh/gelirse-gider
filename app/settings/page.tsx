@@ -116,7 +116,7 @@ export default function SettingsPage() {
   ]
 
   const handleSave = async () => {
-    if (!user) return
+    if (!user) {return}
 
     setIsSaving(true)
     setSaveMessage('')
@@ -161,7 +161,7 @@ export default function SettingsPage() {
   }
 
   const handleResetAllData = async () => {
-    if (!user) return
+    if (!user) {return}
 
     // Kullanıcıdan onay al
     const confirmed = window.confirm(
@@ -175,7 +175,7 @@ export default function SettingsPage() {
         'Devam etmek istediğinizden emin misiniz?'
     )
 
-    if (!confirmed) return
+    if (!confirmed) {return}
 
     // İkinci onay
     const doubleConfirmed = window.confirm(
@@ -184,7 +184,7 @@ export default function SettingsPage() {
         'Kesinlikle devam etmek istiyor musunuz?'
     )
 
-    if (!doubleConfirmed) return
+    if (!doubleConfirmed) {return}
 
     try {
       setIsSaving(true)
