@@ -4,32 +4,22 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useUser } from '@/lib/user-context'
 import {
-  CreditCard,
   Wallet,
-  TrendingUp,
   Settings,
   Plus,
   BarChart3,
-  Coins,
-  Calendar,
   Sparkles,
   PieChart,
   User,
   Crown,
   LogOut,
-  TrendingDown,
   Building2,
-  Activity,
-  Layers,
-  Users,
 } from 'lucide-react'
 
 const navigation = [
   { name: 'Toplam Varlık', href: '/portfolio', icon: PieChart, color: 'text-emerald-500' },
   { name: 'İşlemler', href: '/transactions', icon: Plus, color: 'text-green-500' },
   { name: 'Hesaplar', href: '/accounts', icon: Wallet, color: 'text-purple-500' },
-  { name: 'Kredi Kartları', href: '/cards', icon: CreditCard, color: 'text-orange-500' },
-  { name: 'Altın ve Ziynet', href: '/gold', icon: Coins, color: 'text-yellow-500' },
   { name: 'Diğer Yatırım Araçları', href: '/investments', icon: Building2, color: 'text-cyan-500' },
   { name: 'Analiz ve Raporlar', href: '/analysis', icon: BarChart3, color: 'text-indigo-500' },
 ]
@@ -46,7 +36,10 @@ export default function Sidebar() {
     <div className="flex h-screen w-72 flex-col bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl">
       {/* Logo ve Başlık - Dashboard'a Yönlendirme */}
       <div className="shrink-0 border-b border-slate-700/50">
-        <Link href="/dashboard" className="flex h-20 items-center justify-center bg-gradient-to-r from-blue-600/20 to-purple-600/20 hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-200 group cursor-pointer">
+        <Link
+          href="/dashboard"
+          className="flex h-20 items-center justify-center bg-gradient-to-r from-blue-600/20 to-purple-600/20 hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-200 group cursor-pointer"
+        >
           <div className="flex items-center space-x-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg group-hover:scale-110 transition-transform">
               <span className="text-3xl font-bold text-white">₺</span>
@@ -55,16 +48,21 @@ export default function Sidebar() {
               <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent group-hover:from-blue-300 group-hover:to-purple-300 transition-all">
                 GiderSE-Gelir
               </h1>
-              <p className="text-xs text-slate-400 group-hover:text-slate-300 transition-colors">Finans Yönetimi</p>
+              <p className="text-xs text-slate-400 group-hover:text-slate-300 transition-colors">
+                Finans Yönetimi
+              </p>
             </div>
           </div>
         </Link>
-        
+
         {/* Kullanıcı Plan Bilgisi */}
         {user && (
           <div className="flex items-center justify-center py-3 px-6">
             {user.plan === 'premium' || user.plan === 'enterprise' ? (
-              <Link href="/premium-features" className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 shadow-lg hover:from-yellow-500/30 hover:to-amber-500/30 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer group">
+              <Link
+                href="/premium-features"
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 shadow-lg hover:from-yellow-500/30 hover:to-amber-500/30 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer group"
+              >
                 <Crown className="h-4 w-4 text-yellow-400 animate-pulse group-hover:animate-bounce" />
                 <span className="text-sm font-bold bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-300 bg-clip-text text-transparent group-hover:from-yellow-200 group-hover:via-yellow-300 group-hover:to-amber-200">
                   {user.plan === 'enterprise' ? 'Enterprise' : 'Premium'}
@@ -157,7 +155,7 @@ export default function Sidebar() {
           </Link>
 
           <button
-            onClick={handleLogout}
+            onClick={() => void handleLogout()}
             className="w-full flex items-center space-x-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition-all duration-200 hover:bg-red-600/20 hover:text-red-400"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-700/50">

@@ -8,18 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import EditNameModal from '@/components/ui/edit-name-modal'
 import ConfirmationDialog from '@/components/ui/confirmation-dialog'
 import { usePremium } from '@/lib/use-premium'
-import {
-  Wallet,
-  CreditCard,
-  TrendingUp,
-  Coins,
-  ArrowLeft,
-  Home,
-  Plus,
-  Edit,
-  Trash2,
-  Crown,
-} from 'lucide-react'
+import { Wallet, CreditCard, Coins, ArrowLeft, Home, Plus, Edit, Trash2, Crown } from 'lucide-react'
 import { formatCurrency } from '@/lib/validators'
 
 interface BankAccount {
@@ -44,44 +33,87 @@ interface EWallet {
   createdAt: string
 }
 
+interface CreditCard {
+  id: number
+  name: string
+  limitAmount: string
+  availableLimit: string
+  dueDay: number
+  bank: { id: number; name: string }
+  currency: { id: number; code: string; name: string }
+  createdAt: string
+}
+
+interface GoldItem {
+  id: number
+  name: string
+  weightGrams: string
+  purchasePrice: string
+  currentValueTry: string | null
+  goldType: { id: number; name: string }
+  goldPurity: { id: number; name: string }
+  createdAt: string
+}
+
 export default function AccountsPage() {
   const router = useRouter()
   const { isPremium, handlePremiumFeature } = usePremium()
-  
+
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([])
   const [eWallets, setEWallets] = useState<EWallet[]>([])
+  const [creditCards, setCreditCards] = useState<CreditCard[]>([])
+  const [goldItems, setGoldItems] = useState<GoldItem[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  
+
   // Edit/Delete states
   const [showEditModal, setShowEditModal] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<{ id: number; name: string; type: 'account' | 'ewallet' } | null>(null)
+  const [selectedItem, setSelectedItem] = useState<{
+    id: number
+    name: string
+    type: 'account' | 'ewallet'
+  } | null>(null)
   const [transactionCount, setTransactionCount] = useState(0)
 
   useEffect(() => {
-    fetchData()
+    void fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function fetchData() {
     try {
-      const [accountsRes, ewalletsRes] = await Promise.all([
+      const [accountsRes, ewalletsRes, cardsRes, goldRes] = await Promise.all([
         fetch('/api/accounts?type=bank', { credentials: 'include' }),
-        fetch('/api/ewallets', { credentials: 'include' }).catch(() => ({ ok: false }))
+        fetch('/api/ewallets', { credentials: 'include' }).catch(() => ({ ok: false })),
+        fetch('/api/cards', { credentials: 'include' }).catch(() => ({ ok: false })),
+        fetch('/api/gold', { credentials: 'include' }).catch(() => ({ ok: false })),
       ])
 
       if (accountsRes.ok) {
-        const accounts = await accountsRes.json()
-        setBankAccounts(accounts.filter((acc: any) => acc.accountType === 'bank'))
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const accountsData = await accountsRes.json()
+        setBankAccounts(accountsData as BankAccount[])
       }
 
       if (ewalletsRes.ok && isPremium) {
-        const wallets = await ewalletsRes.json()
-        setEWallets(wallets)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+        const walletsData = await ewalletsRes.json()
+        setEWallets(walletsData as EWallet[])
+      }
+
+      if (cardsRes.ok) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+        const cardsData = await cardsRes.json()
+        setCreditCards(cardsData as CreditCard[])
+      }
+
+      if (goldRes.ok && isPremium) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+        const goldData = await goldRes.json()
+        setGoldItems(goldData as GoldItem[])
       }
     } catch (error) {
       console.error('Veriler yüklenirken hata:', error)
-      setError('Veriler yüklenirken hata oluştu')
     } finally {
       setLoading(false)
     }
@@ -94,23 +126,31 @@ export default function AccountsPage() {
 
   const handleDelete = async (id: number, type: 'account' | 'ewallet') => {
     // İşlem sayısını kontrol et
-    const endpoint = type === 'account' ? `/api/accounts/${id}` : `/api/ewallets/${id}`
-    const countRes = await fetch(`/api/transactions?${type === 'account' ? 'accountId' : 'eWalletId'}=${id}`)
-    const count = countRes.ok ? (await countRes.json()).length : 0
-    
-    setTransactionCount(count)
+    const countRes = await fetch(
+      `/api/transactions?${type === 'account' ? 'accountId' : 'eWalletId'}=${id}`
+    )
+    if (countRes.ok) {
+      const transactions = (await countRes.json()) as Array<{ id: number }>
+      setTransactionCount(transactions.length)
+    } else {
+      setTransactionCount(0)
+    }
+
     setSelectedItem({ id, name: '', type })
     setShowDeleteConfirm(true)
   }
 
   const confirmDelete = async () => {
-    if (!selectedItem) {return}
+    if (!selectedItem) {
+      return
+    }
 
     try {
-      const endpoint = selectedItem.type === 'account' 
-        ? `/api/accounts/${selectedItem.id}` 
-        : `/api/ewallets/${selectedItem.id}`
-      
+      const endpoint =
+        selectedItem.type === 'account'
+          ? `/api/accounts/${selectedItem.id}`
+          : `/api/ewallets/${selectedItem.id}`
+
       const response = await fetch(endpoint, {
         method: 'DELETE',
         credentials: 'include',
@@ -118,7 +158,7 @@ export default function AccountsPage() {
 
       if (response.ok) {
         alert(`${selectedItem.type === 'account' ? 'Hesap' : 'E-Cüzdan'} başarıyla silindi`)
-        fetchData()
+        void fetchData()
       } else {
         alert('Silme işlemi başarısız')
       }
@@ -132,11 +172,14 @@ export default function AccountsPage() {
   }
 
   const handleSaveEdit = async (newName: string) => {
-    if (!selectedItem) {return}
+    if (!selectedItem) {
+      return
+    }
 
-    const endpoint = selectedItem.type === 'account' 
-      ? `/api/accounts/${selectedItem.id}` 
-      : `/api/ewallets/${selectedItem.id}`
+    const endpoint =
+      selectedItem.type === 'account'
+        ? `/api/accounts/${selectedItem.id}`
+        : `/api/ewallets/${selectedItem.id}`
 
     const response = await fetch(endpoint, {
       method: 'PATCH',
@@ -146,7 +189,7 @@ export default function AccountsPage() {
     })
 
     if (response.ok) {
-      fetchData()
+      void fetchData()
     }
   }
 
@@ -158,6 +201,15 @@ export default function AccountsPage() {
   const totalEWalletBalance = eWallets.reduce((sum, wallet) => {
     const rate = wallet.currency.code === 'USD' ? 30 : wallet.currency.code === 'EUR' ? 32 : 1
     return sum + parseFloat(wallet.balance) * rate
+  }, 0)
+
+  const totalCardLimit = creditCards.reduce((sum, card) => {
+    const rate = card.currency.code === 'USD' ? 30 : card.currency.code === 'EUR' ? 32 : 1
+    return sum + parseFloat(card.availableLimit) * rate
+  }, 0)
+
+  const totalGoldValue = goldItems.reduce((sum, item) => {
+    return sum + parseFloat(item.currentValueTry || '0')
   }, 0)
 
   return (
@@ -174,12 +226,12 @@ export default function AccountsPage() {
         </Link>
         <div className="flex-1">
           <h1 className="text-3xl font-bold">Hesaplar</h1>
-          <p className="text-muted-foreground">Banka hesaplarınızı ve e-cüzdanlarınızı yönetin</p>
+          <p className="text-muted-foreground">Tüm finansal hesaplarınızı tek yerden yönetin</p>
         </div>
       </div>
 
       {/* Özet Kartlar */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Banka Hesapları</CardTitle>
@@ -218,24 +270,51 @@ export default function AccountsPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Toplam</CardTitle>
-            <TrendingUp className="h-4 w-4 text-emerald-600" />
+            <CardTitle className="text-sm font-medium">Kredi Kartları</CardTitle>
+            <CreditCard className="h-4 w-4 text-orange-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-emerald-600">
-              {formatCurrency(totalBankBalance + totalEWalletBalance, 'TRY')}
+            <div className="text-2xl font-bold text-orange-600">
+              {formatCurrency(totalCardLimit, 'TRY')}
             </div>
-            <p className="text-xs text-muted-foreground">Toplam bakiye</p>
+            <p className="text-xs text-muted-foreground">{creditCards.length} kart</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Altın ve Ziynet</CardTitle>
+            {!isPremium && <Crown className="h-4 w-4 text-purple-600" />}
+            {isPremium && <Coins className="h-4 w-4 text-yellow-600" />}
+          </CardHeader>
+          <CardContent>
+            {isPremium ? (
+              <>
+                <div className="text-2xl font-bold text-yellow-600">
+                  {formatCurrency(totalGoldValue, 'TRY')}
+                </div>
+                <p className="text-xs text-muted-foreground">{goldItems.length} eşya</p>
+              </>
+            ) : (
+              <>
+                <div className="text-xl font-semibold text-purple-600">Premium</div>
+                <p className="text-xs text-muted-foreground">Özellik</p>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
 
       {/* Tabs */}
       <Tabs defaultValue="bank" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
           <TabsTrigger value="bank">Banka Hesapları</TabsTrigger>
           <TabsTrigger value="ewallet" disabled={!isPremium}>
             E-Cüzdanlar {!isPremium && <Crown className="ml-2 h-3 w-3" />}
+          </TabsTrigger>
+          <TabsTrigger value="cards">Kredi Kartları</TabsTrigger>
+          <TabsTrigger value="gold" disabled={!isPremium}>
+            Altın ve Ziynet {!isPremium && <Crown className="ml-2 h-3 w-3" />}
           </TabsTrigger>
         </TabsList>
 
@@ -286,7 +365,7 @@ export default function AccountsPage() {
                           <Edit className="h-4 w-4 text-blue-600" />
                         </button>
                         <button
-                          onClick={() => handleDelete(account.id, 'account')}
+                          onClick={() => void handleDelete(account.id, 'account')}
                           className="p-1 hover:bg-gray-100 rounded"
                         >
                           <Trash2 className="h-4 w-4 text-red-600" />
@@ -348,14 +427,12 @@ export default function AccountsPage() {
               <CardContent className="py-12 text-center">
                 <Crown className="mx-auto h-16 w-16 text-purple-600 mb-4" />
                 <h3 className="text-xl font-semibold text-purple-900 mb-2">Premium Özellik</h3>
-                <p className="text-purple-700 mb-6">
-                  E-Cüzdan yönetimi Premium üyelere özeldir
-                </p>
+                <p className="text-purple-700 mb-6">E-Cüzdan yönetimi Premium üyelere özeldir</p>
                 <button
                   onClick={() => router.push('/premium')}
                   className="inline-flex items-center justify-center rounded-md bg-purple-600 px-6 py-3 text-sm font-medium text-white hover:bg-purple-700"
                 >
-                  Premium'a Geç
+                  Premium&apos;a Geç
                 </button>
               </CardContent>
             </Card>
@@ -378,7 +455,10 @@ export default function AccountsPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {eWallets.map(wallet => (
-                <Card key={wallet.id} className="hover:shadow-md transition-shadow border-green-200">
+                <Card
+                  key={wallet.id}
+                  className="hover:shadow-md transition-shadow border-green-200"
+                >
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
@@ -393,7 +473,7 @@ export default function AccountsPage() {
                           <Edit className="h-4 w-4 text-blue-600" />
                         </button>
                         <button
-                          onClick={() => handleDelete(wallet.id, 'ewallet')}
+                          onClick={() => void handleDelete(wallet.id, 'ewallet')}
                           className="p-1 hover:bg-gray-100 rounded"
                         >
                           <Trash2 className="h-4 w-4 text-red-600" />
@@ -419,6 +499,151 @@ export default function AccountsPage() {
                           <strong>Telefon:</strong> {wallet.accountPhone}
                         </div>
                       )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        {/* Kredi Kartları Tab */}
+        <TabsContent value="cards" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Kredi Kartları</h2>
+            <Link href="/cards">
+              <button className="inline-flex items-center justify-center rounded-md bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700">
+                <Plus className="mr-2 h-4 w-4" />
+                Yeni Kredi Kartı Ekle
+              </button>
+            </Link>
+          </div>
+
+          {creditCards.length === 0 ? (
+            <Card>
+              <CardContent className="py-12 text-center">
+                <CreditCard className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                <p className="text-gray-500 mb-4">Henüz kredi kartı eklenmemiş</p>
+                <button
+                  onClick={() => router.push('/cards')}
+                  className="inline-flex items-center justify-center rounded-md bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  İlk Kredi Kartını Ekle
+                </button>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {creditCards.map(card => (
+                <Card key={card.id} className="hover:shadow-md transition-shadow border-orange-200">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <CardTitle className="text-lg">{card.name}</CardTitle>
+                        <CardDescription>{card.bank.name}</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div>
+                        <div className="text-2xl font-bold text-orange-600">
+                          {formatCurrency(parseFloat(card.availableLimit), card.currency.code)}
+                        </div>
+                        <p className="text-xs text-gray-500">Kullanılabilir Limit</p>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        <strong>Toplam Limit:</strong>{' '}
+                        {formatCurrency(parseFloat(card.limitAmount), card.currency.code)}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        <strong>Son Ödeme Günü:</strong> Her ayın {card.dueDay}. günü
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        {/* Altın ve Ziynet Tab */}
+        <TabsContent value="gold" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Altın ve Ziynet</h2>
+            {isPremium && (
+              <Link href="/gold/new">
+                <button className="inline-flex items-center justify-center rounded-md bg-yellow-600 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-700">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Yeni Altın Eşyası Ekle
+                </button>
+              </Link>
+            )}
+          </div>
+
+          {!isPremium ? (
+            <Card>
+              <CardContent className="py-12 text-center">
+                <Crown className="mx-auto h-16 w-16 text-purple-600 mb-4" />
+                <h3 className="text-xl font-semibold text-purple-900 mb-2">Premium Özellik</h3>
+                <p className="text-purple-700 mb-6">
+                  Altın ve ziynet takibi Premium üyelere özeldir
+                </p>
+                <button
+                  onClick={() => router.push('/premium')}
+                  className="inline-flex items-center justify-center rounded-md bg-purple-600 px-6 py-3 text-sm font-medium text-white hover:bg-purple-700"
+                >
+                  Premium&apos;a Geç
+                </button>
+              </CardContent>
+            </Card>
+          ) : goldItems.length === 0 ? (
+            <Card>
+              <CardContent className="py-12 text-center">
+                <Coins className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                <p className="text-gray-500 mb-4">Henüz altın eşyası eklenmemiş</p>
+                <button
+                  onClick={() => router.push('/gold/new')}
+                  className="inline-flex items-center justify-center rounded-md bg-yellow-600 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-700"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  İlk Altın Eşyasını Ekle
+                </button>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {goldItems.map(item => (
+                <Card key={item.id} className="hover:shadow-md transition-shadow border-yellow-200">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <CardTitle className="text-lg">{item.name}</CardTitle>
+                        <CardDescription>
+                          {item.goldType.name} - {item.goldPurity.name}
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div>
+                        <div className="text-2xl font-bold text-yellow-600">
+                          {formatCurrency(
+                            parseFloat(item.currentValueTry || item.purchasePrice),
+                            'TRY'
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-500">Güncel Değer</p>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        <strong>Ağırlık:</strong> {item.weightGrams} gram
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        <strong>Alış Fiyatı:</strong>{' '}
+                        {formatCurrency(parseFloat(item.purchasePrice), 'TRY')}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
