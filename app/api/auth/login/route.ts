@@ -1,75 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { AuthService, setAuthCookie } from '@/lib/auth'
+import { setAuthCookie } from '@/lib/auth-refactored'
+import { prisma } from '@/lib/prisma'
+import { AuthService } from '@/server/services/impl/AuthService'
+import { LoginUserDTO } from '@/server/dto/UserDTO'
+import { ExceptionMapper } from '@/server/errors'
+import { BadRequestError } from '@/server/errors'
 
-export async function POST(request: NextRequest) {
-  try {
-    const { email, password } = await request.json()
+// Bu metot kullanıcı girişi yapar (POST).
+// Girdi: NextRequest (JSON body: email, password)
+// Çıktı: NextResponse (user + session + token)
+// Hata: 400, 401, 500
+export const POST = ExceptionMapper.asyncHandler(async (request: NextRequest) => {
+  const { email, password } = await request.json()
 
-    if (!email || !password) {
-      return NextResponse.json(
-        { success: false, message: 'E-posta ve şifre gerekli' },
-        { status: 400 }
-      )
-    }
-
-    // Demo hesap kontrolü
-    const demoAccounts = [
-      { email: 'demo@giderse.com', password: 'demo123' },
-      { email: 'free@giderse.com', password: 'free123' },
-      { email: 'enterprise@giderse.com', password: 'enterprise123' },
-      { email: 'enterprise-premium@giderse.com', password: 'ultra123' }
-    ]
-
-    const demoAccount = demoAccounts.find(acc => acc.email === email && acc.password === password)
-    
-    if (demoAccount) {
-      const userAgent = request.headers.get('user-agent') || undefined
-      const ipAddress = request.headers.get('x-forwarded-for') || 
-                       request.headers.get('x-real-ip') || 
-                       '127.0.0.1'
-
-      const result = await AuthService.login(email, password, userAgent, ipAddress)
-      
-      if (result.success && result.session) {
-        // Cookie'yi ayarla
-        await setAuthCookie(result.session.token, result.session.expiresAt)
-        
-        return NextResponse.json({
-          success: true,
-          user: result.user,
-          message: 'Giriş başarılı'
-        })
-      }
-    }
-
-    // Gerçek kullanıcı girişi
-    const userAgent = request.headers.get('user-agent') || undefined
-    const ipAddress = request.headers.get('x-forwarded-for') || 
-                     request.headers.get('x-real-ip') || 
-                     '127.0.0.1'
-
-    const result = await AuthService.login(email, password, userAgent, ipAddress)
-
-    if (result.success && result.session) {
-      // Cookie'yi ayarla
-      await setAuthCookie(result.session.token, result.session.expiresAt)
-      
-      return NextResponse.json({
-        success: true,
-        user: result.user,
-        message: 'Giriş başarılı'
-      })
-    }
-
-    return NextResponse.json(
-      { success: false, message: result.error || 'Giriş başarısız' },
-      { status: 401 }
-    )
-  } catch (error) {
-    console.error('Login API error:', error)
-    return NextResponse.json(
-      { success: false, message: 'Sunucu hatası' },
-      { status: 500 }
-    )
+  if (!email || !password) {
+    throw new BadRequestError('E-posta ve şifre gereklidir')
   }
-}
+
+  // AuthService ile giriş
+  const authService = new AuthService(prisma)
+
+  const userAgent = request.headers.get('user-agent') || undefined
+  const ipAddress =
+    request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '127.0.0.1'
+
+  const loginDTO = new LoginUserDTO({ email, password })
+  const result = await authService.login(loginDTO, userAgent, ipAddress)
+
+  // Cookie ayarla
+  await setAuthCookie(result.session.token, result.session.expiresAt)
+
+  return NextResponse.json(
+    {
+      success: true,
+      user: result.user,
+      session: result.session,
+      message: 'Giriş başarılı',
+    },
+    { status: 200 }
+  )
+})

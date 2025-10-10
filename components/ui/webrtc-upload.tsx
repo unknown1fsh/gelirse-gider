@@ -1,5 +1,5 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import * as React from 'react'
+import { cn } from '@/lib/utils'
 
 const WebRTCUpload = React.forwardRef<
   HTMLDivElement,
@@ -7,7 +7,7 @@ const WebRTCUpload = React.forwardRef<
     onWebRTCSelect?: (file: File) => void
     accept?: string
   }
->(({ className, onWebRTCSelect, accept = ".sdp,.ice", ...props }, ref) => {
+>(({ className, onWebRTCSelect, accept = '.sdp,.ice', ...props }, ref) => {
   const [isDragOver, setIsDragOver] = React.useState(false)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +30,7 @@ const WebRTCUpload = React.forwardRef<
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragOver(false)
-    
+
     const files = e.dataTransfer.files
     if (files && files.length > 0) {
       onWebRTCSelect?.(files[0])
@@ -40,7 +40,7 @@ const WebRTCUpload = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("relative", className)}
+      className={cn('relative', className)}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -54,20 +54,18 @@ const WebRTCUpload = React.forwardRef<
       />
       <div
         className={cn(
-          "flex h-32 w-full items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 text-center text-sm text-muted-foreground transition-colors hover:bg-muted/80",
-          isDragOver && "border-primary bg-primary/10"
+          'flex h-32 w-full items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 text-center text-sm text-muted-foreground transition-colors hover:bg-muted/80',
+          isDragOver && 'border-primary bg-primary/10'
         )}
       >
         <div className="flex flex-col items-center gap-2">
           <span>WebRTC dosyası seçin veya buraya sürükleyin</span>
-          <span className="text-xs text-muted-foreground/70">
-            SDP, ICE formatları desteklenir
-          </span>
+          <span className="text-xs text-muted-foreground/70">SDP, ICE formatları desteklenir</span>
         </div>
       </div>
     </div>
   )
 })
-WebRTCUpload.displayName = "WebRTCUpload"
+WebRTCUpload.displayName = 'WebRTCUpload'
 
 export { WebRTCUpload }

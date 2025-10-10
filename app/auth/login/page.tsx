@@ -4,17 +4,16 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { 
-  DollarSign, 
-  Eye, 
-  EyeOff, 
-  ArrowLeft, 
-  Mail, 
-  Lock, 
+import {
+  Eye,
+  EyeOff,
+  ArrowLeft,
+  Mail,
+  Lock,
   AlertCircle,
   CheckCircle,
   Loader2,
-  Crown
+  Crown,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -23,7 +22,7 @@ export default function LoginPage() {
   const router = useRouter()
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
   })
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -62,7 +61,7 @@ export default function LoginPage() {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
@@ -70,11 +69,11 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
-      
+
       <div className="relative w-full max-w-md">
         {/* Back Button */}
         <div className="mb-6">
-          <Link 
+          <Link
             href="/landing"
             className="inline-flex items-center text-white/70 hover:text-white transition-colors"
           >
@@ -87,7 +86,7 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center space-x-3 mb-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
-              <DollarSign className="h-7 w-7 text-white" />
+              <span className="text-3xl font-bold text-white">₺</span>
             </div>
             <div>
               <h1 className="text-2xl font-bold text-white">GiderSE-Gelir</h1>
@@ -100,9 +99,7 @@ export default function LoginPage() {
         <Card className="bg-white/10 backdrop-blur-sm border-white/20 shadow-2xl">
           <CardHeader className="text-center pb-4">
             <CardTitle className="text-2xl font-bold text-white">Hoş Geldiniz</CardTitle>
-            <CardDescription className="text-slate-300">
-              Hesabınıza giriş yapın
-            </CardDescription>
+            <CardDescription className="text-slate-300">Hesabınıza giriş yapın</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {error && (
@@ -134,7 +131,7 @@ export default function LoginPage() {
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <Input
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     name="password"
                     value={formData.password}
                     onChange={handleInputChange}
@@ -160,7 +157,7 @@ export default function LoginPage() {
                   />
                   <span className="text-sm text-slate-300">Beni hatırla</span>
                 </label>
-                <Link 
+                <Link
                   href="/auth/forgot-password"
                   className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
                 >
@@ -187,7 +184,7 @@ export default function LoginPage() {
             <div className="text-center">
               <p className="text-slate-300 text-sm">
                 Hesabınız yok mu?{' '}
-                <Link 
+                <Link
                   href="/auth/register"
                   className="text-purple-400 hover:text-purple-300 font-semibold transition-colors"
                 >
@@ -205,21 +202,17 @@ export default function LoginPage() {
               <CheckCircle className="h-5 w-5 text-blue-400 mt-0.5" />
               <div>
                 <p className="text-blue-400 font-medium text-sm">Premium Demo</p>
-                <p className="text-blue-300 text-xs mt-1">
-                  demo@giderse.com / demo123
-                </p>
+                <p className="text-blue-300 text-xs mt-1">demo@giderse.com / demo123</p>
               </div>
             </div>
           </div>
-          
+
           <div className="p-4 bg-green-500/20 border border-green-500/30 rounded-lg">
             <div className="flex items-start space-x-3">
               <CheckCircle className="h-5 w-5 text-green-400 mt-0.5" />
               <div>
                 <p className="text-green-400 font-medium text-sm">Ücretsiz Demo</p>
-                <p className="text-green-300 text-xs mt-1">
-                  free@giderse.com / free123
-                </p>
+                <p className="text-green-300 text-xs mt-1">free@giderse.com / free123</p>
               </div>
             </div>
           </div>

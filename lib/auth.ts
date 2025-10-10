@@ -44,7 +44,7 @@ export class AuthService {
     try {
       // E-posta kontrolü
       const existingUser = await prisma.user.findUnique({
-        where: { email: data.email }
+        where: { email: data.email },
       })
 
       if (existingUser) {
@@ -61,8 +61,8 @@ export class AuthService {
           email: data.email,
           phone: data.phone,
           passwordHash,
-          plan: data.plan || 'free'
-        }
+          plan: data.plan || 'free',
+        },
       })
 
       // Varsayılan ücretsiz abonelik oluştur
@@ -75,8 +75,8 @@ export class AuthService {
             startDate: new Date(),
             endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 yıl
             amount: 0,
-            currency: 'TRY'
-          }
+            currency: 'TRY',
+          },
         })
       }
 
@@ -91,14 +91,14 @@ export class AuthService {
           plan: data.plan || 'free',
           isActive: user.isActive,
           createdAt: user.createdAt,
-          lastLoginAt: user.lastLoginAt
-        }
+          lastLoginAt: user.lastLoginAt,
+        },
       }
     } catch (error) {
       console.error('Register error:', error)
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Kayıt işlemi başarısız'
+        error: error instanceof Error ? error.message : 'Kayıt işlemi başarısız',
       }
     }
   }
@@ -113,9 +113,9 @@ export class AuthService {
           subscriptions: {
             where: { status: 'active' },
             orderBy: { createdAt: 'desc' },
-            take: 1
-          }
-        }
+            take: 1,
+          },
+        },
       })
 
       if (!user) {
@@ -134,10 +134,10 @@ export class AuthService {
 
       // JWT token oluştur
       const token = jwt.sign(
-        { 
-          userId: user.id, 
+        {
+          userId: user.id,
           email: user.email,
-          plan: user.subscriptions[0]?.planId || 'free'
+          plan: user.subscriptions[0]?.planId || 'free',
         },
         JWT_SECRET,
         { expiresIn: '30d' }
@@ -150,14 +150,14 @@ export class AuthService {
           token,
           expiresAt: new Date(Date.now() + SESSION_DURATION),
           userAgent,
-          ipAddress
-        }
+          ipAddress,
+        },
       })
 
       // Son giriş tarihini güncelle
       await prisma.user.update({
         where: { id: user.id },
-        data: { lastLoginAt: new Date() }
+        data: { lastLoginAt: new Date() },
       })
 
       return {
@@ -171,19 +171,19 @@ export class AuthService {
           plan: user.subscriptions[0]?.planId || 'free',
           isActive: user.isActive,
           createdAt: user.createdAt,
-          lastLoginAt: new Date()
+          lastLoginAt: new Date(),
         },
         session: {
           id: session.id,
           token: session.token,
-          expiresAt: session.expiresAt
-        }
+          expiresAt: session.expiresAt,
+        },
       }
     } catch (error) {
       console.error('Login error:', error)
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Giriş işlemi başarısız'
+        error: error instanceof Error ? error.message : 'Giriş işlemi başarısız',
       }
     }
   }
@@ -193,7 +193,7 @@ export class AuthService {
     try {
       // JWT token doğrula
       const decoded = jwt.verify(token, JWT_SECRET) as any
-      
+
       // Session'ı veritabanından kontrol et
       const session = await prisma.userSession.findUnique({
         where: { token },
@@ -203,11 +203,11 @@ export class AuthService {
               subscriptions: {
                 where: { status: 'active' },
                 orderBy: { createdAt: 'desc' },
-                take: 1
-              }
-            }
-          }
-        }
+                take: 1,
+              },
+            },
+          },
+        },
       })
 
       if (!session || !session.isActive || session.expiresAt < new Date()) {
@@ -227,7 +227,7 @@ export class AuthService {
         plan: session.user.subscriptions[0]?.planId || 'free',
         isActive: session.user.isActive,
         createdAt: session.user.createdAt,
-        lastLoginAt: session.user.lastLoginAt
+        lastLoginAt: session.user.lastLoginAt,
       }
     } catch (error) {
       console.error('Session validation error:', error)
@@ -240,7 +240,7 @@ export class AuthService {
     try {
       await prisma.userSession.updateMany({
         where: { token },
-        data: { isActive: false }
+        data: { isActive: false },
       })
 
       return { success: true }
@@ -255,7 +255,7 @@ export class AuthService {
     try {
       await prisma.userSession.updateMany({
         where: { userId },
-        data: { isActive: false }
+        data: { isActive: false },
       })
 
       return { success: true }
@@ -266,23 +266,26 @@ export class AuthService {
   }
 
   // Kullanıcı bilgilerini güncelle
-  static async updateUser(userId: number, data: {
-    name?: string
-    phone?: string
-    avatar?: string
-    timezone?: string
-    language?: string
-    currency?: string
-    dateFormat?: string
-    numberFormat?: string
-    theme?: string
-    notifications?: any
-    settings?: any
-  }) {
+  static async updateUser(
+    userId: number,
+    data: {
+      name?: string
+      phone?: string
+      avatar?: string
+      timezone?: string
+      language?: string
+      currency?: string
+      dateFormat?: string
+      numberFormat?: string
+      theme?: string
+      notifications?: any
+      settings?: any
+    }
+  ) {
     try {
       const user = await prisma.user.update({
         where: { id: userId },
-        data
+        data,
       })
 
       return {
@@ -296,14 +299,14 @@ export class AuthService {
           plan: 'free', // Bu bilgi subscription'dan alınmalı
           isActive: user.isActive,
           createdAt: user.createdAt,
-          lastLoginAt: user.lastLoginAt
-        }
+          lastLoginAt: user.lastLoginAt,
+        },
       }
     } catch (error) {
       console.error('Update user error:', error)
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Güncelleme başarısız'
+        error: error instanceof Error ? error.message : 'Güncelleme başarısız',
       }
     }
   }
@@ -312,7 +315,7 @@ export class AuthService {
   static async changePassword(userId: number, currentPassword: string, newPassword: string) {
     try {
       const user = await prisma.user.findUnique({
-        where: { id: userId }
+        where: { id: userId },
       })
 
       if (!user) {
@@ -331,7 +334,7 @@ export class AuthService {
       // Şifreyi güncelle
       await prisma.user.update({
         where: { id: userId },
-        data: { passwordHash: newPasswordHash }
+        data: { passwordHash: newPasswordHash },
       })
 
       // Tüm session'ları temizle (güvenlik için)
@@ -342,7 +345,7 @@ export class AuthService {
       console.error('Change password error:', error)
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Şifre değiştirme başarısız'
+        error: error instanceof Error ? error.message : 'Şifre değiştirme başarısız',
       }
     }
   }
@@ -352,7 +355,7 @@ export class AuthService {
 export async function getCurrentUser(request: NextRequest): Promise<User | null> {
   try {
     const token = request.cookies.get('auth-token')?.value
-    
+
     if (!token) {
       return null
     }
@@ -377,7 +380,7 @@ export async function setAuthCookie(token: string, expiresAt: Date) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    path: '/'
+    path: '/',
   })
 }
 

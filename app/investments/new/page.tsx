@@ -6,30 +6,35 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import PremiumUpgradeModal from '@/components/premium-upgrade-modal'
-import { 
-  ArrowLeft, 
-  Save, 
-  Building2, 
-  TrendingUp, 
-  PieChart, 
-  Shield, 
-  Coins, 
-  Layers, 
-  Globe, 
+import {
+  ArrowLeft,
+  Save,
+  Building2,
+  TrendingUp,
+  PieChart,
+  Shield,
+  Coins,
+  Layers,
+  Globe,
   Star,
   CheckCircle,
   AlertCircle,
   Info,
   Calculator,
   Target,
-  DollarSign,
   Calendar,
   FileText,
-  Sparkles
+  Sparkles,
 } from 'lucide-react'
 
 interface InvestmentType {
@@ -54,7 +59,7 @@ export default function NewInvestmentPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
-  
+
   const [formData, setFormData] = useState({
     type: '',
     name: '',
@@ -65,7 +70,7 @@ export default function NewInvestmentPage() {
     purchaseDate: new Date().toISOString().split('T')[0],
     description: '',
     category: '',
-    riskLevel: 'medium'
+    riskLevel: 'medium',
   })
 
   const [selectedType, setSelectedType] = useState<InvestmentType | null>(null)
@@ -175,9 +180,7 @@ export default function NewInvestmentPage() {
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               🚀 Yeni Yatırım Ekle
             </h1>
-            <p className="text-gray-600 mt-2">
-              Portföyünüze yeni bir yatırım aracı ekleyin
-            </p>
+            <p className="text-gray-600 mt-2">Portföyünüze yeni bir yatırım aracı ekleyin</p>
           </div>
         </div>
 
@@ -191,20 +194,34 @@ export default function NewInvestmentPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}>
+              <Select
+                value={formData.type}
+                onValueChange={value => setFormData(prev => ({ ...prev, type: value }))}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Yatırım türü seçin" />
                 </SelectTrigger>
                 <SelectContent>
-                  {investmentTypes.map((type) => (
+                  {investmentTypes.map(type => (
                     <SelectItem key={type.id} value={type.id}>
                       <div className="flex items-center space-x-2">
                         <span>{type.name}</span>
-                        <Badge 
-                          variant={type.riskLevel === 'low' ? 'default' : type.riskLevel === 'medium' ? 'secondary' : 'destructive'}
+                        <Badge
+                          variant={
+                            type.riskLevel === 'low'
+                              ? 'default'
+                              : type.riskLevel === 'medium'
+                                ? 'secondary'
+                                : 'destructive'
+                          }
                           className="text-xs"
                         >
-                          {type.riskLevel === 'low' ? 'Düşük' : type.riskLevel === 'medium' ? 'Orta' : 'Yüksek'} Risk
+                          {type.riskLevel === 'low'
+                            ? 'Düşük'
+                            : type.riskLevel === 'medium'
+                              ? 'Orta'
+                              : 'Yüksek'}{' '}
+                          Risk
                         </Badge>
                       </div>
                     </SelectItem>
@@ -214,7 +231,9 @@ export default function NewInvestmentPage() {
 
               {selectedType && (
                 <div className="space-y-4">
-                  <div className={`p-4 rounded-xl bg-gradient-to-r ${selectedType.color} text-white`}>
+                  <div
+                    className={`p-4 rounded-xl bg-gradient-to-r ${selectedType.color} text-white`}
+                  >
                     <h3 className="font-bold text-lg mb-2">{selectedType.name}</h3>
                     <p className="text-sm opacity-90">{selectedType.description}</p>
                   </div>
@@ -232,7 +251,9 @@ export default function NewInvestmentPage() {
                   <div className="space-y-2 p-3 bg-blue-50 rounded-lg">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Min. Tutar:</span>
-                      <span className="font-semibold">₺{selectedType.requirements.minAmount.toLocaleString()}</span>
+                      <span className="font-semibold">
+                        ₺{selectedType.requirements.minAmount.toLocaleString()}
+                      </span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Para Birimi:</span>
@@ -240,7 +261,9 @@ export default function NewInvestmentPage() {
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">İşlem Saatleri:</span>
-                      <span className="font-semibold">{selectedType.requirements.tradingHours}</span>
+                      <span className="font-semibold">
+                        {selectedType.requirements.tradingHours}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -264,7 +287,7 @@ export default function NewInvestmentPage() {
                     <Input
                       id="name"
                       value={formData.name}
-                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                      onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
                       placeholder="Örn: Apple Inc."
                       required
                     />
@@ -275,7 +298,9 @@ export default function NewInvestmentPage() {
                     <Input
                       id="symbol"
                       value={formData.symbol}
-                      onChange={(e) => setFormData(prev => ({ ...prev, symbol: e.target.value.toUpperCase() }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, symbol: e.target.value.toUpperCase() }))
+                      }
                       placeholder="Örn: AAPL"
                       required
                     />
@@ -290,7 +315,7 @@ export default function NewInvestmentPage() {
                       type="number"
                       step="0.000001"
                       value={formData.quantity}
-                      onChange={(e) => setFormData(prev => ({ ...prev, quantity: e.target.value }))}
+                      onChange={e => setFormData(prev => ({ ...prev, quantity: e.target.value }))}
                       placeholder="10"
                       required
                     />
@@ -303,7 +328,9 @@ export default function NewInvestmentPage() {
                       type="number"
                       step="0.01"
                       value={formData.purchasePrice}
-                      onChange={(e) => setFormData(prev => ({ ...prev, purchasePrice: e.target.value }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, purchasePrice: e.target.value }))
+                      }
                       placeholder="150.00"
                       required
                     />
@@ -316,7 +343,9 @@ export default function NewInvestmentPage() {
                       type="number"
                       step="0.01"
                       value={formData.currentPrice}
-                      onChange={(e) => setFormData(prev => ({ ...prev, currentPrice: e.target.value }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, currentPrice: e.target.value }))
+                      }
                       placeholder="175.50"
                       required
                     />
@@ -330,7 +359,9 @@ export default function NewInvestmentPage() {
                       id="purchaseDate"
                       type="date"
                       value={formData.purchaseDate}
-                      onChange={(e) => setFormData(prev => ({ ...prev, purchaseDate: e.target.value }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, purchaseDate: e.target.value }))
+                      }
                       required
                     />
                   </div>
@@ -340,7 +371,7 @@ export default function NewInvestmentPage() {
                     <Input
                       id="category"
                       value={formData.category}
-                      onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                      onChange={e => setFormData(prev => ({ ...prev, category: e.target.value }))}
                       placeholder="Örn: Teknoloji"
                     />
                   </div>
@@ -351,43 +382,54 @@ export default function NewInvestmentPage() {
                   <Textarea
                     id="description"
                     value={formData.description}
-                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                    onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
                     placeholder="Yatırım hakkında notlar..."
                     rows={3}
                   />
                 </div>
 
                 {/* Calculation Summary */}
-                {(formData.quantity && formData.purchasePrice && formData.currentPrice) && (
+                {formData.quantity && formData.purchasePrice && formData.currentPrice && (
                   <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
                     <CardContent className="p-6">
                       <h3 className="font-bold text-lg mb-4 flex items-center">
                         <Calculator className="h-5 w-5 mr-2 text-green-600" />
                         Hesaplama Özeti
                       </h3>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="text-center p-4 bg-white/50 rounded-lg">
                           <div className="text-2xl font-bold text-gray-800">
-                            ₺{calculateTotalValue().toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                            ₺
+                            {calculateTotalValue().toLocaleString('tr-TR', {
+                              minimumFractionDigits: 2,
+                            })}
                           </div>
                           <div className="text-sm text-gray-600">Toplam Değer</div>
                         </div>
-                        
-                        <div className={`text-center p-4 bg-white/50 rounded-lg ${
-                          calculateProfitLoss() >= 0 ? 'text-green-600' : 'text-red-600'
-                        }`}>
+
+                        <div
+                          className={`text-center p-4 bg-white/50 rounded-lg ${
+                            calculateProfitLoss() >= 0 ? 'text-green-600' : 'text-red-600'
+                          }`}
+                        >
                           <div className="text-2xl font-bold">
-                            ₺{Math.abs(calculateProfitLoss()).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                            ₺
+                            {Math.abs(calculateProfitLoss()).toLocaleString('tr-TR', {
+                              minimumFractionDigits: 2,
+                            })}
                           </div>
                           <div className="text-sm">Kar/Zarar</div>
                         </div>
-                        
-                        <div className={`text-center p-4 bg-white/50 rounded-lg ${
-                          calculateProfitLossPercentage() >= 0 ? 'text-green-600' : 'text-red-600'
-                        }`}>
+
+                        <div
+                          className={`text-center p-4 bg-white/50 rounded-lg ${
+                            calculateProfitLossPercentage() >= 0 ? 'text-green-600' : 'text-red-600'
+                          }`}
+                        >
                           <div className="text-2xl font-bold">
-                            {calculateProfitLossPercentage() >= 0 ? '+' : ''}{calculateProfitLossPercentage().toFixed(1)}%
+                            {calculateProfitLossPercentage() >= 0 ? '+' : ''}
+                            {calculateProfitLossPercentage().toFixed(1)}%
                           </div>
                           <div className="text-sm">Getiri Oranı</div>
                         </div>
@@ -436,7 +478,7 @@ export default function NewInvestmentPage() {
           limitInfo={{
             current: 0,
             limit: 5,
-            type: 'analysis'
+            type: 'analysis',
           }}
         />
       </div>

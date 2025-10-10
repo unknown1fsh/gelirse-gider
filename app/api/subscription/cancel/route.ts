@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getCurrentUser } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth-refactored'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -9,19 +9,16 @@ export async function POST(request: NextRequest) {
     const user = await getCurrentUser(request)
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, message: 'Oturum bulunamadı' },
-        { status: 401 }
-      )
+      return NextResponse.json({ success: false, message: 'Oturum bulunamadı' }, { status: 401 })
     }
 
     // Mevcut aktif aboneliği bul
     const subscription = await prisma.userSubscription.findFirst({
       where: {
         userId: user.id,
-        status: 'active'
+        status: 'active',
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     })
 
     if (!subscription) {
@@ -37,14 +34,14 @@ export async function POST(request: NextRequest) {
       data: {
         status: 'cancelled',
         cancelledAt: new Date(),
-        autoRenew: false
-      }
+        autoRenew: false,
+      },
     })
 
     // Kullanıcının planını free'e çevir
     await prisma.user.update({
       where: { id: user.id },
-      data: { plan: 'free' }
+      data: { plan: 'free' },
     })
 
     // Ücretsiz plan aboneliği oluştur
@@ -57,19 +54,16 @@ export async function POST(request: NextRequest) {
         endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 yıl
         amount: 0,
         currency: 'TRY',
-        autoRenew: false
-      }
+        autoRenew: false,
+      },
     })
 
     return NextResponse.json({
       success: true,
-      message: 'Abonelik başarıyla iptal edildi'
+      message: 'Abonelik başarıyla iptal edildi',
     })
   } catch (error) {
     console.error('Cancel subscription error:', error)
-    return NextResponse.json(
-      { success: false, message: 'Sunucu hatası' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, message: 'Sunucu hatası' }, { status: 500 })
   }
 }

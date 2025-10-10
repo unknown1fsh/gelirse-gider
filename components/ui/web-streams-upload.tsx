@@ -1,5 +1,5 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import * as React from 'react'
+import { cn } from '@/lib/utils'
 
 const WebStreamsUpload = React.forwardRef<
   HTMLDivElement,
@@ -7,7 +7,7 @@ const WebStreamsUpload = React.forwardRef<
     onWebStreamsSelect?: (file: File) => void
     accept?: string
   }
->(({ className, onWebStreamsSelect, accept = ".stream,.chunk,.blob", ...props }, ref) => {
+>(({ className, onWebStreamsSelect, accept = '.stream,.chunk,.blob', ...props }, ref) => {
   const [isDragOver, setIsDragOver] = React.useState(false)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +30,7 @@ const WebStreamsUpload = React.forwardRef<
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragOver(false)
-    
+
     const files = e.dataTransfer.files
     if (files && files.length > 0) {
       onWebStreamsSelect?.(files[0])
@@ -40,7 +40,7 @@ const WebStreamsUpload = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("relative", className)}
+      className={cn('relative', className)}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -54,8 +54,8 @@ const WebStreamsUpload = React.forwardRef<
       />
       <div
         className={cn(
-          "flex h-32 w-full items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 text-center text-sm text-muted-foreground transition-colors hover:bg-muted/80",
-          isDragOver && "border-primary bg-primary/10"
+          'flex h-32 w-full items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 text-center text-sm text-muted-foreground transition-colors hover:bg-muted/80',
+          isDragOver && 'border-primary bg-primary/10'
         )}
       >
         <div className="flex flex-col items-center gap-2">
@@ -68,6 +68,6 @@ const WebStreamsUpload = React.forwardRef<
     </div>
   )
 })
-WebStreamsUpload.displayName = "WebStreamsUpload"
+WebStreamsUpload.displayName = 'WebStreamsUpload'
 
 export { WebStreamsUpload }

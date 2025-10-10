@@ -1,38 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { getCurrentUser } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth-refactored'
 
 export async function GET(request: NextRequest) {
   try {
     // Kullanıcı doğrulama
     const user = await getCurrentUser(request)
     if (!user) {
-      return NextResponse.json(
-        { error: 'Oturum bulunamadı' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Oturum bulunamadı' }, { status: 401 })
     }
 
     const goldItems = await prisma.goldItem.findMany({
       include: {
         goldType: true,
-        goldPurity: true
+        goldPurity: true,
       },
       where: {
-        userId: user.id
+        userId: user.id,
       },
       orderBy: {
-        name: 'asc'
-      }
+        name: 'asc',
+      },
     })
 
     return NextResponse.json(goldItems)
   } catch (error) {
     console.error('Gold items API error:', error)
-    return NextResponse.json(
-      { error: 'Altın eşyaları alınamadı' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Altın eşyaları alınamadı' }, { status: 500 })
   }
 }
 
@@ -41,14 +35,11 @@ export async function POST(request: NextRequest) {
     // Kullanıcı doğrulama
     const user = await getCurrentUser(request)
     if (!user) {
-      return NextResponse.json(
-        { error: 'Oturum bulunamadı' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Oturum bulunamadı' }, { status: 401 })
     }
 
     const body = await request.json()
-    
+
     const goldItem = await prisma.goldItem.create({
       data: {
         userId: user.id,
@@ -59,20 +50,17 @@ export async function POST(request: NextRequest) {
         purchasePrice: body.purchasePrice || 0,
         purchaseDate: new Date(),
         currentValueTry: body.purchasePrice || 0, // Başlangıçta alış fiyatı ile aynı
-        description: body.description || null
+        description: body.description || null,
       },
       include: {
         goldType: true,
-        goldPurity: true
-      }
+        goldPurity: true,
+      },
     })
 
     return NextResponse.json(goldItem, { status: 201 })
   } catch (error) {
     console.error('Gold item creation error:', error)
-    return NextResponse.json(
-      { error: 'Altın eşyası oluşturulamadı' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Altın eşyası oluşturulamadı' }, { status: 500 })
   }
 }

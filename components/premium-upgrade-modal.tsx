@@ -2,16 +2,22 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Crown, 
-  Sparkles, 
-  Zap, 
-  CheckCircle, 
-  ArrowRight, 
+import {
+  Crown,
+  Sparkles,
+  Zap,
+  CheckCircle,
+  ArrowRight,
   X,
   Star,
   Rocket,
@@ -20,7 +26,7 @@ import {
   BarChart3,
   Download,
   Brain,
-  Target
+  Target,
 } from 'lucide-react'
 
 interface PremiumUpgradeModalProps {
@@ -34,11 +40,11 @@ interface PremiumUpgradeModalProps {
   }
 }
 
-export default function PremiumUpgradeModal({ 
-  isOpen, 
-  onClose, 
-  featureName = "Premium Özellik",
-  limitInfo 
+export default function PremiumUpgradeModal({
+  isOpen,
+  onClose,
+  featureName = 'Premium Özellik',
+  limitInfo,
 }: PremiumUpgradeModalProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
@@ -72,7 +78,7 @@ export default function PremiumUpgradeModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white">
         <div className="relative">
           {/* Close Button */}
           <button
@@ -106,12 +112,13 @@ export default function PremiumUpgradeModal({
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-red-800 mb-1">
-                      Limit Uyarısı
-                    </h3>
+                    <h3 className="text-lg font-semibold text-red-800 mb-1">Limit Uyarısı</h3>
                     <p className="text-red-700">
                       {limitInfo.type === 'transaction' && (
-                        <>Kullandığınız: <span className="font-bold">{limitInfo.current}</span> / {limitInfo.limit} işlem</>
+                        <>
+                          Kullandığınız: <span className="font-bold">{limitInfo.current}</span> /{' '}
+                          {limitInfo.limit} işlem
+                        </>
                       )}
                       {limitInfo.type !== 'transaction' && (
                         <>Bu özellik Premium üyelik gerektirir</>
@@ -210,7 +217,7 @@ export default function PremiumUpgradeModal({
               </div>
               <div className="text-4xl font-bold mb-2">₺250</div>
               <div className="text-purple-100 mb-6">/ ay</div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mb-6">
                 <div className="flex items-center justify-center space-x-2">
                   <Star className="h-4 w-4" />
@@ -249,7 +256,7 @@ export default function PremiumUpgradeModal({
                 </>
               )}
             </Button>
-            
+
             <Button
               onClick={onClose}
               variant="outline"

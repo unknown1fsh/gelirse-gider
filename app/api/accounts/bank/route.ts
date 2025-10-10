@@ -5,16 +5,16 @@ export async function GET() {
   try {
     const bankAccounts = await prisma.account.findMany({
       where: {
-        active: true
+        active: true,
       },
       include: {
         accountType: true,
         bank: true,
-        currency: true
+        currency: true,
       },
       orderBy: {
-        createdAt: 'desc'
-      }
+        createdAt: 'desc',
+      },
     })
 
     // Veriyi frontend için uygun formata dönüştür
@@ -27,30 +27,27 @@ export async function GET() {
       iban: account.iban,
       accountType: {
         id: account.accountType.id,
-        name: account.accountType.name
+        name: account.accountType.name,
       },
       bank: {
         id: account.bank.id,
         name: account.bank.name,
-        asciiName: account.bank.asciiName
+        asciiName: account.bank.asciiName,
       },
       currency: {
         id: account.currency.id,
         code: account.currency.code,
         name: account.currency.name,
-        symbol: account.currency.symbol
+        symbol: account.currency.symbol,
       },
       createdAt: account.createdAt.toISOString(),
-      updatedAt: account.updatedAt.toISOString()
+      updatedAt: account.updatedAt.toISOString(),
     }))
 
     return NextResponse.json(formattedAccounts)
   } catch (error) {
     console.error('Banka hesapları yüklenirken hata:', error)
-    return NextResponse.json(
-      { error: 'Banka hesapları yüklenirken hata oluştu' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Banka hesapları yüklenirken hata oluştu' }, { status: 500 })
   }
 }
 
@@ -67,21 +64,18 @@ export async function POST(request: Request) {
         currencyId: parseInt(currencyId),
         balance: parseFloat(balance),
         accountNumber,
-        iban
+        iban,
       },
       include: {
         accountType: true,
         bank: true,
-        currency: true
-      }
+        currency: true,
+      },
     })
 
     return NextResponse.json(newAccount, { status: 201 })
   } catch (error) {
     console.error('Banka hesabı oluşturulurken hata:', error)
-    return NextResponse.json(
-      { error: 'Banka hesabı oluşturulurken hata oluştu' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Banka hesabı oluşturulurken hata oluştu' }, { status: 500 })
   }
 }

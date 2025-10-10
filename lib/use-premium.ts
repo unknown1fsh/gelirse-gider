@@ -14,35 +14,35 @@ export function usePremium() {
 
   const requirePremium = (callback?: () => void) => {
     if (loading) return false
-    
+
     if (!isPremium && !isEnterprise && !isEnterprisePremium) {
       // Free kullanıcıyı premium sayfasına yönlendir
       router.push('/premium')
       return false
     }
-    
+
     // Premium veya Enterprise kullanıcı için callback'i çalıştır
     if (callback) {
       callback()
     }
-    
+
     return true
   }
 
   const handlePremiumFeature = (featureName: string, callback?: () => void) => {
     if (loading) return false
-    
+
     if (!isPremium && !isEnterprise && !isEnterprisePremium) {
       // Free kullanıcıyı premium sayfasına yönlendir
       router.push(`/premium?feature=${encodeURIComponent(featureName)}`)
       return false
     }
-    
+
     // Premium veya Enterprise kullanıcı için callback'i çalıştır
     if (callback) {
       callback()
     }
-    
+
     return true
   }
 
@@ -53,6 +53,6 @@ export function usePremium() {
     isEnterprisePremium,
     loading,
     requirePremium,
-    handlePremiumFeature
+    handlePremiumFeature,
   }
 }

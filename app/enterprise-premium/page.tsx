@@ -6,15 +6,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useUser } from '@/lib/user-context'
-import { 
-  Building2, 
-  Users, 
-  Shield, 
-  Zap, 
-  BarChart3, 
-  Globe, 
-  Headphones, 
-  Check, 
+import {
+  Building2,
+  Users,
+  Shield,
+  Zap,
+  BarChart3,
+  Globe,
+  Headphones,
+  Check,
   ArrowRight,
   Star,
   Award,
@@ -655,7 +655,7 @@ import {
   Moscovium,
   Livermorium,
   Tennessine,
-  Oganesson
+  Oganesson,
 } from 'lucide-react'
 
 export default function EnterprisePremiumPage() {
@@ -668,7 +668,7 @@ export default function EnterprisePremiumPage() {
     email: '',
     company: '',
     phone: '',
-    message: ''
+    message: '',
   })
 
   const isAlreadyEnterprisePremium = user?.plan === 'enterprise_premium'
@@ -682,9 +682,14 @@ export default function EnterprisePremiumPage() {
         <div className="absolute -bottom-60 -left-60 w-96 h-96 bg-gradient-to-br from-purple-500/30 to-pink-600/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
         <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-br from-emerald-500/20 to-teal-600/20 rounded-full blur-3xl animate-pulse delay-2000"></div>
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 rounded-full blur-3xl animate-pulse delay-3000"></div>
-        
+
         {/* Grid pattern overlay */}
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        ></div>
       </div>
 
       {/* Floating Tech Elements */}
@@ -697,7 +702,7 @@ export default function EnterprisePremiumPage() {
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${3 + Math.random() * 4}s`
+              animationDuration: `${3 + Math.random() * 4}s`,
             }}
           ></div>
         ))}
@@ -725,11 +730,15 @@ export default function EnterprisePremiumPage() {
             </h1>
 
             <div className="text-2xl md:text-3xl text-amber-100 max-w-5xl mx-auto mb-16 leading-relaxed">
-              <span className="font-bold text-amber-400">Dünyanın en güçlü finansal platformu.</span>
+              <span className="font-bold text-amber-400">
+                Dünyanın en güçlü finansal platformu.
+              </span>
               <br />
               <span className="text-white">AI, Blockchain, IoT, Quantum Computing</span>
               <br />
-              <span className="text-cyan-400 font-bold">ve Siber Güvenlik teknolojileri ile donatılmış.</span>
+              <span className="text-cyan-400 font-bold">
+                ve Siber Güvenlik teknolojileri ile donatılmış.
+              </span>
             </div>
 
             {/* Ultra Action Buttons */}
@@ -742,7 +751,7 @@ export default function EnterprisePremiumPage() {
                 <Rocket className="h-8 w-8 mr-4" />
                 ULTRA PREMIUM'U BAŞLAT
               </Button>
-              
+
               <Button
                 size="lg"
                 variant="outline"
@@ -819,7 +828,8 @@ export default function EnterprisePremiumPage() {
                     Çok Boyutlu İşletme Yönetimi
                   </h3>
                   <p className="text-xl text-amber-100 max-w-4xl mx-auto">
-                    Sınırsız şirket, şube ve iş birimi yönetimi ile global operasyonlarınızı kontrol edin
+                    Sınırsız şirket, şube ve iş birimi yönetimi ile global operasyonlarınızı kontrol
+                    edin
                   </p>
                 </div>
 
@@ -827,31 +837,37 @@ export default function EnterprisePremiumPage() {
                   {[
                     {
                       icon: Building2,
-                      title: "Çoklu Şirket Konsolidasyonu",
-                      description: "Holding, ana şirket ve yan kuruluşların tek platformda yönetimi",
-                      color: "from-amber-500 to-orange-600"
+                      title: 'Çoklu Şirket Konsolidasyonu',
+                      description:
+                        'Holding, ana şirket ve yan kuruluşların tek platformda yönetimi',
+                      color: 'from-amber-500 to-orange-600',
                     },
                     {
                       icon: Users,
-                      title: "Sınırsız Departman Yönetimi",
-                      description: "Finans, IT, İK, Operasyon departmanları için ayrı erişim",
-                      color: "from-amber-500 to-orange-600"
+                      title: 'Sınırsız Departman Yönetimi',
+                      description: 'Finans, IT, İK, Operasyon departmanları için ayrı erişim',
+                      color: 'from-amber-500 to-orange-600',
                     },
                     {
                       icon: UserCheck,
-                      title: "Hiyerarşik Yetki Sistemi",
-                      description: "CEO, CFO, Müdür, Uzman seviyeli detaylı yetkilendirme",
-                      color: "from-amber-500 to-orange-600"
+                      title: 'Hiyerarşik Yetki Sistemi',
+                      description: 'CEO, CFO, Müdür, Uzman seviyeli detaylı yetkilendirme',
+                      color: 'from-amber-500 to-orange-600',
                     },
                     {
                       icon: Globe,
-                      title: "Global Şube Ağı",
-                      description: "Dünya çapında şube, fabrika ve ofis yönetimi",
-                      color: "from-amber-500 to-orange-600"
-                    }
+                      title: 'Global Şube Ağı',
+                      description: 'Dünya çapında şube, fabrika ve ofis yönetimi',
+                      color: 'from-amber-500 to-orange-600',
+                    },
                   ].map((feature, index) => (
-                    <div key={index} className="group bg-gradient-to-br from-amber-500/20 to-orange-500/20 backdrop-blur-sm rounded-3xl p-8 border-2 border-amber-500/30 hover:scale-105 transition-all duration-300 shadow-2xl">
-                      <div className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform shadow-xl`}>
+                    <div
+                      key={index}
+                      className="group bg-gradient-to-br from-amber-500/20 to-orange-500/20 backdrop-blur-sm rounded-3xl p-8 border-2 border-amber-500/30 hover:scale-105 transition-all duration-300 shadow-2xl"
+                    >
+                      <div
+                        className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform shadow-xl`}
+                      >
                         <feature.icon className="h-8 w-8 text-white" />
                       </div>
                       <h4 className="text-xl font-black text-white mb-4">{feature.title}</h4>
@@ -868,9 +884,7 @@ export default function EnterprisePremiumPage() {
                     <Shield className="h-8 w-8 text-red-400" />
                     <span className="text-2xl font-black text-red-400">🔒 ENTERPRISE GÜVENLİK</span>
                   </div>
-                  <h3 className="text-3xl font-black text-white mb-6">
-                    Quantum Seviye Güvenlik
-                  </h3>
+                  <h3 className="text-3xl font-black text-white mb-6">Quantum Seviye Güvenlik</h3>
                   <p className="text-xl text-red-100 max-w-4xl mx-auto">
                     Askeri seviye şifreleme, sıfır güven mimarisi ve quantum dirençli güvenlik
                   </p>
@@ -880,31 +894,36 @@ export default function EnterprisePremiumPage() {
                   {[
                     {
                       icon: Shield,
-                      title: "Kurumsal Quantum Şifreleme",
-                      description: "Bankacılık seviyesi quantum dirençli şifreleme teknolojisi",
-                      color: "from-red-500 to-rose-600"
+                      title: 'Kurumsal Quantum Şifreleme',
+                      description: 'Bankacılık seviyesi quantum dirençli şifreleme teknolojisi',
+                      color: 'from-red-500 to-rose-600',
                     },
                     {
                       icon: Lock,
-                      title: "Enterprise Sıfır Güven",
-                      description: "Çok faktörlü kimlik doğrulama ve mikro segmentasyon",
-                      color: "from-red-500 to-rose-600"
+                      title: 'Enterprise Sıfır Güven',
+                      description: 'Çok faktörlü kimlik doğrulama ve mikro segmentasyon',
+                      color: 'from-red-500 to-rose-600',
                     },
                     {
                       icon: Eye,
-                      title: "Siber Tehdit İzleme",
-                      description: "AI destekli siber güvenlik operasyon merkezi (SOC)",
-                      color: "from-red-500 to-rose-600"
+                      title: 'Siber Tehdit İzleme',
+                      description: 'AI destekli siber güvenlik operasyon merkezi (SOC)',
+                      color: 'from-red-500 to-rose-600',
                     },
                     {
                       icon: Database,
-                      title: "Uyumluluk Yönetimi",
-                      description: "GDPR, KVKK, SOX, PCI DSS otomatik uyumluluk raporlama",
-                      color: "from-red-500 to-rose-600"
-                    }
+                      title: 'Uyumluluk Yönetimi',
+                      description: 'GDPR, KVKK, SOX, PCI DSS otomatik uyumluluk raporlama',
+                      color: 'from-red-500 to-rose-600',
+                    },
                   ].map((feature, index) => (
-                    <div key={index} className="group bg-gradient-to-br from-red-500/20 to-rose-500/20 backdrop-blur-sm rounded-3xl p-8 border-2 border-red-500/30 hover:scale-105 transition-all duration-300 shadow-2xl">
-                      <div className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform shadow-xl`}>
+                    <div
+                      key={index}
+                      className="group bg-gradient-to-br from-red-500/20 to-rose-500/20 backdrop-blur-sm rounded-3xl p-8 border-2 border-red-500/30 hover:scale-105 transition-all duration-300 shadow-2xl"
+                    >
+                      <div
+                        className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform shadow-xl`}
+                      >
                         <feature.icon className="h-8 w-8 text-white" />
                       </div>
                       <h4 className="text-xl font-black text-white mb-4">{feature.title}</h4>
@@ -921,9 +940,7 @@ export default function EnterprisePremiumPage() {
                     <Brain className="h-8 w-8 text-purple-400" />
                     <span className="text-2xl font-black text-purple-400">🤖 AI SÜPER ZEKA</span>
                   </div>
-                  <h3 className="text-3xl font-black text-white mb-6">
-                    Yapay Zeka Süper Zekası
-                  </h3>
+                  <h3 className="text-3xl font-black text-white mb-6">Yapay Zeka Süper Zekası</h3>
                   <p className="text-xl text-purple-100 max-w-4xl mx-auto">
                     Gelişmiş makine öğrenmesi, tahmin analitikleri ve gerçek zamanlı öngörüler
                   </p>
@@ -933,31 +950,39 @@ export default function EnterprisePremiumPage() {
                   {[
                     {
                       icon: Brain,
-                      title: "Kurumsal AI Süper Zeka",
-                      description: "İşletme operasyonları için özel eğitilmiş makine öğrenmesi modelleri",
-                      color: "from-purple-500 to-pink-600"
+                      title: 'Kurumsal AI Süper Zeka',
+                      description:
+                        'İşletme operasyonları için özel eğitilmiş makine öğrenmesi modelleri',
+                      color: 'from-purple-500 to-pink-600',
                     },
                     {
                       icon: BarChart3,
-                      title: "Kurumsal Gelir Optimizasyonu",
-                      description: "Pazar analizi, müşteri segmentasyonu ve gelir artırma stratejileri",
-                      color: "from-purple-500 to-pink-600"
+                      title: 'Kurumsal Gelir Optimizasyonu',
+                      description:
+                        'Pazar analizi, müşteri segmentasyonu ve gelir artırma stratejileri',
+                      color: 'from-purple-500 to-pink-600',
                     },
                     {
                       icon: TrendingUp,
-                      title: "Operasyonel Verimlilik",
-                      description: "Üretim, lojistik ve tedarik zinciri optimizasyonu ve maliyet azaltma",
-                      color: "from-purple-500 to-pink-600"
+                      title: 'Operasyonel Verimlilik',
+                      description:
+                        'Üretim, lojistik ve tedarik zinciri optimizasyonu ve maliyet azaltma',
+                      color: 'from-purple-500 to-pink-600',
                     },
                     {
                       icon: Bot,
-                      title: "Kurumsal Süreç Otomasyonu",
-                      description: "RPA ve AI destekli kurumsal süreç otomasyonu ve iş akışları",
-                      color: "from-purple-500 to-pink-600"
-                    }
+                      title: 'Kurumsal Süreç Otomasyonu',
+                      description: 'RPA ve AI destekli kurumsal süreç otomasyonu ve iş akışları',
+                      color: 'from-purple-500 to-pink-600',
+                    },
                   ].map((feature, index) => (
-                    <div key={index} className="group bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-3xl p-8 border-2 border-purple-500/30 hover:scale-105 transition-all duration-300 shadow-2xl">
-                      <div className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform shadow-xl`}>
+                    <div
+                      key={index}
+                      className="group bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-3xl p-8 border-2 border-purple-500/30 hover:scale-105 transition-all duration-300 shadow-2xl"
+                    >
+                      <div
+                        className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform shadow-xl`}
+                      >
                         <feature.icon className="h-8 w-8 text-white" />
                       </div>
                       <h4 className="text-xl font-black text-white mb-4">{feature.title}</h4>
@@ -974,9 +999,7 @@ export default function EnterprisePremiumPage() {
                     <Globe className="h-8 w-8 text-cyan-400" />
                     <span className="text-2xl font-black text-cyan-400">🌐 GLOBAL ALTYAPI</span>
                   </div>
-                  <h3 className="text-3xl font-black text-white mb-6">
-                    Dünya Çapında Altyapı
-                  </h3>
+                  <h3 className="text-3xl font-black text-white mb-6">Dünya Çapında Altyapı</h3>
                   <p className="text-xl text-cyan-100 max-w-4xl mx-auto">
                     Dünya çapında altyapı, çoklu para birimi, çoklu dil ve 7/24 global destek
                   </p>
@@ -986,31 +1009,36 @@ export default function EnterprisePremiumPage() {
                   {[
                     {
                       icon: Globe,
-                      title: "Global İş Ağı",
-                      description: "Dünya çapında şube, fabrika ve ofis koordinasyonu",
-                      color: "from-cyan-500 to-blue-600"
+                      title: 'Global İş Ağı',
+                      description: 'Dünya çapında şube, fabrika ve ofis koordinasyonu',
+                      color: 'from-cyan-500 to-blue-600',
                     },
                     {
                       icon: Cloud,
-                      title: "Enterprise Bulut Altyapısı",
-                      description: "Yüksek performanslı kurumsal bulut işlem platformu",
-                      color: "from-cyan-500 to-blue-600"
+                      title: 'Enterprise Bulut Altyapısı',
+                      description: 'Yüksek performanslı kurumsal bulut işlem platformu',
+                      color: 'from-cyan-500 to-blue-600',
                     },
                     {
                       icon: Wifi,
-                      title: "Çoklu Para Birimi Yönetimi",
-                      description: "Global ticaret için 150+ para birimi ve döviz kuru yönetimi",
-                      color: "from-cyan-500 to-blue-600"
+                      title: 'Çoklu Para Birimi Yönetimi',
+                      description: 'Global ticaret için 150+ para birimi ve döviz kuru yönetimi',
+                      color: 'from-cyan-500 to-blue-600',
                     },
                     {
                       icon: Headphones,
-                      title: "VIP Kurumsal Destek",
-                      description: "Dedicated hesap yöneticisi ve 7/24 premium kurumsal destek",
-                      color: "from-cyan-500 to-blue-600"
-                    }
+                      title: 'VIP Kurumsal Destek',
+                      description: 'Dedicated hesap yöneticisi ve 7/24 premium kurumsal destek',
+                      color: 'from-cyan-500 to-blue-600',
+                    },
                   ].map((feature, index) => (
-                    <div key={index} className="group bg-gradient-to-br from-cyan-500/20 to-blue-500/20 backdrop-blur-sm rounded-3xl p-8 border-2 border-cyan-500/30 hover:scale-105 transition-all duration-300 shadow-2xl">
-                      <div className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform shadow-xl`}>
+                    <div
+                      key={index}
+                      className="group bg-gradient-to-br from-cyan-500/20 to-blue-500/20 backdrop-blur-sm rounded-3xl p-8 border-2 border-cyan-500/30 hover:scale-105 transition-all duration-300 shadow-2xl"
+                    >
+                      <div
+                        className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform shadow-xl`}
+                      >
                         <feature.icon className="h-8 w-8 text-white" />
                       </div>
                       <h4 className="text-xl font-black text-white mb-4">{feature.title}</h4>
@@ -1025,13 +1053,16 @@ export default function EnterprisePremiumPage() {
                 <div className="text-center mb-16">
                   <div className="inline-flex items-center space-x-4 px-8 py-4 bg-gradient-to-r from-yellow-500/30 to-amber-500/30 backdrop-blur-sm rounded-full border-2 border-yellow-500/50 mb-8 shadow-2xl">
                     <TrendingUp className="h-8 w-8 text-yellow-400" />
-                    <span className="text-2xl font-black text-yellow-400">💰 KURUMSAL GELİR ARTTIRMA</span>
+                    <span className="text-2xl font-black text-yellow-400">
+                      💰 KURUMSAL GELİR ARTTIRMA
+                    </span>
                   </div>
                   <h3 className="text-3xl font-black text-white mb-6">
                     Kurumsal Gelir Artırma Stratejileri
                   </h3>
                   <p className="text-xl text-yellow-100 max-w-4xl mx-auto">
-                    AI destekli kurumsal gelir artırma, pazar genişletme ve operasyonel büyüme stratejileri
+                    AI destekli kurumsal gelir artırma, pazar genişletme ve operasyonel büyüme
+                    stratejileri
                   </p>
                 </div>
 
@@ -1039,31 +1070,37 @@ export default function EnterprisePremiumPage() {
                   {[
                     {
                       icon: TrendingUp,
-                      title: "Pazar Genişletme",
-                      description: "Yeni pazar segmentleri ve coğrafi bölgeler için strateji geliştirme",
-                      color: "from-yellow-500 to-amber-600"
+                      title: 'Pazar Genişletme',
+                      description:
+                        'Yeni pazar segmentleri ve coğrafi bölgeler için strateji geliştirme',
+                      color: 'from-yellow-500 to-amber-600',
                     },
                     {
                       icon: Target,
-                      title: "Müşteri Segmentasyonu",
-                      description: "AI destekli müşteri analizi ve kişiselleştirilmiş pazarlama",
-                      color: "from-yellow-500 to-amber-600"
+                      title: 'Müşteri Segmentasyonu',
+                      description: 'AI destekli müşteri analizi ve kişiselleştirilmiş pazarlama',
+                      color: 'from-yellow-500 to-amber-600',
                     },
                     {
                       icon: BarChart3,
-                      title: "Ürün Portföy Optimizasyonu",
-                      description: "Kurumsal ürün portföyü analizi ve gelir optimizasyonu",
-                      color: "from-yellow-500 to-amber-600"
+                      title: 'Ürün Portföy Optimizasyonu',
+                      description: 'Kurumsal ürün portföyü analizi ve gelir optimizasyonu',
+                      color: 'from-yellow-500 to-amber-600',
                     },
                     {
                       icon: Building2,
-                      title: "Kurumsal Ortaklıklar",
-                      description: "Stratejik iş ortaklıkları ve sinerji yaratma fırsatları",
-                      color: "from-yellow-500 to-amber-600"
-                    }
+                      title: 'Kurumsal Ortaklıklar',
+                      description: 'Stratejik iş ortaklıkları ve sinerji yaratma fırsatları',
+                      color: 'from-yellow-500 to-amber-600',
+                    },
                   ].map((feature, index) => (
-                    <div key={index} className="group bg-gradient-to-br from-yellow-500/20 to-amber-500/20 backdrop-blur-sm rounded-3xl p-8 border-2 border-yellow-500/30 hover:scale-105 transition-all duration-300 shadow-2xl">
-                      <div className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform shadow-xl`}>
+                    <div
+                      key={index}
+                      className="group bg-gradient-to-br from-yellow-500/20 to-amber-500/20 backdrop-blur-sm rounded-3xl p-8 border-2 border-yellow-500/30 hover:scale-105 transition-all duration-300 shadow-2xl"
+                    >
+                      <div
+                        className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform shadow-xl`}
+                      >
                         <feature.icon className="h-8 w-8 text-white" />
                       </div>
                       <h4 className="text-xl font-black text-white mb-4">{feature.title}</h4>
@@ -1078,11 +1115,11 @@ export default function EnterprisePremiumPage() {
                 <div className="text-center mb-16">
                   <div className="inline-flex items-center space-x-4 px-8 py-4 bg-gradient-to-r from-emerald-500/30 to-teal-500/30 backdrop-blur-sm rounded-full border-2 border-emerald-500/50 mb-8 shadow-2xl">
                     <BarChart3 className="h-8 w-8 text-emerald-400" />
-                    <span className="text-2xl font-black text-emerald-400">📈 İŞ ZEKASI & ANALYTICS</span>
+                    <span className="text-2xl font-black text-emerald-400">
+                      📈 İŞ ZEKASI & ANALYTICS
+                    </span>
                   </div>
-                  <h3 className="text-3xl font-black text-white mb-6">
-                    Gelişmiş İş Zekası
-                  </h3>
+                  <h3 className="text-3xl font-black text-white mb-6">Gelişmiş İş Zekası</h3>
                   <p className="text-xl text-emerald-100 max-w-4xl mx-auto">
                     Gelişmiş raporlama, API erişimi, özel entegrasyonlar ve iş zekası araçları
                   </p>
@@ -1092,31 +1129,36 @@ export default function EnterprisePremiumPage() {
                   {[
                     {
                       icon: BarChart3,
-                      title: "Kurumsal Dashboard",
+                      title: 'Kurumsal Dashboard',
                       description: "CEO/CFO seviyesi yönetim dashboard'ları ve KPI raporları",
-                      color: "from-emerald-500 to-teal-600"
+                      color: 'from-emerald-500 to-teal-600',
                     },
                     {
                       icon: Database,
-                      title: "Enterprise API",
-                      description: "ERP, CRM, muhasebe sistemleri ile tam entegrasyon",
-                      color: "from-emerald-500 to-teal-600"
+                      title: 'Enterprise API',
+                      description: 'ERP, CRM, muhasebe sistemleri ile tam entegrasyon',
+                      color: 'from-emerald-500 to-teal-600',
                     },
                     {
                       icon: Settings,
-                      title: "Özel Sistem Entegrasyonları",
-                      description: "SAP, Oracle, Microsoft Dynamics ile özel entegrasyon",
-                      color: "from-emerald-500 to-teal-600"
+                      title: 'Özel Sistem Entegrasyonları',
+                      description: 'SAP, Oracle, Microsoft Dynamics ile özel entegrasyon',
+                      color: 'from-emerald-500 to-teal-600',
                     },
                     {
                       icon: FileText,
-                      title: "Beyaz Etiket Çözümü",
-                      description: "Kendi markanızla özelleştirilebilir kurumsal platform",
-                      color: "from-emerald-500 to-teal-600"
-                    }
+                      title: 'Beyaz Etiket Çözümü',
+                      description: 'Kendi markanızla özelleştirilebilir kurumsal platform',
+                      color: 'from-emerald-500 to-teal-600',
+                    },
                   ].map((feature, index) => (
-                    <div key={index} className="group bg-gradient-to-br from-emerald-500/20 to-teal-500/20 backdrop-blur-sm rounded-3xl p-8 border-2 border-emerald-500/30 hover:scale-105 transition-all duration-300 shadow-2xl">
-                      <div className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform shadow-xl`}>
+                    <div
+                      key={index}
+                      className="group bg-gradient-to-br from-emerald-500/20 to-teal-500/20 backdrop-blur-sm rounded-3xl p-8 border-2 border-emerald-500/30 hover:scale-105 transition-all duration-300 shadow-2xl"
+                    >
+                      <div
+                        className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform shadow-xl`}
+                      >
                         <feature.icon className="h-8 w-8 text-white" />
                       </div>
                       <h4 className="text-xl font-black text-white mb-4">{feature.title}</h4>
@@ -1135,10 +1177,14 @@ export default function EnterprisePremiumPage() {
             <div className="bg-gradient-to-r from-amber-500/30 to-orange-500/30 backdrop-blur-sm rounded-3xl p-16 border-2 border-amber-500/50 shadow-2xl">
               <h2 className="text-5xl md:text-7xl font-black text-white mb-8">
                 ULTRA GÜÇ İÇİN
-                <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent"> HAZIR MISINIZ?</span>
+                <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+                  {' '}
+                  HAZIR MISINIZ?
+                </span>
               </h2>
               <p className="text-2xl text-amber-100 mb-12 max-w-4xl mx-auto">
-                Dünyanın en güçlü şirketlerinin kullandığı Ultra Premium Kurumsal çözümlerimize katılın
+                Dünyanın en güçlü şirketlerinin kullandığı Ultra Premium Kurumsal çözümlerimize
+                katılın
               </p>
               <div className="flex flex-col sm:flex-row gap-8 justify-center">
                 <Button

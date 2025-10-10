@@ -12,6 +12,25 @@ datasource db {
 
 // Reference Tables
 
+// Sistem Parametreleri - Merkezi parametre yönetimi
+model SystemParameter {
+  id           Int      @id @default(autoincrement())
+  paramGroup   String   @map("param_group") @db.VarChar(50)  // BANK, GOLD_TYPE, ACCOUNT_TYPE vb
+  paramCode    String   @map("param_code") @db.VarChar(50)   // Parametre kodu
+  paramValue   String   @map("param_value") @db.VarChar(255) // Parametre değeri
+  displayName  String   @map("display_name") @db.VarChar(100) // Gösterim adı
+  description  String?  @db.Text                              // Açıklama
+  displayOrder Int      @default(0) @map("display_order")    // Sıralama
+  metadata     Json?    @default("{}")                        // Ek bilgiler (JSON)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@unique([paramGroup, paramCode])
+  @@index([paramGroup, isActive])
+  @@map("system_parameter")
+}
+
 model RefCurrency {
   id        Int      @id @default(autoincrement())
   code      String   @unique @db.VarChar(3)
@@ -24,6 +43,8 @@ model RefCurrency {
   // Relations
   accounts         Account[]
   creditCards      CreditCard[]
+  eWallets         EWallet[]
+  investments      Investment[]
   transactions     Transaction[]
   autoPayments     AutoPayment[]
   fxRatesFrom      FxRate[] @relation("FromCurrency")
@@ -51,6 +72,8 @@ model RefTxType {
   id        Int      @id @default(autoincrement())
   code      String   @unique @db.VarChar(10)
   name      String   @db.VarChar(20)
+  icon      String?  @db.VarChar(50)
+  color     String?  @db.VarChar(20)
   active    Boolean  @default(true)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -63,14 +86,17 @@ model RefTxType {
 }
 
 model RefTxCategory {
-  id         Int      @id @default(autoincrement())
-  txTypeId   Int      @map("tx_type_id")
-  code       String   @db.VarChar(30)
-  name       String   @db.VarChar(50)
+  id          Int      @id @default(autoincrement())
+  txTypeId    Int      @map("tx_type_id")
+  code        String   @db.VarChar(30)
+  name        String   @db.VarChar(50)
   description String?
-  active     Boolean  @default(true)
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  icon        String?  @db.VarChar(50)
+  color       String?  @db.VarChar(20)
+  isDefault   Boolean  @default(false) @map("is_default")
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   // Relations
   txType       RefTxType      @relation(fields: [txTypeId], references: [id])
@@ -139,8 +165,9 @@ model RefBank {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  accounts    Account[]
-  creditCards CreditCard[]
+  accounts      Account[]
+  creditCards   CreditCard[]
+  beneficiaries Beneficiary[]
 
   @@map("ref_bank")
 }
@@ -174,9 +201,12 @@ model User {
   subscriptions     UserSubscription[]
   accounts          Account[]
   creditCards       CreditCard[]
+  eWallets          EWallet[]
+  beneficiaries     Beneficiary[]
   transactions      Transaction[]
   autoPayments      AutoPayment[]
   goldItems         GoldItem[]
+  investments       Investment[]
   portfolioSnapshots PortfolioSnapshot[]
 
   @@map("user")
@@ -273,6 +303,53 @@ model CreditCard {
   @@map("credit_card")
 }
 
+// E-Cüzdanlar (PayPal, Papara, Ininal, vb.)
+model EWallet {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @map("user_id")
+  name         String   @db.VarChar(100) // "PayPal Hesabım", "Papara", vb.
+  provider     String   @db.VarChar(50)  // "PayPal", "Papara", "Ininal", vb.
+  accountEmail String?  @map("account_email") @db.VarChar(255)
+  accountPhone String?  @map("account_phone") @db.VarChar(20)
+  balance      Decimal  @default(0) @db.Decimal(15, 2)
+  currencyId   Int      @map("currency_id")
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currency     RefCurrency    @relation(fields: [currencyId], references: [id])
+  transactions Transaction[]
+  autoPayments AutoPayment[]
+
+  @@map("e_wallet")
+}
+
+// Alıcı/Kişi bilgileri (Havale/EFT için)
+model Beneficiary {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @map("user_id")
+  name         String   @db.VarChar(100) // Kişi veya kurum adı
+  iban         String?  @db.VarChar(34)
+  accountNo    String?  @map("account_no") @db.VarChar(50)
+  bankId       Int?     @map("bank_id")
+  phoneNumber  String?  @map("phone_number") @db.VarChar(20)
+  email        String?  @db.VarChar(255)
+  description  String?  // Not
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bank         RefBank?       @relation(fields: [bankId], references: [id])
+  transactions Transaction[]
+  autoPayments AutoPayment[]
+
+  @@map("beneficiary")
+}
+
 model Transaction {
   id              Int      @id @default(autoincrement())
   userId          Int      @map("user_id")
@@ -281,22 +358,29 @@ model Transaction {
   paymentMethodId Int      @map("payment_method_id")
   accountId       Int?     @map("account_id")
   creditCardId    Int?     @map("credit_card_id")
+  eWalletId       Int?     @map("e_wallet_id")
+  beneficiaryId   Int?     @map("beneficiary_id")
   amount          Decimal  @db.Decimal(15, 2)
   currencyId      Int      @map("currency_id")
   transactionDate DateTime @map("transaction_date") @db.Date
   description     String?
+  notes           String?
   tags            String[]
+  isRecurring     Boolean  @default(false) @map("is_recurring")
+  recurringType   String?  @db.VarChar(20) @map("recurring_type")
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   // Relations
-  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  txType        RefTxType       @relation(fields: [txTypeId], references: [id])
-  category      RefTxCategory   @relation(fields: [categoryId], references: [id])
-  paymentMethod RefPaymentMethod @relation(fields: [paymentMethodId], references: [id])
-  account       Account?        @relation(fields: [accountId], references: [id])
-  creditCard    CreditCard?     @relation(fields: [creditCardId], references: [id])
-  currency      RefCurrency     @relation(fields: [currencyId], references: [id])
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  txType        RefTxType          @relation(fields: [txTypeId], references: [id])
+  category      RefTxCategory      @relation(fields: [categoryId], references: [id])
+  paymentMethod RefPaymentMethod   @relation(fields: [paymentMethodId], references: [id])
+  account       Account?           @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  creditCard    CreditCard?        @relation(fields: [creditCardId], references: [id], onDelete: Cascade)
+  eWallet       EWallet?           @relation(fields: [eWalletId], references: [id], onDelete: Cascade)
+  beneficiary   Beneficiary?       @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
+  currency      RefCurrency        @relation(fields: [currencyId], references: [id])
 
   @@map("transaction")
 }
@@ -309,6 +393,8 @@ model AutoPayment {
   currencyId      Int      @map("currency_id")
   accountId       Int?     @map("account_id")
   creditCardId    Int?     @map("credit_card_id")
+  eWalletId       Int?     @map("e_wallet_id")
+  beneficiaryId   Int?     @map("beneficiary_id")
   paymentMethodId Int      @map("payment_method_id")
   categoryId      Int      @map("category_id")
   cronSchedule    String   @map("cron_schedule") @db.VarChar(100)
@@ -319,12 +405,14 @@ model AutoPayment {
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   // Relations
-  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  currency      RefCurrency     @relation(fields: [currencyId], references: [id])
-  account       Account?        @relation(fields: [accountId], references: [id])
-  creditCard    CreditCard?     @relation(fields: [creditCardId], references: [id])
-  paymentMethod RefPaymentMethod @relation(fields: [paymentMethodId], references: [id])
-  category      RefTxCategory   @relation(fields: [categoryId], references: [id])
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currency      RefCurrency        @relation(fields: [currencyId], references: [id])
+  account       Account?           @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  creditCard    CreditCard?        @relation(fields: [creditCardId], references: [id], onDelete: Cascade)
+  eWallet       EWallet?           @relation(fields: [eWalletId], references: [id], onDelete: Cascade)
+  beneficiary   Beneficiary?       @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
+  paymentMethod RefPaymentMethod   @relation(fields: [paymentMethodId], references: [id])
+  category      RefTxCategory      @relation(fields: [categoryId], references: [id])
 
   @@map("auto_payment")
 }
@@ -383,5 +471,35 @@ model PortfolioSnapshot {
 
   @@unique([userId, snapshotDate])
   @@map("portfolio_snapshot")
+}
+
+// Yatırım Araçları (Premium özelliği)
+model Investment {
+  id              Int      @id @default(autoincrement())
+  userId          Int      @map("user_id")
+  investmentType  String   @map("investment_type") @db.VarChar(50) // stock, crypto, fund, bond, commodity, forex, real-estate, other
+  name            String   @db.VarChar(200)
+  symbol          String?  @db.VarChar(20)  // AAPL, BTC, THYAO, vb.
+  quantity        Decimal  @db.Decimal(18, 8)
+  purchasePrice   Decimal  @map("purchase_price") @db.Decimal(15, 2)
+  currentPrice    Decimal? @map("current_price") @db.Decimal(15, 2)
+  purchaseDate    DateTime @map("purchase_date") @db.Date
+  currencyId      Int      @map("currency_id")
+  category        String?  @db.VarChar(100) // Teknoloji, Finans, Enerji vb.
+  riskLevel       String   @map("risk_level") @db.VarChar(20) // low, medium, high
+  notes           String?
+  metadata        Json?    @default("{}")  // API'den gelen ek bilgiler (logo, website, vb.)
+  lastPriceUpdate DateTime? @map("last_price_update")
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currency RefCurrency @relation(fields: [currencyId], references: [id])
+
+  @@index([userId, active])
+  @@index([investmentType])
+  @@map("investment")
 }
 

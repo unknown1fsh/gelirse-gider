@@ -4,7 +4,7 @@ import { z } from 'zod'
 export const currencySchema = z.object({
   code: z.string().min(3).max(3),
   name: z.string().min(1).max(50),
-  symbol: z.string().min(1).max(5)
+  symbol: z.string().min(1).max(5),
 })
 
 // Hesap validasyonu
@@ -15,7 +15,7 @@ export const accountSchema = z.object({
   currencyId: z.number().int().positive('Geçerli para birimi seçiniz'),
   balance: z.number().min(0, 'Bakiye negatif olamaz').default(0),
   accountNumber: z.string().optional(),
-  iban: z.string().optional()
+  iban: z.string().optional(),
 })
 
 // Kredi kartı validasyonu
@@ -27,10 +27,15 @@ export const creditCardSchema = z.object({
   availableLimit: z.number().min(0, 'Kullanılabilir limit negatif olamaz'),
   statementDay: z.number().int().min(1, 'Hesap kesim günü 1-31 arasında olmalıdır').max(31),
   dueDay: z.number().int().min(1, 'Vade günü 1-31 arasında olmalıdır').max(31),
-  minPaymentPercent: z.number().min(0).max(100, 'Asgari ödeme yüzdesi 0-100 arasında olmalıdır').default(3.0)
+  minPaymentPercent: z
+    .number()
+    .min(0)
+    .max(100, 'Asgari ödeme yüzdesi 0-100 arasında olmalıdır')
+    .default(3.0),
 })
 
 // İşlem validasyonu
+// NOT: Hesap/Kart kontrolü backend'de yapılır (nakit ödemeler için opsiyonel)
 export const transactionSchema = z.object({
   txTypeId: z.number().int().positive('Geçerli işlem türü seçiniz'),
   categoryId: z.number().int().positive('Geçerli kategori seçiniz'),
@@ -41,10 +46,7 @@ export const transactionSchema = z.object({
   currencyId: z.number().int().positive('Geçerli para birimi seçiniz'),
   transactionDate: z.date(),
   description: z.string().optional(),
-  tags: z.array(z.string()).optional()
-}).refine(data => data.accountId || data.creditCardId, {
-  message: 'Hesap veya kredi kartı seçilmelidir',
-  path: ['accountId']
+  tags: z.array(z.string()).optional(),
 })
 
 // Altın eşyası validasyonu
@@ -55,10 +57,11 @@ export const goldItemSchema = z.object({
   weightGrams: z.number().positive('Ağırlık pozitif olmalıdır'),
   purchasePrice: z.number().positive('Alış fiyatı pozitif olmalıdır'),
   purchaseDate: z.date(),
-  description: z.string().optional()
+  description: z.string().optional(),
 })
 
 // Otomatik ödeme validasyonu
+// NOT: Hesap/Kart kontrolü backend'de yapılır (nakit ödemeler için opsiyonel)
 export const autoPaymentSchema = z.object({
   name: z.string().min(1, 'Ödeme adı gereklidir').max(100, 'Ödeme adı çok uzun'),
   amount: z.number().positive('Tutar pozitif olmalıdır'),
@@ -69,24 +72,21 @@ export const autoPaymentSchema = z.object({
   categoryId: z.number().int().positive('Geçerli kategori seçiniz'),
   cronSchedule: z.string().min(1, 'Zamanlama gereklidir'),
   nextPaymentDate: z.date().optional(),
-  description: z.string().optional()
-}).refine(data => data.accountId || data.creditCardId, {
-  message: 'Hesap veya kredi kartı seçilmelidir',
-  path: ['accountId']
+  description: z.string().optional(),
 })
 
 // Para birimi dönüşümü için yardımcı fonksiyonlar
 export function formatCurrency(amount: number, currencyCode: string): string {
   const symbols: Record<string, string> = {
-    'TRY': '₺',
-    'USD': '$',
-    'EUR': '€',
-    'GBP': '£',
-    'CHF': 'CHF',
-    'JPY': '¥',
-    'XAU': 'Au'
+    TRY: '₺',
+    USD: '$',
+    EUR: '€',
+    GBP: '£',
+    CHF: 'CHF',
+    JPY: '¥',
+    XAU: 'Au',
   }
-  
+
   const symbol = symbols[currencyCode] || currencyCode
   return `${symbol} ${amount.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
@@ -95,7 +95,7 @@ export function parseCurrencyInput(value: string): number {
   // Türkçe sayı formatını parse et (1.234,56 -> 1234.56)
   const cleaned = value.replace(/[^\d,.-]/g, '')
   const parts = cleaned.split(',')
-  
+
   if (parts.length === 2) {
     // Virgül varsa ondalık kısım
     const integerPart = parts[0].replace(/\./g, '')
@@ -110,4 +110,3 @@ export function parseCurrencyInput(value: string): number {
 export function formatCurrencyInput(amount: number): string {
   return amount.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
-

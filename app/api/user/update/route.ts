@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getCurrentUser } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth-refactored'
 import { AuthService } from '@/lib/auth'
 
 export async function PUT(request: NextRequest) {
@@ -7,10 +7,7 @@ export async function PUT(request: NextRequest) {
     const user = await getCurrentUser(request)
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, message: 'Oturum bulunamadı' },
-        { status: 401 }
-      )
+      return NextResponse.json({ success: false, message: 'Oturum bulunamadı' }, { status: 401 })
     }
 
     const data = await request.json()
@@ -27,7 +24,7 @@ export async function PUT(request: NextRequest) {
       'numberFormat',
       'theme',
       'notifications',
-      'settings'
+      'settings',
     ]
 
     const updateData: any = {}
@@ -43,7 +40,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({
         success: true,
         user: result.user,
-        message: 'Profil güncellendi'
+        message: 'Profil güncellendi',
       })
     }
 
@@ -53,9 +50,6 @@ export async function PUT(request: NextRequest) {
     )
   } catch (error) {
     console.error('Update user API error:', error)
-    return NextResponse.json(
-      { success: false, message: 'Sunucu hatası' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, message: 'Sunucu hatası' }, { status: 500 })
   }
 }

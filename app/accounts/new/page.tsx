@@ -6,8 +6,33 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ArrowLeft, Save, Wallet, CreditCard, Coins } from 'lucide-react'
 
 interface ReferenceData {
-  banks: Array<{ id: number; name: string; asciiName: string }>
-  currencies: Array<{ id: number; code: string; name: string }>
+  banks: Array<{
+    id: number
+    name: string
+    asciiName: string
+    swiftBic?: string | null
+    bankCode?: string | null
+    website?: string | null
+  }>
+  accountTypes: Array<{
+    id: number
+    code: string
+    name: string
+    description?: string | null
+  }>
+  goldTypes: Array<{
+    id: number
+    code: string
+    name: string
+    description?: string | null
+  }>
+  goldPurities: Array<{
+    id: number
+    code: string
+    name: string
+    purity: string
+  }>
+  currencies: Array<{ id: number; code: string; name: string; symbol: string }>
 }
 
 export default function NewAccountPage() {
@@ -16,7 +41,7 @@ export default function NewAccountPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [accountType, setAccountType] = useState<'bank' | 'credit_card' | 'gold'>('bank')
-  
+
   const [formData, setFormData] = useState({
     name: '',
     bankId: 0,
@@ -32,7 +57,7 @@ export default function NewAccountPage() {
     goldTypeId: 0,
     goldPurityId: 0,
     weight: '',
-    purchasePrice: ''
+    purchasePrice: '',
   })
 
   useEffect(() => {
@@ -43,7 +68,7 @@ export default function NewAccountPage() {
           const data = await response.json()
           console.log('Reference data:', data)
           setReferenceData(data)
-          
+
           // Varsayılan değerleri set et
           if (data.currencies && data.currencies.length > 0) {
             const tryCurrency = data.currencies.find((c: any) => c.code === 'TRY')
@@ -76,7 +101,7 @@ export default function NewAccountPage() {
         weight: parseFloat(formData.weight) || 0,
         purchasePrice: parseFloat(formData.purchasePrice) || 0,
         iban: formData.iban ? `TR${formData.iban}` : null, // TR prefix ekle
-        accountType
+        accountType,
       }
 
       const response = await fetch('/api/accounts', {
@@ -117,8 +142,8 @@ export default function NewAccountPage() {
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
           <p className="text-red-600">Veri yüklenemedi</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
           >
             Yeniden Dene
@@ -131,10 +156,7 @@ export default function NewAccountPage() {
   return (
     <div>
       <div className="flex items-center gap-4 mb-6">
-        <button
-          onClick={() => router.back()}
-          className="p-2 hover:bg-gray-100 rounded-lg"
-        >
+        <button onClick={() => router.back()} className="p-2 hover:bg-gray-100 rounded-lg">
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div>
@@ -148,9 +170,7 @@ export default function NewAccountPage() {
       <Card className="max-w-2xl">
         <CardHeader>
           <CardTitle>Hesap Türü Seçin</CardTitle>
-          <CardDescription>
-            Eklemek istediğiniz hesap türünü seçin
-          </CardDescription>
+          <CardDescription>Eklemek istediğiniz hesap türünü seçin</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -200,19 +220,17 @@ export default function NewAccountPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Ortak alanlar */}
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Hesap Adı *
-              </label>
+              <label className="block text-sm font-medium mb-2">Hesap Adı *</label>
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 placeholder={
-                  accountType === 'bank' 
+                  accountType === 'bank'
                     ? 'Örn: Ziraat Bankası Vadesiz Hesap'
                     : accountType === 'credit_card'
-                    ? 'Örn: Ziraat Bankası World Kart'
-                    : 'Örn: 22 Ayar Altın Bilezik'
+                      ? 'Örn: Ziraat Bankası World Kart'
+                      : 'Örn: 22 Ayar Altın Bilezik'
                 }
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
@@ -223,17 +241,17 @@ export default function NewAccountPage() {
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Banka *
-                    </label>
+                    <label className="block text-sm font-medium mb-2">Banka *</label>
                     <select
                       value={formData.bankId}
-                      onChange={(e) => setFormData(prev => ({ ...prev, bankId: parseInt(e.target.value) }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, bankId: parseInt(e.target.value) }))
+                      }
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
                       <option value={0}>Seçiniz</option>
-                      {referenceData?.banks.map((bank) => (
+                      {referenceData?.banks.map(bank => (
                         <option key={bank.id} value={bank.id}>
                           {bank.name}
                         </option>
@@ -242,12 +260,12 @@ export default function NewAccountPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Hesap Türü *
-                    </label>
+                    <label className="block text-sm font-medium mb-2">Hesap Türü *</label>
                     <select
                       value={formData.accountTypeId}
-                      onChange={(e) => setFormData(prev => ({ ...prev, accountTypeId: parseInt(e.target.value) }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, accountTypeId: parseInt(e.target.value) }))
+                      }
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
@@ -262,17 +280,17 @@ export default function NewAccountPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Para Birimi *
-                    </label>
+                    <label className="block text-sm font-medium mb-2">Para Birimi *</label>
                     <select
                       value={formData.currencyId}
-                      onChange={(e) => setFormData(prev => ({ ...prev, currencyId: parseInt(e.target.value) }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, currencyId: parseInt(e.target.value) }))
+                      }
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
                       <option value={0}>Seçiniz</option>
-                      {referenceData?.currencies.map((currency) => (
+                      {referenceData?.currencies.map(currency => (
                         <option key={currency.id} value={currency.id}>
                           {currency.code} - {currency.name}
                         </option>
@@ -281,14 +299,12 @@ export default function NewAccountPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Bakiye
-                    </label>
+                    <label className="block text-sm font-medium mb-2">Bakiye</label>
                     <input
                       type="number"
                       step="0.01"
                       value={formData.balance}
-                      onChange={(e) => setFormData(prev => ({ ...prev, balance: e.target.value }))}
+                      onChange={e => setFormData(prev => ({ ...prev, balance: e.target.value }))}
                       placeholder="0,00"
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
@@ -297,22 +313,20 @@ export default function NewAccountPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Hesap Numarası
-                    </label>
+                    <label className="block text-sm font-medium mb-2">Hesap Numarası</label>
                     <input
                       type="text"
                       value={formData.accountNumber}
-                      onChange={(e) => setFormData(prev => ({ ...prev, accountNumber: e.target.value }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, accountNumber: e.target.value }))
+                      }
                       placeholder="Hesap numarası"
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      IBAN
-                    </label>
+                    <label className="block text-sm font-medium mb-2">IBAN</label>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">
                         TR
@@ -320,7 +334,7 @@ export default function NewAccountPage() {
                       <input
                         type="text"
                         value={formData.iban}
-                        onChange={(e) => {
+                        onChange={e => {
                           // Sadece rakam ve boşluk karakterlerine izin ver, max 26 karakter (TR hariç)
                           let value = e.target.value.replace(/[^0-9\s]/g, '')
                           // Maksimum 26 karakter (TR hariç)
@@ -346,17 +360,17 @@ export default function NewAccountPage() {
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Banka *
-                    </label>
+                    <label className="block text-sm font-medium mb-2">Banka *</label>
                     <select
                       value={formData.bankId}
-                      onChange={(e) => setFormData(prev => ({ ...prev, bankId: parseInt(e.target.value) }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, bankId: parseInt(e.target.value) }))
+                      }
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
                       <option value={0}>Seçiniz</option>
-                      {referenceData?.banks.map((bank) => (
+                      {referenceData?.banks.map(bank => (
                         <option key={bank.id} value={bank.id}>
                           {bank.name}
                         </option>
@@ -365,17 +379,17 @@ export default function NewAccountPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Para Birimi *
-                    </label>
+                    <label className="block text-sm font-medium mb-2">Para Birimi *</label>
                     <select
                       value={formData.currencyId}
-                      onChange={(e) => setFormData(prev => ({ ...prev, currencyId: parseInt(e.target.value) }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, currencyId: parseInt(e.target.value) }))
+                      }
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
                       <option value={0}>Seçiniz</option>
-                      {referenceData?.currencies.map((currency) => (
+                      {referenceData?.currencies.map(currency => (
                         <option key={currency.id} value={currency.id}>
                           {currency.code} - {currency.name}
                         </option>
@@ -386,14 +400,14 @@ export default function NewAccountPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Limit Tutarı *
-                    </label>
+                    <label className="block text-sm font-medium mb-2">Limit Tutarı *</label>
                     <input
                       type="number"
                       step="0.01"
                       value={formData.limitAmount}
-                      onChange={(e) => setFormData(prev => ({ ...prev, limitAmount: e.target.value }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, limitAmount: e.target.value }))
+                      }
                       placeholder="0,00"
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
@@ -401,15 +415,15 @@ export default function NewAccountPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Ödeme Günü *
-                    </label>
+                    <label className="block text-sm font-medium mb-2">Ödeme Günü *</label>
                     <input
                       type="number"
                       min="1"
                       max="31"
                       value={formData.dueDay}
-                      onChange={(e) => setFormData(prev => ({ ...prev, dueDay: parseInt(e.target.value) }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, dueDay: parseInt(e.target.value) }))
+                      }
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     />
@@ -422,52 +436,58 @@ export default function NewAccountPage() {
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Altın Türü *
-                    </label>
+                    <label className="block text-sm font-medium mb-2">Altın Türü * (13 Tür)</label>
                     <select
                       value={formData.goldTypeId}
-                      onChange={(e) => setFormData(prev => ({ ...prev, goldTypeId: parseInt(e.target.value) }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, goldTypeId: parseInt(e.target.value) }))
+                      }
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
-                      <option value={0}>Seçiniz</option>
-                      <option value={1}>Bilezik</option>
-                      <option value={2}>Cumhuriyet Altını</option>
-                      <option value={3}>Altın Bar</option>
-                      <option value={4}>Diğer Ziynet</option>
+                      <option value={0}>Altın türü seçiniz</option>
+                      {referenceData?.goldTypes.map(type => (
+                        <option key={type.id} value={type.id} title={type.description || ''}>
+                          {type.name}
+                        </option>
+                      ))}
                     </select>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Bilezik, Kolye, Küpe, Cumhuriyet Altını, vb.
+                    </p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Ayar *
-                    </label>
+                    <label className="block text-sm font-medium mb-2">Ayar * (5 Ayar)</label>
                     <select
                       value={formData.goldPurityId}
-                      onChange={(e) => setFormData(prev => ({ ...prev, goldPurityId: parseInt(e.target.value) }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, goldPurityId: parseInt(e.target.value) }))
+                      }
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
-                      <option value={0}>Seçiniz</option>
-                      <option value={1}>24K</option>
-                      <option value={2}>22K</option>
-                      <option value={3}>18K</option>
-                      <option value={4}>14K</option>
+                      <option value={0}>Ayar seçiniz</option>
+                      {referenceData?.goldPurities.map(purity => (
+                        <option key={purity.id} value={purity.id}>
+                          {purity.name}
+                        </option>
+                      ))}
                     </select>
+                    <p className="text-xs text-gray-500 mt-1">
+                      24K (Saf), 22K (Cumhuriyet), 18K, 14K, 8K
+                    </p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Ağırlık (Gram) *
-                    </label>
+                    <label className="block text-sm font-medium mb-2">Ağırlık (Gram) *</label>
                     <input
                       type="number"
                       step="0.01"
                       value={formData.weight}
-                      onChange={(e) => setFormData(prev => ({ ...prev, weight: e.target.value }))}
+                      onChange={e => setFormData(prev => ({ ...prev, weight: e.target.value }))}
                       placeholder="0,00"
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
@@ -475,14 +495,14 @@ export default function NewAccountPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Alış Fiyatı (TRY) *
-                    </label>
+                    <label className="block text-sm font-medium mb-2">Alış Fiyatı (TRY) *</label>
                     <input
                       type="number"
                       step="0.01"
                       value={formData.purchasePrice}
-                      onChange={(e) => setFormData(prev => ({ ...prev, purchasePrice: e.target.value }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, purchasePrice: e.target.value }))
+                      }
                       placeholder="0,00"
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required

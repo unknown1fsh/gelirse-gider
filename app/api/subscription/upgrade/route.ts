@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getCurrentUser } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth-refactored'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -9,36 +9,27 @@ export async function POST(request: NextRequest) {
     const user = await getCurrentUser(request)
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, message: 'Oturum bulunamadı' },
-        { status: 401 }
-      )
+      return NextResponse.json({ success: false, message: 'Oturum bulunamadı' }, { status: 401 })
     }
 
     const { planId, paymentMethod } = await request.json()
 
     // Validation
     if (!planId) {
-      return NextResponse.json(
-        { success: false, message: 'Plan ID gerekli' },
-        { status: 400 }
-      )
+      return NextResponse.json({ success: false, message: 'Plan ID gerekli' }, { status: 400 })
     }
 
     // Plan kontrolü
     const validPlans = ['free', 'premium', 'enterprise']
     if (!validPlans.includes(planId)) {
-      return NextResponse.json(
-        { success: false, message: 'Geçersiz plan' },
-        { status: 400 }
-      )
+      return NextResponse.json({ success: false, message: 'Geçersiz plan' }, { status: 400 })
     }
 
     // Plan fiyatları
     const planPrices: { [key: string]: number } = {
       free: 0,
       premium: 250,
-      enterprise: 450
+      enterprise: 450,
     }
 
     const amount = planPrices[planId]
@@ -47,9 +38,9 @@ export async function POST(request: NextRequest) {
     const existingSubscription = await prisma.userSubscription.findFirst({
       where: {
         userId: user.id,
-        status: 'active'
+        status: 'active',
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     })
 
     // Yeni abonelik oluştur
@@ -67,8 +58,8 @@ export async function POST(request: NextRequest) {
         currency: 'TRY',
         paymentMethod: paymentMethod || 'credit_card',
         transactionId: `txn_${Date.now()}_${user.id}`,
-        autoRenew: planId !== 'free'
-      }
+        autoRenew: planId !== 'free',
+      },
     })
 
     // Eski aboneliği iptal et (eğer varsa)
@@ -77,15 +68,15 @@ export async function POST(request: NextRequest) {
         where: { id: existingSubscription.id },
         data: {
           status: 'cancelled',
-          cancelledAt: new Date()
-        }
+          cancelledAt: new Date(),
+        },
       })
     }
 
     // Kullanıcının plan bilgisini güncelle
     await prisma.user.update({
       where: { id: user.id },
-      data: { plan: planId }
+      data: { plan: planId },
     })
 
     return NextResponse.json({
@@ -98,14 +89,11 @@ export async function POST(request: NextRequest) {
         startDate: subscription.startDate,
         endDate: subscription.endDate,
         amount: subscription.amount,
-        currency: subscription.currency
-      }
+        currency: subscription.currency,
+      },
     })
   } catch (error) {
     console.error('Upgrade subscription error:', error)
-    return NextResponse.json(
-      { success: false, message: 'Sunucu hatası' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, message: 'Sunucu hatası' }, { status: 500 })
   }
 }

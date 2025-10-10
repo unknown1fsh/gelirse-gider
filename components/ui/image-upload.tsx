@@ -1,5 +1,5 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import * as React from 'react'
+import { cn } from '@/lib/utils'
 
 const ImageUpload = React.forwardRef<
   HTMLDivElement,
@@ -16,10 +16,10 @@ const ImageUpload = React.forwardRef<
     if (files && files.length > 0) {
       const file = files[0]
       onImageSelect?.(file)
-      
+
       // Preview oluştur
       const reader = new FileReader()
-      reader.onload = (e) => {
+      reader.onload = e => {
         setImagePreview(e.target?.result as string)
       }
       reader.readAsDataURL(file)
@@ -39,16 +39,16 @@ const ImageUpload = React.forwardRef<
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragOver(false)
-    
+
     const files = e.dataTransfer.files
     if (files && files.length > 0) {
       const file = files[0]
       if (file.type.startsWith('image/')) {
         onImageSelect?.(file)
-        
+
         // Preview oluştur
         const reader = new FileReader()
-        reader.onload = (e) => {
+        reader.onload = e => {
           setImagePreview(e.target?.result as string)
         }
         reader.readAsDataURL(file)
@@ -59,7 +59,7 @@ const ImageUpload = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("relative", className)}
+      className={cn('relative', className)}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -73,8 +73,8 @@ const ImageUpload = React.forwardRef<
       />
       <div
         className={cn(
-          "flex h-48 w-full items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 text-center text-sm text-muted-foreground transition-colors hover:bg-muted/80",
-          isDragOver && "border-primary bg-primary/10"
+          'flex h-48 w-full items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/50 text-center text-sm text-muted-foreground transition-colors hover:bg-muted/80',
+          isDragOver && 'border-primary bg-primary/10'
         )}
       >
         {imagePreview ? (
@@ -100,6 +100,6 @@ const ImageUpload = React.forwardRef<
     </div>
   )
 })
-ImageUpload.displayName = "ImageUpload"
+ImageUpload.displayName = 'ImageUpload'
 
 export { ImageUpload }

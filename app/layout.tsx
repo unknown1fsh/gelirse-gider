@@ -10,19 +10,12 @@ export const metadata: Metadata = {
   description: 'Modern kişisel finans platformu ile gelir ve giderlerinizi kolayca takip edin',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr" className="scroll-smooth">
       <body className={`${inter.className} antialiased`}>
-        <UserProvider>
-          {children}
-        </UserProvider>
+        <UserProvider>{children}</UserProvider>
       </body>
     </html>
   )
 }
-

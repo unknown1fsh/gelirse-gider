@@ -1,0 +1,61 @@
+import { NextRequest } from 'next/server'
+import { cookies } from 'next/headers'
+import { prisma } from '@/lib/prisma'
+import { AuthService } from '@/server/services/impl/AuthService'
+import { UserDTO } from '@/server/dto/UserDTO'
+
+// Bu metot mevcut kullanıcıyı getirir.
+// Girdi: NextRequest
+// Çıktı: UserDTO veya null
+// Hata: -
+export async function getCurrentUser(request: NextRequest): Promise<UserDTO | null> {
+  try {
+    const token = request.cookies.get('auth-token')?.value
+
+    if (!token) {
+      return null
+    }
+
+    const authService = new AuthService(prisma)
+    return await authService.validateSession(token)
+  } catch (error) {
+    console.error('Get current user error:', error)
+    return null
+  }
+}
+
+// Bu metot basit token kontrolü yapar (Edge runtime için).
+// Girdi: NextRequest
+// Çıktı: Boolean
+// Hata: -
+export function hasValidToken(request: NextRequest): boolean {
+  const token = request.cookies.get('auth-token')?.value
+  return !!token
+}
+
+// Bu metot auth cookie'si ayarlar.
+// Girdi: token, expiresAt
+// Çıktı: void
+// Hata: -
+export async function setAuthCookie(token: string, expiresAt: Date): Promise<void> {
+  const cookieStore = await cookies()
+  cookieStore.set('auth-token', token, {
+    expires: expiresAt,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+  })
+}
+
+// Bu metot auth cookie'sini temizler.
+// Girdi: -
+// Çıktı: void
+// Hata: -
+export async function clearAuthCookie(): Promise<void> {
+  const cookieStore = await cookies()
+  cookieStore.delete('auth-token')
+}
+
+// Type exports
+export type { UserDTO }

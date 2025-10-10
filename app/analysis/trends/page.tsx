@@ -2,20 +2,19 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { usePremium } from '@/lib/use-premium'
 import { useUser } from '@/lib/user-context'
-import { 
-  TrendingUp, 
-  TrendingDown, 
+import {
+  TrendingUp,
+  TrendingDown,
   Minus,
-  DollarSign, 
-  Target, 
-  Brain, 
-  FileText, 
-  Settings, 
+  Target,
+  Brain,
+  FileText,
+  Settings,
   Lightbulb,
   Sparkles,
   Zap,
@@ -231,8 +230,8 @@ import {
   CalendarDinar as CalendarDinarIcon2,
   CalendarDirham as CalendarDirhamIcon2,
   CalendarShekel as CalendarShekelIcon2,
-  CalendarRiyal as CalendarRiyalIcon2
-} from "lucide-react"
+  CalendarRiyal as CalendarRiyalIcon2,
+} from 'lucide-react'
 
 interface TrendData {
   period: string
@@ -261,7 +260,8 @@ export default function TrendsAnalysis() {
   const { user } = useUser()
 
   // Kullanıcı tipi tespiti
-  const isEnterpriseUser = user?.email?.includes('enterprise') || user?.plan === 'enterprise_premium'
+  const isEnterpriseUser =
+    user?.email?.includes('enterprise') || user?.plan === 'enterprise_premium'
   const isIndividualUser = user?.email?.includes('demo') || user?.plan === 'premium'
 
   const handleBack = () => {
@@ -283,7 +283,8 @@ export default function TrendsAnalysis() {
       gradient: 'from-purple-500 to-pink-600',
       performance: 'AI',
       action: 'Tahmin Yap',
-      onClick: () => handlePremiumFeature('Tahmin Analizi', () => setSelectedFeature('predictive-analysis'))
+      onClick: () =>
+        handlePremiumFeature('Tahmin Analizi', () => setSelectedFeature('predictive-analysis')),
     },
     {
       id: 'seasonal-trends',
@@ -293,7 +294,8 @@ export default function TrendsAnalysis() {
       gradient: 'from-blue-500 to-cyan-600',
       performance: 'Season',
       action: 'Analiz Et',
-      onClick: () => handlePremiumFeature('Mevsimsel Trendler', () => setSelectedFeature('seasonal-trends'))
+      onClick: () =>
+        handlePremiumFeature('Mevsimsel Trendler', () => setSelectedFeature('seasonal-trends')),
     },
     {
       id: 'market-insights',
@@ -303,7 +305,8 @@ export default function TrendsAnalysis() {
       gradient: 'from-green-500 to-emerald-600',
       performance: 'Market',
       action: 'İçgörüleri Gör',
-      onClick: () => handlePremiumFeature('Pazar İçgörüleri', () => setSelectedFeature('market-insights'))
+      onClick: () =>
+        handlePremiumFeature('Pazar İçgörüleri', () => setSelectedFeature('market-insights')),
     },
     {
       id: 'investment-trends',
@@ -313,7 +316,8 @@ export default function TrendsAnalysis() {
       gradient: 'from-orange-500 to-red-600',
       performance: 'Invest',
       action: 'Fırsatları Gör',
-      onClick: () => handlePremiumFeature('Yatırım Trendleri', () => setSelectedFeature('investment-trends'))
+      onClick: () =>
+        handlePremiumFeature('Yatırım Trendleri', () => setSelectedFeature('investment-trends')),
     },
     {
       id: 'spending-forecast',
@@ -323,7 +327,8 @@ export default function TrendsAnalysis() {
       gradient: 'from-indigo-500 to-purple-600',
       performance: 'Forecast',
       action: 'Tahmin Oluştur',
-      onClick: () => handlePremiumFeature('Harcama Tahmini', () => setSelectedFeature('spending-forecast'))
+      onClick: () =>
+        handlePremiumFeature('Harcama Tahmini', () => setSelectedFeature('spending-forecast')),
     },
     {
       id: 'risk-analysis',
@@ -333,7 +338,8 @@ export default function TrendsAnalysis() {
       gradient: 'from-red-500 to-rose-600',
       performance: 'Risk',
       action: 'Risk Analiz Et',
-      onClick: () => handlePremiumFeature('Risk Analizi', () => setSelectedFeature('risk-analysis'))
+      onClick: () =>
+        handlePremiumFeature('Risk Analizi', () => setSelectedFeature('risk-analysis')),
     },
     {
       id: 'trend-reports',
@@ -343,8 +349,8 @@ export default function TrendsAnalysis() {
       gradient: 'from-teal-500 to-cyan-600',
       performance: 'PDF',
       action: 'Rapor Oluştur',
-      onClick: () => setSelectedFeature('trend-reports')
-    }
+      onClick: () => setSelectedFeature('trend-reports'),
+    },
   ]
 
   // Kurumsal Premium özellikler
@@ -357,7 +363,8 @@ export default function TrendsAnalysis() {
       gradient: 'from-purple-500 to-pink-600',
       performance: 'AI',
       action: 'Tahmin Yap',
-      onClick: () => handlePremiumFeature('Kurumsal Tahmin', () => setSelectedFeature('enterprise-predictive'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Tahmin', () => setSelectedFeature('enterprise-predictive')),
     },
     {
       id: 'enterprise-seasonal',
@@ -367,7 +374,8 @@ export default function TrendsAnalysis() {
       gradient: 'from-blue-500 to-cyan-600',
       performance: 'Season',
       action: 'Analiz Et',
-      onClick: () => handlePremiumFeature('Kurumsal Mevsimsel', () => setSelectedFeature('enterprise-seasonal'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Mevsimsel', () => setSelectedFeature('enterprise-seasonal')),
     },
     {
       id: 'enterprise-market',
@@ -377,7 +385,8 @@ export default function TrendsAnalysis() {
       gradient: 'from-green-500 to-emerald-600',
       performance: 'Market',
       action: 'İçgörüleri Gör',
-      onClick: () => handlePremiumFeature('Kurumsal Pazar', () => setSelectedFeature('enterprise-market'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Pazar', () => setSelectedFeature('enterprise-market')),
     },
     {
       id: 'enterprise-investment',
@@ -387,7 +396,8 @@ export default function TrendsAnalysis() {
       gradient: 'from-orange-500 to-red-600',
       performance: 'Invest',
       action: 'Fırsatları Gör',
-      onClick: () => handlePremiumFeature('Kurumsal Yatırım', () => setSelectedFeature('enterprise-investment'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Yatırım', () => setSelectedFeature('enterprise-investment')),
     },
     {
       id: 'enterprise-forecast',
@@ -397,7 +407,8 @@ export default function TrendsAnalysis() {
       gradient: 'from-indigo-500 to-purple-600',
       performance: 'Forecast',
       action: 'Tahmin Oluştur',
-      onClick: () => handlePremiumFeature('Kurumsal Tahmin', () => setSelectedFeature('enterprise-forecast'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Tahmin', () => setSelectedFeature('enterprise-forecast')),
     },
     {
       id: 'enterprise-risk',
@@ -407,7 +418,8 @@ export default function TrendsAnalysis() {
       gradient: 'from-red-500 to-rose-600',
       performance: 'Risk',
       action: 'Risk Analiz Et',
-      onClick: () => handlePremiumFeature('Kurumsal Risk', () => setSelectedFeature('enterprise-risk'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Risk', () => setSelectedFeature('enterprise-risk')),
     },
     {
       id: 'enterprise-reports',
@@ -417,8 +429,8 @@ export default function TrendsAnalysis() {
       gradient: 'from-teal-500 to-cyan-600',
       performance: 'PDF',
       action: 'Rapor Oluştur',
-      onClick: () => setSelectedFeature('enterprise-reports')
-    }
+      onClick: () => setSelectedFeature('enterprise-reports'),
+    },
   ]
 
   // Kullanıcı tipine göre premium özellikleri seç
@@ -435,7 +447,7 @@ export default function TrendsAnalysis() {
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
           <div className={`h-2 bg-gradient-to-r ${feature.gradient} rounded-t-2xl`} />
-          
+
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
@@ -457,33 +469,19 @@ export default function TrendsAnalysis() {
               </Button>
             </div>
 
-            {selectedFeature === 'predictive-analysis' && (
-              <PredictiveAnalysisModal />
-            )}
-            
-            {selectedFeature === 'seasonal-trends' && (
-              <SeasonalTrendsModal />
-            )}
-            
-            {selectedFeature === 'market-insights' && (
-              <MarketInsightsModal />
-            )}
-            
-            {selectedFeature === 'investment-trends' && (
-              <InvestmentTrendsModal />
-            )}
-            
-            {selectedFeature === 'spending-forecast' && (
-              <SpendingForecastModal />
-            )}
-            
-            {selectedFeature === 'risk-analysis' && (
-              <RiskAnalysisModal />
-            )}
-            
-            {selectedFeature === 'trend-reports' && (
-              <TrendReportsModal />
-            )}
+            {selectedFeature === 'predictive-analysis' && <PredictiveAnalysisModal />}
+
+            {selectedFeature === 'seasonal-trends' && <SeasonalTrendsModal />}
+
+            {selectedFeature === 'market-insights' && <MarketInsightsModal />}
+
+            {selectedFeature === 'investment-trends' && <InvestmentTrendsModal />}
+
+            {selectedFeature === 'spending-forecast' && <SpendingForecastModal />}
+
+            {selectedFeature === 'risk-analysis' && <RiskAnalysisModal />}
+
+            {selectedFeature === 'trend-reports' && <TrendReportsModal />}
           </div>
         </div>
       </div>
@@ -505,10 +503,9 @@ export default function TrendsAnalysis() {
                   {isEnterpriseUser ? 'Kurumsal Trend Analizi' : 'Trend Analizi'}
                 </h1>
                 <p className="text-gray-600">
-                  {isEnterpriseUser 
+                  {isEnterpriseUser
                     ? 'Enterprise AI destekli kurumsal finansal trend analizi ve tahminleme'
-                    : 'Premium AI destekli finansal trend analizi ve tahminleme'
-                  }
+                    : 'Premium AI destekli finansal trend analizi ve tahminleme'}
                 </p>
               </div>
             </div>
@@ -540,21 +537,25 @@ export default function TrendsAnalysis() {
           <CardHeader className="pb-4">
             <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
               <Crown className="w-6 h-6 text-yellow-500" />
-              {isEnterpriseUser ? 'Kurumsal Premium Trend Aksiyonları' : 'Premium Trend Aksiyonları'}
-              <Badge variant="secondary" className="bg-gradient-to-r from-purple-400 to-pink-500 text-white">
+              {isEnterpriseUser
+                ? 'Kurumsal Premium Trend Aksiyonları'
+                : 'Premium Trend Aksiyonları'}
+              <Badge
+                variant="secondary"
+                className="bg-gradient-to-r from-purple-400 to-pink-500 text-white"
+              >
                 {isEnterpriseUser ? 'Enterprise AI' : 'AI Destekli'}
               </Badge>
             </CardTitle>
             <p className="text-gray-600">
-              {isEnterpriseUser 
+              {isEnterpriseUser
                 ? 'Kurumsal trend analizine dayalı aksiyon önerileri'
-                : 'Trend analizine dayalı aksiyon önerileri'
-              }
+                : 'Trend analizine dayalı aksiyon önerileri'}
             </p>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {premiumFeatures.map((feature) => (
+              {premiumFeatures.map(feature => (
                 <div
                   key={feature.id}
                   className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${feature.gradient} p-6 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl`}
@@ -576,10 +577,10 @@ export default function TrendsAnalysis() {
                   <div className="text-white">
                     <h3 className="text-lg font-bold mb-2">{feature.title}</h3>
                     <p className="text-sm text-white/90 mb-4">{feature.description}</p>
-                    
+
                     {/* Action Button */}
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
                     >
                       {feature.action}
@@ -674,34 +675,80 @@ export default function TrendsAnalysis() {
         <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm mb-8">
           <CardHeader>
             <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-purple-500" />
-              6 Aylık Trend Geçmişi
+              <TrendingUp className="w-5 h-5 text-purple-500" />6 Aylık Trend Geçmişi
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {[
-                { period: 'Aralık 2024', income: 45230, expenses: 32180, netFlow: 13050, trend: 'up' },
-                { period: 'Kasım 2024', income: 43800, expenses: 33500, netFlow: 10300, trend: 'up' },
-                { period: 'Ekim 2024', income: 42100, expenses: 31200, netFlow: 10900, trend: 'up' },
-                { period: 'Eylül 2024', income: 39500, expenses: 32800, netFlow: 6700, trend: 'down' },
-                { period: 'Ağustos 2024', income: 38200, expenses: 31500, netFlow: 6700, trend: 'up' },
-                { period: 'Temmuz 2024', income: 36800, expenses: 32200, netFlow: 4600, trend: 'up' }
+                {
+                  period: 'Aralık 2024',
+                  income: 45230,
+                  expenses: 32180,
+                  netFlow: 13050,
+                  trend: 'up',
+                },
+                {
+                  period: 'Kasım 2024',
+                  income: 43800,
+                  expenses: 33500,
+                  netFlow: 10300,
+                  trend: 'up',
+                },
+                {
+                  period: 'Ekim 2024',
+                  income: 42100,
+                  expenses: 31200,
+                  netFlow: 10900,
+                  trend: 'up',
+                },
+                {
+                  period: 'Eylül 2024',
+                  income: 39500,
+                  expenses: 32800,
+                  netFlow: 6700,
+                  trend: 'down',
+                },
+                {
+                  period: 'Ağustos 2024',
+                  income: 38200,
+                  expenses: 31500,
+                  netFlow: 6700,
+                  trend: 'up',
+                },
+                {
+                  period: 'Temmuz 2024',
+                  income: 36800,
+                  expenses: 32200,
+                  netFlow: 4600,
+                  trend: 'up',
+                },
               ].map((month, index) => (
-                <div key={index} className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors"
+                >
                   <div className="flex items-center gap-4">
                     <div className="text-center">
                       <p className="font-medium text-gray-900">{month.period}</p>
                       <p className="text-sm text-gray-600">₺{month.netFlow.toLocaleString()}</p>
                     </div>
-                    <div className={`p-2 rounded-lg ${
-                      month.trend === 'up' ? 'bg-green-100 text-green-600' : 
-                      month.trend === 'down' ? 'bg-red-100 text-red-600' : 
-                      'bg-gray-100 text-gray-600'
-                    }`}>
-                      {month.trend === 'up' ? <TrendingUp className="w-4 h-4" /> : 
-                       month.trend === 'down' ? <TrendingDown className="w-4 h-4" /> : 
-                       <Minus className="w-4 h-4" />}
+                    <div
+                      className={`p-2 rounded-lg ${
+                        month.trend === 'up'
+                          ? 'bg-green-100 text-green-600'
+                          : month.trend === 'down'
+                            ? 'bg-red-100 text-red-600'
+                            : 'bg-gray-100 text-gray-600'
+                      }`}
+                    >
+                      {month.trend === 'up' ? (
+                        <TrendingUp className="w-4 h-4" />
+                      ) : month.trend === 'down' ? (
+                        <TrendingDown className="w-4 h-4" />
+                      ) : (
+                        <Minus className="w-4 h-4" />
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-6">
@@ -715,7 +762,9 @@ export default function TrendsAnalysis() {
                     </div>
                     <div className="text-right">
                       <p className="text-sm text-gray-600">Net</p>
-                      <p className={`font-medium ${month.netFlow > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      <p
+                        className={`font-medium ${month.netFlow > 0 ? 'text-green-600' : 'text-red-600'}`}
+                      >
                         ₺{month.netFlow.toLocaleString()}
                       </p>
                     </div>
@@ -739,9 +788,15 @@ export default function TrendsAnalysis() {
               <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl border border-green-200">
                 <h3 className="font-bold text-green-800 mb-3">📈 1 Ay Sonra</h3>
                 <div className="space-y-2">
-                  <p className="text-sm text-green-700">Tahmini Gelir: <span className="font-medium">₺47,500</span></p>
-                  <p className="text-sm text-green-700">Tahmini Gider: <span className="font-medium">₺33,200</span></p>
-                  <p className="text-sm text-green-700">Tahmini Net: <span className="font-bold">₺14,300</span></p>
+                  <p className="text-sm text-green-700">
+                    Tahmini Gelir: <span className="font-medium">₺47,500</span>
+                  </p>
+                  <p className="text-sm text-green-700">
+                    Tahmini Gider: <span className="font-medium">₺33,200</span>
+                  </p>
+                  <p className="text-sm text-green-700">
+                    Tahmini Net: <span className="font-bold">₺14,300</span>
+                  </p>
                   <Badge className="bg-green-100 text-green-700">+9.6% Artış</Badge>
                 </div>
               </div>
@@ -749,9 +804,15 @@ export default function TrendsAnalysis() {
               <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-6 rounded-xl border border-blue-200">
                 <h3 className="font-bold text-blue-800 mb-3">📊 3 Ay Sonra</h3>
                 <div className="space-y-2">
-                  <p className="text-sm text-blue-700">Tahmini Gelir: <span className="font-medium">₺49,200</span></p>
-                  <p className="text-sm text-blue-700">Tahmini Gider: <span className="font-medium">₺34,800</span></p>
-                  <p className="text-sm text-blue-700">Tahmini Net: <span className="font-bold">₺14,400</span></p>
+                  <p className="text-sm text-blue-700">
+                    Tahmini Gelir: <span className="font-medium">₺49,200</span>
+                  </p>
+                  <p className="text-sm text-blue-700">
+                    Tahmini Gider: <span className="font-medium">₺34,800</span>
+                  </p>
+                  <p className="text-sm text-blue-700">
+                    Tahmini Net: <span className="font-bold">₺14,400</span>
+                  </p>
                   <Badge className="bg-blue-100 text-blue-700">+10.3% Artış</Badge>
                 </div>
               </div>
@@ -759,9 +820,15 @@ export default function TrendsAnalysis() {
               <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-xl border border-purple-200">
                 <h3 className="font-bold text-purple-800 mb-3">🎯 6 Ay Sonra</h3>
                 <div className="space-y-2">
-                  <p className="text-sm text-purple-700">Tahmini Gelir: <span className="font-medium">₺52,100</span></p>
-                  <p className="text-sm text-purple-700">Tahmini Gider: <span className="font-medium">₺36,500</span></p>
-                  <p className="text-sm text-purple-700">Tahmini Net: <span className="font-bold">₺15,600</span></p>
+                  <p className="text-sm text-purple-700">
+                    Tahmini Gelir: <span className="font-medium">₺52,100</span>
+                  </p>
+                  <p className="text-sm text-purple-700">
+                    Tahmini Gider: <span className="font-medium">₺36,500</span>
+                  </p>
+                  <p className="text-sm text-purple-700">
+                    Tahmini Net: <span className="font-bold">₺15,600</span>
+                  </p>
                   <Badge className="bg-purple-100 text-purple-700">+19.5% Artış</Badge>
                 </div>
               </div>
@@ -797,7 +864,7 @@ function PredictiveAnalysisModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-purple-500 to-pink-600 text-white">
           <Brain className="w-4 h-4 mr-2" />
@@ -832,7 +899,7 @@ function SeasonalTrendsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white">
           <Calendar className="w-4 h-4 mr-2" />
@@ -867,7 +934,7 @@ function MarketInsightsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-green-500 to-emerald-600 text-white">
           <Eye className="w-4 h-4 mr-2" />
@@ -902,7 +969,7 @@ function InvestmentTrendsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-orange-500 to-red-600 text-white">
           <TrendingUp className="w-4 h-4 mr-2" />
@@ -937,7 +1004,7 @@ function SpendingForecastModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
           <Target className="w-4 h-4 mr-2" />
@@ -972,7 +1039,7 @@ function RiskAnalysisModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-red-500 to-rose-600 text-white">
           <Shield className="w-4 h-4 mr-2" />
@@ -1007,7 +1074,7 @@ function TrendReportsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-teal-500 to-cyan-600 text-white">
           <Download className="w-4 h-4 mr-2" />

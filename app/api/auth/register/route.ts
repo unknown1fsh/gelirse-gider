@@ -1,74 +1,63 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { AuthService, setAuthCookie } from '@/lib/auth'
+import { setAuthCookie } from '@/lib/auth-refactored'
+import { prisma } from '@/lib/prisma'
+import { AuthService } from '@/server/services/impl/AuthService'
+import { RegisterUserDTO } from '@/server/dto/UserDTO'
+import { ExceptionMapper } from '@/server/errors'
+import { BadRequestError } from '@/server/errors'
 
-export async function POST(request: NextRequest) {
-  try {
-    const { name, email, phone, password, plan } = await request.json()
+// Bu metot yeni kullanıcı kaydı oluşturur (POST).
+// Girdi: NextRequest (JSON body: name, email, password, phone?, plan?)
+// Çıktı: NextResponse (user bilgisi + token)
+// Hata: 400, 409, 500
+export const POST = ExceptionMapper.asyncHandler(async (request: NextRequest) => {
+  const { name, email, phone, password, plan } = await request.json()
 
-    // Validation
-    if (!name || !email || !password) {
-      return NextResponse.json(
-        { success: false, message: 'Gerekli alanlar eksik' },
-        { status: 400 }
-      )
-    }
-
-    // Şifre uzunluk kontrolü
-    if (password.length < 6) {
-      return NextResponse.json(
-        { success: false, message: 'Şifre en az 6 karakter olmalı' },
-        { status: 400 }
-      )
-    }
-
-    // E-posta format kontrolü
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { success: false, message: 'Geçersiz e-posta formatı' },
-        { status: 400 }
-      )
-    }
-
-    // Kullanıcı kaydı
-    const result = await AuthService.register({
-      name,
-      email,
-      phone,
-      password,
-      plan: plan || 'free'
-    })
-
-    if (result.success) {
-      // Kayıt sonrası otomatik giriş
-      const userAgent = request.headers.get('user-agent') || undefined
-      const ipAddress = request.headers.get('x-forwarded-for') || 
-                       request.headers.get('x-real-ip') || 
-                       '127.0.0.1'
-
-      const loginResult = await AuthService.login(email, password, userAgent, ipAddress)
-      
-      if (loginResult.success && loginResult.session) {
-        // Cookie'yi ayarla
-        await setAuthCookie(loginResult.session.token, loginResult.session.expiresAt)
-        
-        return NextResponse.json({
-          success: true,
-          user: loginResult.user,
-          message: 'Kayıt başarılı ve giriş yapıldı'
-        })
-      }
-    }
-
-    return NextResponse.json(
-      { success: false, message: result.error || 'Kayıt başarısız' },
-      { status: 400 }
-    )
-  } catch (error) {
-    console.error('Register API error:', error)
-    return NextResponse.json(
-      { success: false, message: 'Sunucu hatası' },
-      { status: 500 }
-    )
+  // Validation
+  if (!name || !email || !password) {
+    throw new BadRequestError('Gerekli alanlar eksik (name, email, password)')
   }
-}
+
+  if (password.length < 6) {
+    throw new BadRequestError('Şifre en az 6 karakter olmalıdır')
+  }
+
+  // E-posta format kontrolü
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(email)) {
+    throw new BadRequestError('Geçersiz e-posta formatı')
+  }
+
+  // AuthService ile kullanıcı kaydı
+  const authService = new AuthService(prisma)
+
+  const registerDTO = new RegisterUserDTO({
+    name,
+    email,
+    phone,
+    password,
+    plan: plan || 'free',
+  })
+
+  const user = await authService.register(registerDTO)
+
+  // Kayıt sonrası otomatik giriş
+  const userAgent = request.headers.get('user-agent') || undefined
+  const ipAddress =
+    request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '127.0.0.1'
+
+  const loginResult = await authService.login({ email, password }, userAgent, ipAddress)
+
+  // Cookie ayarla
+  await setAuthCookie(loginResult.session.token, loginResult.session.expiresAt)
+
+  return NextResponse.json(
+    {
+      success: true,
+      user: loginResult.user,
+      session: loginResult.session,
+      message: 'Kayıt başarılı ve giriş yapıldı',
+    },
+    { status: 201 }
+  )
+})

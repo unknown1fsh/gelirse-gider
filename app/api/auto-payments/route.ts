@@ -1,16 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { getCurrentUser } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth-refactored'
 
 export async function GET(request: NextRequest) {
   try {
     // Kullanıcı doğrulama
     const user = await getCurrentUser(request)
     if (!user) {
-      return NextResponse.json(
-        { error: 'Oturum bulunamadı' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Oturum bulunamadı' }, { status: 401 })
     }
 
     const autoPayments = await prisma.autoPayment.findMany({
@@ -18,33 +15,30 @@ export async function GET(request: NextRequest) {
         account: {
           include: {
             bank: true,
-            currency: true
-          }
+            currency: true,
+          },
         },
         creditCard: {
           include: {
             bank: true,
-            currency: true
-          }
+            currency: true,
+          },
         },
-        category: true
+        category: true,
       },
       where: {
         userId: user.id,
-        active: true
+        active: true,
       },
       orderBy: {
-        nextPaymentDate: 'asc'
-      }
+        nextPaymentDate: 'asc',
+      },
     })
 
     return NextResponse.json(autoPayments)
   } catch (error) {
     console.error('Auto payments API error:', error)
-    return NextResponse.json(
-      { error: 'Otomatik ödemeler alınamadı' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Otomatik ödemeler alınamadı' }, { status: 500 })
   }
 }
 
@@ -53,62 +47,88 @@ export async function POST(request: NextRequest) {
     // Kullanıcı doğrulama
     const user = await getCurrentUser(request)
     if (!user) {
+      return NextResponse.json({ error: 'Oturum bulunamadı' }, { status: 401 })
+    }
+
+    // Premium kontrolü
+    const subscription = await prisma.userSubscription.findFirst({
+      where: {
+        userId: user.id,
+        status: 'active',
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    const currentPlan = subscription?.planId || 'free'
+
+    if (currentPlan === 'free') {
       return NextResponse.json(
-        { error: 'Oturum bulunamadı' },
-        { status: 401 }
+        {
+          error: 'Otomatik Ödemeler/Düzenli Gelir özelliği Premium üyelik gerektirir.',
+          requiresPremium: true,
+          feature: 'Otomatik Ödemeler',
+        },
+        { status: 403 }
       )
     }
 
     const body = await request.json()
-    
+
     // Frequency'den cron schedule oluştur
     const getCronSchedule = (frequency: string) => {
-      switch (frequency) {
-        case 'WEEKLY': return '0 0 * * 0' // Her pazar
-        case 'MONTHLY': return '0 0 1 * *' // Her ayın 1'i
-        case 'YEARLY': return '0 0 1 1 *' // Her yılın 1 Ocak'ı
-        default: return '0 0 1 * *' // Varsayılan aylık
+      switch (frequency.toLowerCase()) {
+        case 'daily':
+          return '0 0 * * *' // Her gün
+        case 'weekly':
+          return '0 0 * * 0' // Her pazar
+        case 'monthly':
+          return '0 0 1 * *' // Her ayın 1'i
+        case 'yearly':
+          return '0 0 1 1 *' // Her yılın 1 Ocak'ı
+        default:
+          return '0 0 1 * *' // Varsayılan aylık
       }
     }
 
     const autoPayment = await prisma.autoPayment.create({
       data: {
         userId: user.id,
+        txTypeId: body.txTypeId || 2, // Varsayılan GIDER
         name: body.name,
         description: body.description || null,
         amount: body.amount || 0,
-        currencyId: 1, // Varsayılan TRY
-        paymentMethodId: 1, // Varsayılan nakit
-        cronSchedule: getCronSchedule(body.frequency || 'MONTHLY'),
+        currencyId: body.currencyId || 1,
+        paymentMethodId: body.paymentMethodId || 1,
+        cronSchedule: getCronSchedule(body.frequency || 'monthly'),
         nextPaymentDate: new Date(body.nextPaymentDate),
+        endDate: body.endDate ? new Date(body.endDate) : null,
         categoryId: body.categoryId,
         accountId: body.accountId || null,
         creditCardId: body.creditCardId || null,
-        active: true
+        eWalletId: body.eWalletId || null,
+        beneficiaryId: body.beneficiaryId || null,
+        active: true,
       },
       include: {
         account: {
           include: {
             bank: true,
-            currency: true
-          }
+            currency: true,
+          },
         },
         creditCard: {
           include: {
             bank: true,
-            currency: true
-          }
+            currency: true,
+          },
         },
-        category: true
-      }
+        category: true,
+      },
     })
 
     return NextResponse.json(autoPayment, { status: 201 })
   } catch (error) {
     console.error('Auto payment creation error:', error)
-    return NextResponse.json(
-      { error: 'Otomatik ödeme oluşturulamadı' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Otomatik ödeme oluşturulamadı' }, { status: 500 })
   }
 }

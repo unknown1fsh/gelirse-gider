@@ -42,13 +42,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const fetchUser = async () => {
     try {
       const response = await fetch('/api/auth/me', {
-        credentials: 'include'
+        credentials: 'include',
       })
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      
+
       const data = await response.json()
 
       if (data.success) {
@@ -182,14 +182,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     register,
     logout,
     updateUser,
-    refreshUser
+    refreshUser,
   }
 
-  return (
-    <UserContext.Provider value={value}>
-      {children}
-    </UserContext.Provider>
-  )
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }
 
 export function useUser() {

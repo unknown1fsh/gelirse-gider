@@ -2,20 +2,19 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { usePremium } from '@/lib/use-premium'
 import { useUser } from '@/lib/user-context'
 import PremiumUpgradeModal from '@/components/premium-upgrade-modal'
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
-  Target, 
-  Brain, 
-  FileText, 
-  Settings, 
+import {
+  TrendingUp,
+  TrendingDown,
+  Target,
+  Brain,
+  FileText,
+  Settings,
   Lightbulb,
   Sparkles,
   Zap,
@@ -39,8 +38,8 @@ import {
   Bell,
   Download,
   Eye,
-  Share2
-} from "lucide-react"
+  Share2,
+} from 'lucide-react'
 
 interface CashFlowData {
   totalIncome: number
@@ -77,7 +76,8 @@ export default function CashFlowAnalysis() {
   const { user } = useUser()
 
   // Kullanıcı tipi tespiti
-  const isEnterpriseUser = user?.email?.includes('enterprise') || user?.plan === 'enterprise_premium'
+  const isEnterpriseUser =
+    user?.email?.includes('enterprise') || user?.plan === 'enterprise_premium'
   const isIndividualUser = user?.email?.includes('demo') || user?.plan === 'premium'
 
   // Veri yükleme
@@ -122,7 +122,7 @@ export default function CashFlowAnalysis() {
       gradient: 'from-emerald-500 to-teal-600',
       performance: '+15%',
       action: 'Strateji Oluştur',
-      onClick: () => handlePremiumFeature('Gelir Artır', () => setSelectedFeature('income-boost'))
+      onClick: () => handlePremiumFeature('Gelir Artır', () => setSelectedFeature('income-boost')),
     },
     {
       id: 'savings-plan',
@@ -132,7 +132,8 @@ export default function CashFlowAnalysis() {
       gradient: 'from-blue-500 to-cyan-600',
       performance: '-20%',
       action: 'Plan Oluştur',
-      onClick: () => handlePremiumFeature('Tasarruf Planı', () => setSelectedFeature('savings-plan'))
+      onClick: () =>
+        handlePremiumFeature('Tasarruf Planı', () => setSelectedFeature('savings-plan')),
     },
     {
       id: 'ai-advice',
@@ -142,7 +143,7 @@ export default function CashFlowAnalysis() {
       gradient: 'from-purple-500 to-pink-600',
       performance: 'AI',
       action: 'Danışmanlık Al',
-      onClick: () => handlePremiumFeature('AI Önerileri', () => setSelectedFeature('ai-advice'))
+      onClick: () => handlePremiumFeature('AI Önerileri', () => setSelectedFeature('ai-advice')),
     },
     {
       id: 'report-download',
@@ -152,7 +153,8 @@ export default function CashFlowAnalysis() {
       gradient: 'from-orange-500 to-red-600',
       performance: 'PDF',
       action: 'Rapor Oluştur',
-      onClick: () => handlePremiumFeature('Rapor İndir', () => setSelectedFeature('report-download'))
+      onClick: () =>
+        handlePremiumFeature('Rapor İndir', () => setSelectedFeature('report-download')),
     },
     {
       id: 'auto-tracking',
@@ -162,7 +164,8 @@ export default function CashFlowAnalysis() {
       gradient: 'from-indigo-500 to-purple-600',
       performance: 'Auto',
       action: 'Hedef Belirle',
-      onClick: () => handlePremiumFeature('Otomatik Takip', () => setSelectedFeature('auto-tracking'))
+      onClick: () =>
+        handlePremiumFeature('Otomatik Takip', () => setSelectedFeature('auto-tracking')),
     },
     {
       id: 'smart-goals',
@@ -172,7 +175,7 @@ export default function CashFlowAnalysis() {
       gradient: 'from-green-500 to-emerald-600',
       performance: 'Smart',
       action: 'Hedef Belirle',
-      onClick: () => handlePremiumFeature('Akıllı Hedef', () => setSelectedFeature('smart-goals'))
+      onClick: () => handlePremiumFeature('Akıllı Hedef', () => setSelectedFeature('smart-goals')),
     },
     {
       id: 'daily-tips',
@@ -182,8 +185,9 @@ export default function CashFlowAnalysis() {
       gradient: 'from-yellow-500 to-orange-600',
       performance: 'Tips',
       action: 'İpuçları',
-      onClick: () => handlePremiumFeature('Günlük İpuçları', () => setSelectedFeature('daily-tips'))
-    }
+      onClick: () =>
+        handlePremiumFeature('Günlük İpuçları', () => setSelectedFeature('daily-tips')),
+    },
   ]
 
   // Kurumsal Premium özellikler
@@ -196,7 +200,10 @@ export default function CashFlowAnalysis() {
       gradient: 'from-emerald-500 to-teal-600',
       performance: '+25%',
       action: 'Strateji Oluştur',
-      onClick: () => handlePremiumFeature('Gelir Optimizasyonu', () => setSelectedFeature('revenue-optimization'))
+      onClick: () =>
+        handlePremiumFeature('Gelir Optimizasyonu', () =>
+          setSelectedFeature('revenue-optimization')
+        ),
     },
     {
       id: 'cost-optimization',
@@ -206,7 +213,10 @@ export default function CashFlowAnalysis() {
       gradient: 'from-blue-500 to-cyan-600',
       performance: '-35%',
       action: 'Plan Oluştur',
-      onClick: () => handlePremiumFeature('Maliyet Optimizasyonu', () => setSelectedFeature('cost-optimization'))
+      onClick: () =>
+        handlePremiumFeature('Maliyet Optimizasyonu', () =>
+          setSelectedFeature('cost-optimization')
+        ),
     },
     {
       id: 'enterprise-ai',
@@ -216,7 +226,8 @@ export default function CashFlowAnalysis() {
       gradient: 'from-purple-500 to-pink-600',
       performance: 'AI',
       action: 'Danışmanlık Al',
-      onClick: () => handlePremiumFeature('Enterprise AI', () => setSelectedFeature('enterprise-ai'))
+      onClick: () =>
+        handlePremiumFeature('Enterprise AI', () => setSelectedFeature('enterprise-ai')),
     },
     {
       id: 'enterprise-reports',
@@ -226,7 +237,8 @@ export default function CashFlowAnalysis() {
       gradient: 'from-orange-500 to-red-600',
       performance: 'PDF',
       action: 'Rapor Oluştur',
-      onClick: () => handlePremiumFeature('Enterprise Raporlar', () => setSelectedFeature('enterprise-reports'))
+      onClick: () =>
+        handlePremiumFeature('Enterprise Raporlar', () => setSelectedFeature('enterprise-reports')),
     },
     {
       id: 'enterprise-automation',
@@ -236,7 +248,10 @@ export default function CashFlowAnalysis() {
       gradient: 'from-indigo-500 to-purple-600',
       performance: 'Auto',
       action: 'Hedef Belirle',
-      onClick: () => handlePremiumFeature('Enterprise Otomasyon', () => setSelectedFeature('enterprise-automation'))
+      onClick: () =>
+        handlePremiumFeature('Enterprise Otomasyon', () =>
+          setSelectedFeature('enterprise-automation')
+        ),
     },
     {
       id: 'enterprise-goals',
@@ -246,7 +261,8 @@ export default function CashFlowAnalysis() {
       gradient: 'from-green-500 to-emerald-600',
       performance: 'Smart',
       action: 'Hedef Belirle',
-      onClick: () => handlePremiumFeature('Kurumsal Hedefler', () => setSelectedFeature('enterprise-goals'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Hedefler', () => setSelectedFeature('enterprise-goals')),
     },
     {
       id: 'enterprise-insights',
@@ -256,8 +272,9 @@ export default function CashFlowAnalysis() {
       gradient: 'from-yellow-500 to-orange-600',
       performance: 'AI',
       action: 'İçgörüler',
-      onClick: () => handlePremiumFeature('Kurumsal İçgörüler', () => setSelectedFeature('enterprise-insights'))
-    }
+      onClick: () =>
+        handlePremiumFeature('Kurumsal İçgörüler', () => setSelectedFeature('enterprise-insights')),
+    },
   ]
 
   // Kullanıcı tipine göre premium özellikleri seç
@@ -274,7 +291,7 @@ export default function CashFlowAnalysis() {
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
           <div className={`h-2 bg-gradient-to-r ${feature.gradient} rounded-t-2xl`} />
-          
+
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
@@ -297,62 +314,34 @@ export default function CashFlowAnalysis() {
             </div>
 
             {/* Şahıs Premium Modalları */}
-            {selectedFeature === 'income-boost' && (
-              <IncomeBoostModal />
-            )}
-            
-            {selectedFeature === 'savings-plan' && (
-              <SavingsPlanModal />
-            )}
-            
-            {selectedFeature === 'ai-advice' && (
-              <AIAdviceModal />
-            )}
-            
-            {selectedFeature === 'report-download' && (
-              <ReportDownloadModal />
-            )}
-            
-            {selectedFeature === 'auto-tracking' && (
-              <AutoTrackingModal />
-            )}
-            
-            {selectedFeature === 'smart-goals' && (
-              <SmartGoalsModal />
-            )}
-            
-            {selectedFeature === 'daily-tips' && (
-              <DailyTipsModal />
-            )}
+            {selectedFeature === 'income-boost' && <IncomeBoostModal />}
+
+            {selectedFeature === 'savings-plan' && <SavingsPlanModal />}
+
+            {selectedFeature === 'ai-advice' && <AIAdviceModal />}
+
+            {selectedFeature === 'report-download' && <ReportDownloadModal />}
+
+            {selectedFeature === 'auto-tracking' && <AutoTrackingModal />}
+
+            {selectedFeature === 'smart-goals' && <SmartGoalsModal />}
+
+            {selectedFeature === 'daily-tips' && <DailyTipsModal />}
 
             {/* Kurumsal Premium Modalları */}
-            {selectedFeature === 'revenue-optimization' && (
-              <RevenueOptimizationModal />
-            )}
-            
-            {selectedFeature === 'cost-optimization' && (
-              <CostOptimizationModal />
-            )}
-            
-            {selectedFeature === 'enterprise-ai' && (
-              <EnterpriseAIModal />
-            )}
-            
-            {selectedFeature === 'enterprise-reports' && (
-              <EnterpriseReportsModal />
-            )}
-            
-            {selectedFeature === 'enterprise-automation' && (
-              <EnterpriseAutomationModal />
-            )}
-            
-            {selectedFeature === 'enterprise-goals' && (
-              <EnterpriseGoalsModal />
-            )}
-            
-            {selectedFeature === 'enterprise-insights' && (
-              <EnterpriseInsightsModal />
-            )}
+            {selectedFeature === 'revenue-optimization' && <RevenueOptimizationModal />}
+
+            {selectedFeature === 'cost-optimization' && <CostOptimizationModal />}
+
+            {selectedFeature === 'enterprise-ai' && <EnterpriseAIModal />}
+
+            {selectedFeature === 'enterprise-reports' && <EnterpriseReportsModal />}
+
+            {selectedFeature === 'enterprise-automation' && <EnterpriseAutomationModal />}
+
+            {selectedFeature === 'enterprise-goals' && <EnterpriseGoalsModal />}
+
+            {selectedFeature === 'enterprise-insights' && <EnterpriseInsightsModal />}
           </div>
         </div>
       </div>
@@ -385,7 +374,7 @@ export default function CashFlowAnalysis() {
               Anasayfa
             </Button>
           </div>
-          
+
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white">
               <TrendingUp className="w-8 h-8" />
@@ -395,10 +384,9 @@ export default function CashFlowAnalysis() {
                 {isEnterpriseUser ? 'Kurumsal Nakit Akışı Analizi' : 'Nakit Akışı Analizi'}
               </h1>
               <p className="text-gray-600">
-                {isEnterpriseUser 
+                {isEnterpriseUser
                   ? 'Enterprise AI destekli kurumsal nakit akışı yönetimi'
-                  : 'Premium AI destekli nakit akışı yönetimi'
-                }
+                  : 'Premium AI destekli nakit akışı yönetimi'}
               </p>
             </div>
           </div>
@@ -410,20 +398,22 @@ export default function CashFlowAnalysis() {
             <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
               <Crown className="w-6 h-6 text-yellow-500" />
               {isEnterpriseUser ? 'Kurumsal Premium Aksiyonlar' : 'Premium Aksiyonlar'}
-              <Badge variant="secondary" className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
+              <Badge
+                variant="secondary"
+                className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white"
+              >
                 {isEnterpriseUser ? 'Enterprise AI' : 'AI Destekli'}
               </Badge>
             </CardTitle>
             <p className="text-gray-600">
-              {isEnterpriseUser 
+              {isEnterpriseUser
                 ? 'Kurumsal nakit akışınızı optimize etmek için Enterprise AI destekli öneriler'
-                : 'Nakit akışınızı iyileştirmek için AI destekli premium öneriler'
-              }
+                : 'Nakit akışınızı iyileştirmek için AI destekli premium öneriler'}
             </p>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {premiumFeatures.map((feature) => (
+              {premiumFeatures.map(feature => (
                 <div
                   key={feature.id}
                   className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${feature.gradient} p-6 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl`}
@@ -445,10 +435,10 @@ export default function CashFlowAnalysis() {
                   <div className="text-white">
                     <h3 className="text-lg font-bold mb-2">{feature.title}</h3>
                     <p className="text-sm text-white/90 mb-4">{feature.description}</p>
-                    
+
                     {/* Action Button */}
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
                     >
                       {feature.action}
@@ -513,8 +503,8 @@ export default function CashFlowAnalysis() {
                     +25.3%
                   </p>
                 </div>
-                <div className="p-3 rounded-full bg-blue-500 text-white">
-                  <DollarSign className="w-6 h-6" />
+                <div className="p-3 rounded-full bg-blue-500 text-white flex items-center justify-center">
+                  <span className="text-2xl font-bold">₺</span>
                 </div>
               </div>
             </CardContent>
@@ -549,20 +539,86 @@ export default function CashFlowAnalysis() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {(isEnterpriseUser ? [
-                { name: 'Operasyonel Giderler', amount: 8500, percentage: 26.4, trend: 5.2, color: 'from-red-400 to-red-600' },
-                { name: 'Lojistik & Ulaştırma', amount: 6200, percentage: 19.3, trend: -2.1, color: 'from-blue-400 to-blue-600' },
-                { name: 'Pazarlama & Reklam', amount: 4800, percentage: 14.9, trend: 8.7, color: 'from-purple-400 to-purple-600' },
-                { name: 'İnsan Kaynakları', amount: 3200, percentage: 9.9, trend: 12.3, color: 'from-green-400 to-green-600' },
-                { name: 'Teknoloji & IT', amount: 9480, percentage: 29.5, trend: -1.8, color: 'from-gray-400 to-gray-600' }
-              ] : [
-                { name: 'Gıda & İçecek', amount: 8500, percentage: 26.4, trend: 5.2, color: 'from-red-400 to-red-600' },
-                { name: 'Ulaşım', amount: 6200, percentage: 19.3, trend: -2.1, color: 'from-blue-400 to-blue-600' },
-                { name: 'Eğlence', amount: 4800, percentage: 14.9, trend: 8.7, color: 'from-purple-400 to-purple-600' },
-                { name: 'Sağlık', amount: 3200, percentage: 9.9, trend: 12.3, color: 'from-green-400 to-green-600' },
-                { name: 'Diğer', amount: 9480, percentage: 29.5, trend: -1.8, color: 'from-gray-400 to-gray-600' }
-              ]).map((category, index) => (
-                <div key={index} className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+              {(isEnterpriseUser
+                ? [
+                    {
+                      name: 'Operasyonel Giderler',
+                      amount: 8500,
+                      percentage: 26.4,
+                      trend: 5.2,
+                      color: 'from-red-400 to-red-600',
+                    },
+                    {
+                      name: 'Lojistik & Ulaştırma',
+                      amount: 6200,
+                      percentage: 19.3,
+                      trend: -2.1,
+                      color: 'from-blue-400 to-blue-600',
+                    },
+                    {
+                      name: 'Pazarlama & Reklam',
+                      amount: 4800,
+                      percentage: 14.9,
+                      trend: 8.7,
+                      color: 'from-purple-400 to-purple-600',
+                    },
+                    {
+                      name: 'İnsan Kaynakları',
+                      amount: 3200,
+                      percentage: 9.9,
+                      trend: 12.3,
+                      color: 'from-green-400 to-green-600',
+                    },
+                    {
+                      name: 'Teknoloji & IT',
+                      amount: 9480,
+                      percentage: 29.5,
+                      trend: -1.8,
+                      color: 'from-gray-400 to-gray-600',
+                    },
+                  ]
+                : [
+                    {
+                      name: 'Gıda & İçecek',
+                      amount: 8500,
+                      percentage: 26.4,
+                      trend: 5.2,
+                      color: 'from-red-400 to-red-600',
+                    },
+                    {
+                      name: 'Ulaşım',
+                      amount: 6200,
+                      percentage: 19.3,
+                      trend: -2.1,
+                      color: 'from-blue-400 to-blue-600',
+                    },
+                    {
+                      name: 'Eğlence',
+                      amount: 4800,
+                      percentage: 14.9,
+                      trend: 8.7,
+                      color: 'from-purple-400 to-purple-600',
+                    },
+                    {
+                      name: 'Sağlık',
+                      amount: 3200,
+                      percentage: 9.9,
+                      trend: 12.3,
+                      color: 'from-green-400 to-green-600',
+                    },
+                    {
+                      name: 'Diğer',
+                      amount: 9480,
+                      percentage: 29.5,
+                      trend: -1.8,
+                      color: 'from-gray-400 to-gray-600',
+                    },
+                  ]
+              ).map((category, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors"
+                >
                   <div className="flex items-center gap-4">
                     <div className={`w-4 h-4 rounded-full bg-gradient-to-r ${category.color}`} />
                     <div>
@@ -573,8 +629,14 @@ export default function CashFlowAnalysis() {
                   <div className="flex items-center gap-4">
                     <div className="text-right">
                       <p className="font-medium text-gray-900">%{category.percentage}</p>
-                      <p className={`text-sm flex items-center ${category.trend > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {category.trend > 0 ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
+                      <p
+                        className={`text-sm flex items-center ${category.trend > 0 ? 'text-green-600' : 'text-red-600'}`}
+                      >
+                        {category.trend > 0 ? (
+                          <TrendingUp className="w-3 h-3 mr-1" />
+                        ) : (
+                          <TrendingDown className="w-3 h-3 mr-1" />
+                        )}
                         %{Math.abs(category.trend)}
                       </p>
                     </div>
@@ -597,7 +659,7 @@ export default function CashFlowAnalysis() {
         limitInfo={{
           current: 0,
           limit: 0,
-          type: 'analysis'
+          type: 'analysis',
         }}
       />
     </div>
@@ -625,7 +687,7 @@ function IncomeBoostModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white">
           <Sparkles className="w-4 h-4 mr-2" />
@@ -660,7 +722,7 @@ function SavingsPlanModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white">
           <Settings className="w-4 h-4 mr-2" />
@@ -695,7 +757,7 @@ function AIAdviceModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-purple-500 to-pink-600 text-white">
           <MessageSquare className="w-4 h-4 mr-2" />
@@ -730,7 +792,7 @@ function ReportDownloadModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-orange-500 to-red-600 text-white">
           <Download className="w-4 h-4 mr-2" />
@@ -765,7 +827,7 @@ function AutoTrackingModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
           <Settings className="w-4 h-4 mr-2" />
@@ -800,7 +862,7 @@ function SmartGoalsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-green-500 to-emerald-600 text-white">
           <Plus className="w-4 h-4 mr-2" />
@@ -835,7 +897,7 @@ function DailyTipsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white">
           <Bell className="w-4 h-4 mr-2" />
@@ -863,7 +925,9 @@ function RevenueOptimizationModal() {
           </div>
           <div className="flex items-center gap-3">
             <CheckCircle className="w-5 h-5 text-emerald-600" />
-            <span className="text-emerald-700">Müşteri segmentasyonu ve fiyatlandırma optimizasyonu</span>
+            <span className="text-emerald-700">
+              Müşteri segmentasyonu ve fiyatlandırma optimizasyonu
+            </span>
           </div>
           <div className="flex items-center gap-3">
             <CheckCircle className="w-5 h-5 text-emerald-600" />
@@ -871,7 +935,7 @@ function RevenueOptimizationModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white">
           <Sparkles className="w-4 h-4 mr-2" />
@@ -906,7 +970,7 @@ function CostOptimizationModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white">
           <Settings className="w-4 h-4 mr-2" />
@@ -941,7 +1005,7 @@ function EnterpriseAIModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-purple-500 to-pink-600 text-white">
           <MessageSquare className="w-4 h-4 mr-2" />
@@ -976,7 +1040,7 @@ function EnterpriseReportsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-orange-500 to-red-600 text-white">
           <Download className="w-4 h-4 mr-2" />
@@ -1011,7 +1075,7 @@ function EnterpriseAutomationModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
           <Settings className="w-4 h-4 mr-2" />
@@ -1046,7 +1110,7 @@ function EnterpriseGoalsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-green-500 to-emerald-600 text-white">
           <Plus className="w-4 h-4 mr-2" />
@@ -1081,7 +1145,7 @@ function EnterpriseInsightsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white">
           <Bell className="w-4 h-4 mr-2" />

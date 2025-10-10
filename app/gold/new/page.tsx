@@ -7,8 +7,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ArrowLeft, Home, Coins, Save, Loader2 } from 'lucide-react'
 
 interface ReferenceData {
-  goldTypes: Array<{ id: number; name: string }>
-  goldPurities: Array<{ id: number; name: string }>
+  goldTypes: Array<{
+    id: number
+    code: string
+    name: string
+    description?: string | null
+  }>
+  goldPurities: Array<{
+    id: number
+    code: string
+    name: string
+    purity: string
+  }>
 }
 
 export default function NewGoldItemPage() {
@@ -22,7 +32,7 @@ export default function NewGoldItemPage() {
     goldPurityId: '',
     weight: '',
     purchasePrice: '',
-    description: ''
+    description: '',
   })
 
   useEffect(() => {
@@ -53,7 +63,7 @@ export default function NewGoldItemPage() {
         weight: parseFloat(formData.weight) || 0,
         purchasePrice: parseFloat(formData.purchasePrice) || 0,
         goldTypeId: parseInt(formData.goldTypeId),
-        goldPurityId: parseInt(formData.goldPurityId)
+        goldPurityId: parseInt(formData.goldPurityId),
       }
 
       const response = await fetch('/api/gold', {
@@ -98,17 +108,12 @@ export default function NewGoldItemPage() {
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <Link
-          href="/dashboard"
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-        >
+        <Link href="/dashboard" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
           <Home className="h-5 w-5" />
         </Link>
         <div>
           <h1 className="text-3xl font-bold">Yeni Altın Eşyası</h1>
-          <p className="text-muted-foreground">
-            Altın veya ziynet eşyası ekleyin
-          </p>
+          <p className="text-muted-foreground">Altın veya ziynet eşyası ekleyin</p>
         </div>
       </div>
 
@@ -118,20 +123,16 @@ export default function NewGoldItemPage() {
             <Coins className="h-5 w-5 text-yellow-600" />
             Altın Eşyası Bilgileri
           </CardTitle>
-          <CardDescription>
-            Altın veya ziynet eşyasının detaylarını girin
-          </CardDescription>
+          <CardDescription>Altın veya ziynet eşyasının detaylarını girin</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Eşya Adı *
-              </label>
+              <label className="block text-sm font-medium mb-2">Eşya Adı *</label>
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 placeholder="Örn: 22 Ayar Altın Bilezik"
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
@@ -140,55 +141,55 @@ export default function NewGoldItemPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  Altın Türü *
-                </label>
+                <label className="block text-sm font-medium mb-2">Altın Türü * (13 Tür)</label>
                 <select
                   value={formData.goldTypeId}
-                  onChange={(e) => setFormData(prev => ({ ...prev, goldTypeId: e.target.value }))}
+                  onChange={e => setFormData(prev => ({ ...prev, goldTypeId: e.target.value }))}
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 >
                   <option value="">Altın türü seçin</option>
-                  {referenceData?.goldTypes.map((type) => (
-                    <option key={type.id} value={type.id}>
+                  {referenceData?.goldTypes.map(type => (
+                    <option key={type.id} value={type.id} title={type.description || ''}>
                       {type.name}
                     </option>
                   ))}
                 </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Bilezik, Kolye, Küpe, Cumhuriyet Altını, Yarım/Çeyrek Altın, vb.
+                </p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  Ayar *
-                </label>
+                <label className="block text-sm font-medium mb-2">Ayar * (5 Ayar)</label>
                 <select
                   value={formData.goldPurityId}
-                  onChange={(e) => setFormData(prev => ({ ...prev, goldPurityId: e.target.value }))}
+                  onChange={e => setFormData(prev => ({ ...prev, goldPurityId: e.target.value }))}
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 >
                   <option value="">Ayar seçin</option>
-                  {referenceData?.goldPurities.map((purity) => (
+                  {referenceData?.goldPurities.map(purity => (
                     <option key={purity.id} value={purity.id}>
-                      {purity.name}
+                      {purity.name} ({purity.purity} ayar)
                     </option>
                   ))}
                 </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  24K (Saf), 22K (Cumhuriyet), 18K, 14K, 8K
+                </p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  Ağırlık (Gram) *
-                </label>
+                <label className="block text-sm font-medium mb-2">Ağırlık (Gram) *</label>
                 <input
                   type="number"
                   step="0.01"
                   min="0"
                   value={formData.weight}
-                  onChange={(e) => setFormData(prev => ({ ...prev, weight: e.target.value }))}
+                  onChange={e => setFormData(prev => ({ ...prev, weight: e.target.value }))}
                   placeholder="Örn: 15.50"
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
@@ -196,15 +197,13 @@ export default function NewGoldItemPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  Alış Fiyatı (₺) *
-                </label>
+                <label className="block text-sm font-medium mb-2">Alış Fiyatı (₺) *</label>
                 <input
                   type="number"
                   step="0.01"
                   min="0"
                   value={formData.purchasePrice}
-                  onChange={(e) => setFormData(prev => ({ ...prev, purchasePrice: e.target.value }))}
+                  onChange={e => setFormData(prev => ({ ...prev, purchasePrice: e.target.value }))}
                   placeholder="Örn: 25000.00"
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
@@ -213,12 +212,10 @@ export default function NewGoldItemPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Açıklama
-              </label>
+              <label className="block text-sm font-medium mb-2">Açıklama</label>
               <textarea
                 value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 placeholder="Eşya hakkında ek bilgiler..."
                 rows={3}
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"

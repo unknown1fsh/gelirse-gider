@@ -11,19 +11,15 @@ const protectedRoutes = [
   '/gold',
   '/analysis',
   '/portfolio',
-  '/settings'
+  '/settings',
 ]
 
 // Auth rotaları (giriş yapmış kullanıcılar erişemez)
-const authRoutes = [
-  '/auth/login',
-  '/auth/register',
-  '/landing'
-]
+const authRoutes = ['/auth/login', '/auth/register', '/landing']
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  
+
   // Cookie'den token kontrolü (basit)
   const hasToken = hasValidToken(request)
 
@@ -65,5 +61,5 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ]
+  ],
 }

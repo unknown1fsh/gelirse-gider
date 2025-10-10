@@ -1,5 +1,5 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import * as React from 'react'
+import { cn } from '@/lib/utils'
 
 const ColorPicker = React.forwardRef<
   HTMLDivElement,
@@ -22,20 +22,16 @@ const ColorPicker = React.forwardRef<
   }
 
   return (
-    <div
-      ref={ref}
-      className={cn("relative", className)}
-      {...props}
-    >
+    <div ref={ref} className={cn('relative', className)} {...props}>
       <input
         type="color"
         value={selectedColor}
-        onChange={(e) => handleColorChange(e.target.value)}
+        onChange={e => handleColorChange(e.target.value)}
         className="h-10 w-full rounded-md border border-input bg-background p-1 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
       />
     </div>
   )
 })
-ColorPicker.displayName = "ColorPicker"
+ColorPicker.displayName = 'ColorPicker'
 
 export { ColorPicker }

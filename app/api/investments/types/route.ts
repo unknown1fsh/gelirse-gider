@@ -14,13 +14,13 @@ export async function GET() {
         'Borsa İstanbul hisseleri',
         'NYSE ve NASDAQ hisseleri',
         'Sektörel analizler',
-        'Teknik analiz araçları'
+        'Teknik analiz araçları',
       ],
       requirements: {
         minAmount: 100,
         currency: 'TRY',
-        tradingHours: '09:30 - 18:00'
-      }
+        tradingHours: '09:30 - 18:00',
+      },
     },
     {
       id: 'fund',
@@ -34,13 +34,13 @@ export async function GET() {
         'Hisse senedi fonları',
         'Borçlanma araçları fonları',
         'Karma fonlar',
-        'Endeks fonları'
+        'Endeks fonları',
       ],
       requirements: {
         minAmount: 1000,
         currency: 'TRY',
-        tradingHours: '24/7'
-      }
+        tradingHours: '24/7',
+      },
     },
     {
       id: 'bond',
@@ -53,14 +53,14 @@ export async function GET() {
       features: [
         'Devlet tahvilleri',
         'Kurumsal tahviller',
-        'Eurobond\'lar',
-        'Faiz hesaplama araçları'
+        "Eurobond'lar",
+        'Faiz hesaplama araçları',
       ],
       requirements: {
         minAmount: 10000,
         currency: 'TRY',
-        tradingHours: '09:30 - 18:00'
-      }
+        tradingHours: '09:30 - 18:00',
+      },
     },
     {
       id: 'crypto',
@@ -70,17 +70,12 @@ export async function GET() {
       color: 'from-yellow-500 to-orange-600',
       riskLevel: 'high',
       popularity: 90,
-      features: [
-        'Bitcoin (BTC)',
-        'Ethereum (ETH)',
-        'Altcoin\'ler',
-        'DeFi tokenları'
-      ],
+      features: ['Bitcoin (BTC)', 'Ethereum (ETH)', "Altcoin'ler", 'DeFi tokenları'],
       requirements: {
         minAmount: 100,
         currency: 'TRY',
-        tradingHours: '24/7'
-      }
+        tradingHours: '24/7',
+      },
     },
     {
       id: 'commodity',
@@ -90,17 +85,12 @@ export async function GET() {
       color: 'from-amber-500 to-yellow-600',
       riskLevel: 'medium',
       popularity: 75,
-      features: [
-        'Altın ve gümüş',
-        'Petrol ve doğalgaz',
-        'Tarım ürünleri',
-        'Endüstriyel metaller'
-      ],
+      features: ['Altın ve gümüş', 'Petrol ve doğalgaz', 'Tarım ürünleri', 'Endüstriyel metaller'],
       requirements: {
         minAmount: 500,
         currency: 'TRY',
-        tradingHours: '24/7'
-      }
+        tradingHours: '24/7',
+      },
     },
     {
       id: 'forex',
@@ -114,33 +104,28 @@ export async function GET() {
         'Major döviz çiftleri',
         'Emerging market dövizleri',
         'Forex analizleri',
-        'Hedge araçları'
+        'Hedge araçları',
       ],
       requirements: {
         minAmount: 1000,
         currency: 'USD',
-        tradingHours: '24/5'
-      }
+        tradingHours: '24/5',
+      },
     },
     {
       id: 'real-estate',
       name: 'Gayrimenkul',
-      description: 'Emlak yatırımları ve REIT\'ler',
+      description: "Emlak yatırımları ve REIT'ler",
       icon: 'building-2',
       color: 'from-red-500 to-rose-600',
       riskLevel: 'medium',
       popularity: 65,
-      features: [
-        'Konut yatırımları',
-        'Ticari emlak',
-        'REIT\'ler',
-        'Emlak analizleri'
-      ],
+      features: ['Konut yatırımları', 'Ticari emlak', "REIT'ler", 'Emlak analizleri'],
       requirements: {
         minAmount: 100000,
         currency: 'TRY',
-        tradingHours: '09:00 - 18:00'
-      }
+        tradingHours: '09:00 - 18:00',
+      },
     },
     {
       id: 'other',
@@ -150,18 +135,13 @@ export async function GET() {
       color: 'from-pink-500 to-purple-600',
       riskLevel: 'high',
       popularity: 45,
-      features: [
-        'Vadeli işlemler',
-        'Opsiyonlar',
-        'CFD\'ler',
-        'Structured products'
-      ],
+      features: ['Vadeli işlemler', 'Opsiyonlar', "CFD'ler", 'Structured products'],
       requirements: {
         minAmount: 5000,
         currency: 'TRY',
-        tradingHours: 'Değişken'
-      }
-    }
+        tradingHours: 'Değişken',
+      },
+    },
   ]
 
   return NextResponse.json(investmentTypes)

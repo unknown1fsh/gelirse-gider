@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getCurrentUser } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth-refactored'
 import { AuthService } from '@/lib/auth'
 
 export async function POST(request: NextRequest) {
@@ -7,10 +7,7 @@ export async function POST(request: NextRequest) {
     const user = await getCurrentUser(request)
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, message: 'Oturum bulunamadı' },
-        { status: 401 }
-      )
+      return NextResponse.json({ success: false, message: 'Oturum bulunamadı' }, { status: 401 })
     }
 
     const { currentPassword, newPassword } = await request.json()
@@ -34,7 +31,7 @@ export async function POST(request: NextRequest) {
     if (result.success) {
       return NextResponse.json({
         success: true,
-        message: 'Şifre başarıyla değiştirildi'
+        message: 'Şifre başarıyla değiştirildi',
       })
     }
 
@@ -44,9 +41,6 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     console.error('Change password API error:', error)
-    return NextResponse.json(
-      { success: false, message: 'Sunucu hatası' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, message: 'Sunucu hatası' }, { status: 500 })
   }
 }

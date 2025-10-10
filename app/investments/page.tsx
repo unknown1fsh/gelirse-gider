@@ -8,17 +8,22 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import PremiumUpgradeModal from '@/components/premium-upgrade-modal'
-import { 
-  Building2, 
-  TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
-  Plus, 
-  Eye, 
-  Edit, 
+import {
+  Building2,
+  TrendingUp,
+  TrendingDown,
+  Plus,
+  Eye,
+  Edit,
   Trash2,
   Search,
   Filter,
@@ -127,7 +132,7 @@ import {
   BatteryLow,
   BatteryMedium,
   BatteryHigh,
-  BatteryFull
+  BatteryFull,
 } from 'lucide-react'
 
 interface Investment {
@@ -157,7 +162,7 @@ const investmentTypes = [
     color: 'from-green-500 to-emerald-600',
     description: 'Borsa hisseleri ve şirket payları',
     riskLevel: 'medium',
-    popularity: 95
+    popularity: 95,
   },
   {
     id: 'fund',
@@ -166,7 +171,7 @@ const investmentTypes = [
     color: 'from-blue-500 to-indigo-600',
     description: 'Profesyonel yönetilen yatırım fonları',
     riskLevel: 'low',
-    popularity: 85
+    popularity: 85,
   },
   {
     id: 'bond',
@@ -175,7 +180,7 @@ const investmentTypes = [
     color: 'from-purple-500 to-violet-600',
     description: 'Devlet ve kurumsal tahvilleri',
     riskLevel: 'low',
-    popularity: 70
+    popularity: 70,
   },
   {
     id: 'crypto',
@@ -184,7 +189,7 @@ const investmentTypes = [
     color: 'from-yellow-500 to-orange-600',
     description: 'Bitcoin, Ethereum ve diğer kripto paralar',
     riskLevel: 'high',
-    popularity: 90
+    popularity: 90,
   },
   {
     id: 'commodity',
@@ -193,7 +198,7 @@ const investmentTypes = [
     color: 'from-amber-500 to-yellow-600',
     description: 'Altın, gümüş, petrol ve diğer emtialar',
     riskLevel: 'medium',
-    popularity: 75
+    popularity: 75,
   },
   {
     id: 'forex',
@@ -202,16 +207,16 @@ const investmentTypes = [
     color: 'from-cyan-500 to-blue-600',
     description: 'USD, EUR ve diğer döviz kurları',
     riskLevel: 'high',
-    popularity: 80
+    popularity: 80,
   },
   {
     id: 'real-estate',
     name: 'Gayrimenkul',
     icon: Building2,
     color: 'from-red-500 to-rose-600',
-    description: 'Emlak yatırımları ve REIT\'ler',
+    description: "Emlak yatırımları ve REIT'ler",
     riskLevel: 'medium',
-    popularity: 65
+    popularity: 65,
   },
   {
     id: 'other',
@@ -220,8 +225,8 @@ const investmentTypes = [
     color: 'from-pink-500 to-purple-600',
     description: 'Vadeli işlemler, opsiyonlar ve diğer araçlar',
     riskLevel: 'high',
-    popularity: 45
-  }
+    popularity: 45,
+  },
 ]
 
 export default function InvestmentsPage() {
@@ -234,26 +239,51 @@ export default function InvestmentsPage() {
   const [showPremiumModal, setShowPremiumModal] = useState(false)
   const [selectedInvestment, setSelectedInvestment] = useState<Investment | null>(null)
   const [activeTab, setActiveTab] = useState('portfolio')
+  const [userPlan, setUserPlan] = useState<string>('free')
+  const [userLoading, setUserLoading] = useState(true)
 
-  // Demo veriler
+  // Kullanıcı bilgisini al
   useEffect(() => {
-    const demoInvestments: Investment[] = [
+    async function fetchUser() {
+      try {
+        const response = await fetch('/api/auth/me', { credentials: 'include' })
+        if (response.ok) {
+          const data = await response.json()
+          setUserPlan(data.plan || 'free')
+        }
+      } catch (error) {
+        console.error('Kullanıcı bilgisi alınamadı:', error)
+      } finally {
+        setUserLoading(false)
+      }
+    }
+    fetchUser()
+  }, [])
+
+  // Gerçek yatırım verilerini getir
+  useEffect(() => {
+    if (userLoading) return
+
+    async function fetchInvestments() {
+      if (userPlan === 'free') {
+        // Free kullanıcı - demo veriler göster
+        const demoInvestments: Investment[] = [
       {
         id: '1',
         type: 'stock',
         name: 'Apple Inc.',
         symbol: 'AAPL',
         quantity: 10,
-        purchasePrice: 150.00,
-        currentPrice: 175.50,
-        totalValue: 1755.00,
-        profitLoss: 255.00,
+        purchasePrice: 150.0,
+        currentPrice: 175.5,
+        totalValue: 1755.0,
+        profitLoss: 255.0,
         profitLossPercentage: 17.0,
         purchaseDate: '2024-01-15',
         lastUpdate: '2024-06-30',
         category: 'Teknoloji',
         riskLevel: 'medium',
-        status: 'active'
+        status: 'active',
       },
       {
         id: '2',
@@ -261,16 +291,16 @@ export default function InvestmentsPage() {
         name: 'Bitcoin',
         symbol: 'BTC',
         quantity: 0.5,
-        purchasePrice: 45000.00,
-        currentPrice: 67500.00,
-        totalValue: 33750.00,
-        profitLoss: 11250.00,
+        purchasePrice: 45000.0,
+        currentPrice: 67500.0,
+        totalValue: 33750.0,
+        profitLoss: 11250.0,
         profitLossPercentage: 50.0,
         purchaseDate: '2024-02-10',
         lastUpdate: '2024-06-30',
         category: 'Kripto',
         riskLevel: 'high',
-        status: 'active'
+        status: 'active',
       },
       {
         id: '3',
@@ -278,43 +308,64 @@ export default function InvestmentsPage() {
         name: 'Borsa İstanbul 100 Fonu',
         symbol: 'BIST100',
         quantity: 1000,
-        purchasePrice: 12.50,
+        purchasePrice: 12.5,
         currentPrice: 14.75,
-        totalValue: 14750.00,
-        profitLoss: 2250.00,
+        totalValue: 14750.0,
+        profitLoss: 2250.0,
         profitLossPercentage: 18.0,
         purchaseDate: '2024-03-05',
         lastUpdate: '2024-06-30',
         category: 'Hisse Senedi Fonu',
         riskLevel: 'medium',
-        status: 'active'
-      }
+        status: 'active',
+      },
     ]
-    
-    setTimeout(() => {
-      setInvestments(demoInvestments)
-      setIsLoading(false)
-    }, 1000)
-  }, [])
+
+        setInvestments(demoInvestments)
+        setIsLoading(false)
+      } else {
+        // Premium kullanıcı - gerçek veriler getir
+        try {
+          const response = await fetch('/api/investments', { credentials: 'include' })
+          if (response.ok) {
+            const data = await response.json()
+            setInvestments(data)
+          }
+        } catch (error) {
+          console.error('Yatırımlar alınamadı:', error)
+        } finally {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    fetchInvestments()
+  }, [userPlan, userLoading])
 
   const filteredInvestments = investments.filter(investment => {
-    const matchesSearch = investment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         investment.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSearch =
+      investment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      investment.symbol.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesType = selectedType === 'all' || investment.type === selectedType
     return matchesSearch && matchesType
   })
 
   const totalValue = investments.reduce((sum, inv) => sum + inv.totalValue, 0)
   const totalProfitLoss = investments.reduce((sum, inv) => sum + inv.profitLoss, 0)
-  const totalProfitLossPercentage = totalValue > 0 ? (totalProfitLoss / (totalValue - totalProfitLoss)) * 100 : 0
+  const totalProfitLossPercentage =
+    totalValue > 0 ? (totalProfitLoss / (totalValue - totalProfitLoss)) * 100 : 0
 
   const getTypeInfo = (type: string) => {
     return investmentTypes.find(t => t.id === type) || investmentTypes[7]
   }
 
-  const handleAddInvestment = () => {
-    // Premium kontrolü
-    setShowPremiumModal(true)
+  const handleAddInvestment = (investmentType: string) => {
+    if (userPlan === 'free') {
+      setShowPremiumModal(true)
+    } else {
+      // Premium kullanıcı - doğrudan ekleme sayfasına git
+      router.push(`/investments/${investmentType}/new`)
+    }
   }
 
   if (isLoading) {
@@ -338,13 +389,12 @@ export default function InvestmentsPage() {
             <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
               <Building2 className="h-10 w-10 text-white" />
             </div>
-            <h1 className="text-5xl font-bold mb-4">
-              🚀 Yatırım Araçları
-            </h1>
+            <h1 className="text-5xl font-bold mb-4">🚀 Yatırım Araçları</h1>
             <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
-              Profesyonel yatırım portföyünüzü yönetin. Hisse senetleri, fonlar, kripto paralar ve daha fazlası!
+              Profesyonel yatırım portföyünüzü yönetin. Hisse senetleri, fonlar, kripto paralar ve
+              daha fazlası!
             </p>
-            
+
             {/* Portfolio Summary */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               <Card className="bg-white/10 backdrop-blur-sm border-white/20">
@@ -355,25 +405,37 @@ export default function InvestmentsPage() {
                   <div className="text-blue-100">Toplam Değer</div>
                 </CardContent>
               </Card>
-              
+
               <Card className="bg-white/10 backdrop-blur-sm border-white/20">
                 <CardContent className="p-6 text-center">
-                  <div className={`text-3xl font-bold mb-2 flex items-center justify-center ${
-                    totalProfitLoss >= 0 ? 'text-green-300' : 'text-red-300'
-                  }`}>
-                    {totalProfitLoss >= 0 ? <TrendingUp className="h-6 w-6 mr-1" /> : <TrendingDown className="h-6 w-6 mr-1" />}
-                    ₺{Math.abs(totalProfitLoss).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                  <div
+                    className={`text-3xl font-bold mb-2 flex items-center justify-center ${
+                      totalProfitLoss >= 0 ? 'text-green-300' : 'text-red-300'
+                    }`}
+                  >
+                    {totalProfitLoss >= 0 ? (
+                      <TrendingUp className="h-6 w-6 mr-1" />
+                    ) : (
+                      <TrendingDown className="h-6 w-6 mr-1" />
+                    )}
+                    ₺
+                    {Math.abs(totalProfitLoss).toLocaleString('tr-TR', {
+                      minimumFractionDigits: 2,
+                    })}
                   </div>
                   <div className="text-blue-100">Kar/Zarar</div>
                 </CardContent>
               </Card>
-              
+
               <Card className="bg-white/10 backdrop-blur-sm border-white/20">
                 <CardContent className="p-6 text-center">
-                  <div className={`text-3xl font-bold mb-2 ${
-                    totalProfitLossPercentage >= 0 ? 'text-green-300' : 'text-red-300'
-                  }`}>
-                    {totalProfitLossPercentage >= 0 ? '+' : ''}{totalProfitLossPercentage.toFixed(1)}%
+                  <div
+                    className={`text-3xl font-bold mb-2 ${
+                      totalProfitLossPercentage >= 0 ? 'text-green-300' : 'text-red-300'
+                    }`}
+                  >
+                    {totalProfitLossPercentage >= 0 ? '+' : ''}
+                    {totalProfitLossPercentage.toFixed(1)}%
                   </div>
                   <div className="text-blue-100">Getiri Oranı</div>
                 </CardContent>
@@ -387,36 +449,46 @@ export default function InvestmentsPage() {
         {/* Investment Types Grid */}
         <div className="mb-12">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
-              💎 Yatırım Araçları
-            </h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">💎 Yatırım Araçları</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Çeşitli yatırım araçları ile portföyünüzü çeşitlendirin ve riskinizi dağıtın
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {investmentTypes.map((type) => {
+            {investmentTypes.map(type => {
               const Icon = type.icon
               return (
-                <Card 
+                <Card
                   key={type.id}
                   className="group cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-blue-300"
                   onClick={() => setSelectedType(selectedType === type.id ? 'all' : type.id)}
                 >
                   <CardContent className="p-6">
-                    <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${type.color} mb-4 group-hover:scale-110 transition-transform`}>
+                    <div
+                      className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${type.color} mb-4 group-hover:scale-110 transition-transform`}
+                    >
                       <Icon className="h-8 w-8 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-800 mb-2">{type.name}</h3>
                     <p className="text-gray-600 mb-4">{type.description}</p>
-                    
+
                     <div className="flex items-center justify-between mb-4">
-                      <Badge 
-                        variant={type.riskLevel === 'low' ? 'default' : type.riskLevel === 'medium' ? 'secondary' : 'destructive'}
+                      <Badge
+                        variant={
+                          type.riskLevel === 'low'
+                            ? 'default'
+                            : type.riskLevel === 'medium'
+                              ? 'secondary'
+                              : 'destructive'
+                        }
                         className="text-xs"
                       >
-                        {type.riskLevel === 'low' ? 'Düşük Risk' : type.riskLevel === 'medium' ? 'Orta Risk' : 'Yüksek Risk'}
+                        {type.riskLevel === 'low'
+                          ? 'Düşük Risk'
+                          : type.riskLevel === 'medium'
+                            ? 'Orta Risk'
+                            : 'Yüksek Risk'}
                       </Badge>
                       <div className="flex items-center text-sm text-gray-500">
                         <Star className="h-4 w-4 mr-1 text-yellow-500" />
@@ -424,9 +496,12 @@ export default function InvestmentsPage() {
                       </div>
                     </div>
 
-                    <Button 
+                    <Button
                       className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
-                      onClick={handleAddInvestment}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleAddInvestment(type.id)
+                      }}
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Yatırım Ekle
@@ -470,7 +545,7 @@ export default function InvestmentsPage() {
                       <Input
                         placeholder="Yatırım ara..."
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onChange={e => setSearchTerm(e.target.value)}
                         className="pl-10"
                       />
                     </div>
@@ -481,14 +556,17 @@ export default function InvestmentsPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Tüm Türler</SelectItem>
-                      {investmentTypes.map((type) => (
+                      {investmentTypes.map(type => (
                         <SelectItem key={type.id} value={type.id}>
                           {type.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <Button onClick={handleAddInvestment} className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white">
+                  <Button
+                    onClick={() => handleAddInvestment('stock')}
+                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
+                  >
                     <Plus className="h-4 w-4 mr-2" />
                     Yeni Yatırım
                   </Button>
@@ -498,11 +576,14 @@ export default function InvestmentsPage() {
 
             {/* Investments List */}
             <div className="grid gap-6">
-              {filteredInvestments.map((investment) => {
+              {filteredInvestments.map(investment => {
                 const typeInfo = getTypeInfo(investment.type)
                 const Icon = typeInfo.icon
                 return (
-                  <Card key={investment.id} className="bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+                  <Card
+                    key={investment.id}
+                    className="bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300"
+                  >
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
@@ -511,41 +592,66 @@ export default function InvestmentsPage() {
                           </div>
                           <div>
                             <h3 className="text-xl font-bold text-gray-800">{investment.name}</h3>
-                            <p className="text-gray-600">{investment.symbol} • {investment.category}</p>
+                            <p className="text-gray-600">
+                              {investment.symbol} • {investment.category}
+                            </p>
                             <div className="flex items-center space-x-4 mt-2">
                               <Badge variant="outline" className="text-xs">
                                 {investment.quantity} adet
                               </Badge>
-                              <Badge 
-                                variant={investment.riskLevel === 'low' ? 'default' : investment.riskLevel === 'medium' ? 'secondary' : 'destructive'}
+                              <Badge
+                                variant={
+                                  investment.riskLevel === 'low'
+                                    ? 'default'
+                                    : investment.riskLevel === 'medium'
+                                      ? 'secondary'
+                                      : 'destructive'
+                                }
                                 className="text-xs"
                               >
-                                {investment.riskLevel === 'low' ? 'Düşük Risk' : investment.riskLevel === 'medium' ? 'Orta Risk' : 'Yüksek Risk'}
+                                {investment.riskLevel === 'low'
+                                  ? 'Düşük Risk'
+                                  : investment.riskLevel === 'medium'
+                                    ? 'Orta Risk'
+                                    : 'Yüksek Risk'}
                               </Badge>
                             </div>
                           </div>
                         </div>
-                        
+
                         <div className="text-right">
                           <div className="text-2xl font-bold text-gray-800 mb-1">
-                            ₺{investment.totalValue.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                            ₺
+                            {investment.totalValue.toLocaleString('tr-TR', {
+                              minimumFractionDigits: 2,
+                            })}
                           </div>
-                          <div className={`flex items-center justify-end space-x-1 ${
-                            investment.profitLoss >= 0 ? 'text-green-600' : 'text-red-600'
-                          }`}>
-                            {investment.profitLoss >= 0 ? 
-                              <TrendingUp className="h-4 w-4" /> : 
+                          <div
+                            className={`flex items-center justify-end space-x-1 ${
+                              investment.profitLoss >= 0 ? 'text-green-600' : 'text-red-600'
+                            }`}
+                          >
+                            {investment.profitLoss >= 0 ? (
+                              <TrendingUp className="h-4 w-4" />
+                            ) : (
                               <TrendingDown className="h-4 w-4" />
-                            }
+                            )}
                             <span className="font-semibold">
-                              ₺{Math.abs(investment.profitLoss).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                              ₺
+                              {Math.abs(investment.profitLoss).toLocaleString('tr-TR', {
+                                minimumFractionDigits: 2,
+                              })}
                             </span>
                             <span className="text-sm">
-                              ({investment.profitLoss >= 0 ? '+' : ''}{investment.profitLossPercentage.toFixed(1)}%)
+                              ({investment.profitLoss >= 0 ? '+' : ''}
+                              {investment.profitLossPercentage.toFixed(1)}%)
                             </span>
                           </div>
                           <div className="text-sm text-gray-500 mt-1">
-                            Alış: ₺{investment.purchasePrice.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                            Alış: ₺
+                            {investment.purchasePrice.toLocaleString('tr-TR', {
+                              minimumFractionDigits: 2,
+                            })}
                           </div>
                         </div>
                       </div>
@@ -553,7 +659,7 @@ export default function InvestmentsPage() {
                   </Card>
                 )
               })}
-              
+
               {filteredInvestments.length === 0 && (
                 <Card className="bg-white/80 backdrop-blur-sm">
                   <CardContent className="p-12 text-center">
@@ -564,8 +670,8 @@ export default function InvestmentsPage() {
                     <p className="text-gray-500 mb-6">
                       İlk yatırımınızı ekleyerek portföyünüzü oluşturmaya başlayın
                     </p>
-                    <Button 
-                      onClick={handleAddInvestment}
+                    <Button
+                      onClick={() => handleAddInvestment('stock')}
                       className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
                     >
                       <Plus className="h-4 w-4 mr-2" />
@@ -582,13 +688,12 @@ export default function InvestmentsPage() {
               <CardContent className="p-8">
                 <div className="text-center">
                   <BarChart3 className="h-16 w-16 text-blue-500 mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                    📊 Gelişmiş Analiz
-                  </h3>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-2">📊 Gelişmiş Analiz</h3>
                   <p className="text-gray-600 mb-6">
-                    Premium üyelik ile detaylı portföy analizleri, risk hesaplamaları ve performans raporlarına erişin
+                    Premium üyelik ile detaylı portföy analizleri, risk hesaplamaları ve performans
+                    raporlarına erişin
                   </p>
-                  <Button 
+                  <Button
                     onClick={() => setShowPremiumModal(true)}
                     className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white"
                   >
@@ -611,7 +716,7 @@ export default function InvestmentsPage() {
                   <p className="text-gray-600 mb-6">
                     Gerçek zamanlı piyasa verileri, fiyat hareketleri ve teknik analizler
                   </p>
-                  <Button 
+                  <Button
                     onClick={() => setShowPremiumModal(true)}
                     className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
                   >
@@ -628,13 +733,11 @@ export default function InvestmentsPage() {
               <CardContent className="p-8">
                 <div className="text-center">
                   <Bell className="h-16 w-16 text-orange-500 mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                    📰 Yatırım Haberleri
-                  </h3>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-2">📰 Yatırım Haberleri</h3>
                   <p className="text-gray-600 mb-6">
                     Kişiselleştirilmiş haber akışı, piyasa analizleri ve yatırım önerileri
                   </p>
-                  <Button 
+                  <Button
                     onClick={() => setShowPremiumModal(true)}
                     className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white"
                   >
@@ -656,7 +759,7 @@ export default function InvestmentsPage() {
         limitInfo={{
           current: investments.length,
           limit: 5,
-          type: 'analysis'
+          type: 'analysis',
         }}
       />
     </div>

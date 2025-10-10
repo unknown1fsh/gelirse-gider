@@ -4,7 +4,16 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Calendar, Clock, AlertCircle, ArrowLeft, Home, Wallet, CreditCard, Tag } from 'lucide-react'
+import {
+  Calendar,
+  Clock,
+  AlertCircle,
+  ArrowLeft,
+  Home,
+  Wallet,
+  CreditCard,
+  Tag,
+} from 'lucide-react'
 import { formatCurrency } from '@/lib/validators'
 
 interface AutoPayment {
@@ -53,7 +62,7 @@ export default function AutoPaymentsPage() {
     async function fetchAutoPayments() {
       try {
         const response = await fetch('/api/auto-payments', {
-          credentials: 'include'
+          credentials: 'include',
         })
         if (response.ok) {
           const data = await response.json()
@@ -86,7 +95,10 @@ export default function AutoPaymentsPage() {
     return nextDate >= now && nextDate <= sevenDaysFromNow
   })
 
-  const thisMonthTotal = thisMonthPayments.reduce((sum, payment) => sum + parseFloat(payment.amount), 0)
+  const thisMonthTotal = thisMonthPayments.reduce(
+    (sum, payment) => sum + parseFloat(payment.amount),
+    0
+  )
 
   return (
     <div className="p-6 space-y-6">
@@ -98,17 +110,12 @@ export default function AutoPaymentsPage() {
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <Link
-            href="/dashboard"
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
+          <Link href="/dashboard" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <Home className="h-5 w-5" />
           </Link>
           <div>
             <h1 className="text-3xl font-bold">Otomatik Ödemeler</h1>
-            <p className="text-muted-foreground">
-              Düzenli ödemelerinizi otomatikleştirin
-            </p>
+            <p className="text-muted-foreground">Düzenli ödemelerinizi otomatikleştirin</p>
           </div>
         </div>
         <Link
@@ -139,9 +146,7 @@ export default function AutoPaymentsPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-blue-600">{activePayments.length}</div>
-                <p className="text-xs text-muted-foreground">
-                  Aktif otomatik ödeme sayısı
-                </p>
+                <p className="text-xs text-muted-foreground">Aktif otomatik ödeme sayısı</p>
               </CardContent>
             </Card>
 
@@ -154,9 +159,7 @@ export default function AutoPaymentsPage() {
                 <div className="text-2xl font-bold text-orange-600">
                   {formatCurrency(thisMonthTotal, 'TRY')}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Bu ay ödenecek toplam tutar
-                </p>
+                <p className="text-xs text-muted-foreground">Bu ay ödenecek toplam tutar</p>
               </CardContent>
             </Card>
 
@@ -167,9 +170,7 @@ export default function AutoPaymentsPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-red-600">{upcomingPayments.length}</div>
-                <p className="text-xs text-muted-foreground">
-                  Önümüzdeki 7 günde ödenecek
-                </p>
+                <p className="text-xs text-muted-foreground">Önümüzdeki 7 günde ödenecek</p>
               </CardContent>
             </Card>
           </div>
@@ -179,9 +180,7 @@ export default function AutoPaymentsPage() {
       <Card>
         <CardHeader>
           <CardTitle>Otomatik Ödeme Listesi</CardTitle>
-          <CardDescription>
-            Tüm otomatik ödemelerinizin listesi
-          </CardDescription>
+          <CardDescription>Tüm otomatik ödemelerinizin listesi</CardDescription>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -197,33 +196,37 @@ export default function AutoPaymentsPage() {
             <div className="text-center py-8 text-muted-foreground">
               <Calendar className="h-8 w-8 mx-auto mb-2" />
               <p>Henüz otomatik ödeme eklenmemiş</p>
-              <Link 
-                href="/auto-payments/new"
-                className="text-blue-600 hover:underline"
-              >
+              <Link href="/auto-payments/new" className="text-blue-600 hover:underline">
                 İlk otomatik ödemenizi ekleyin
               </Link>
             </div>
           ) : (
             <div className="space-y-4">
-              {autoPayments.map((payment) => (
-                <div key={payment.id} className="group p-4 border border-slate-200 rounded-xl hover:shadow-md transition-all duration-200 bg-gradient-to-r from-slate-50 to-slate-100/50">
+              {autoPayments.map(payment => (
+                <div
+                  key={payment.id}
+                  className="group p-4 border border-slate-200 rounded-xl hover:shadow-md transition-all duration-200 bg-gradient-to-r from-slate-50 to-slate-100/50"
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <div className="w-3 h-3 rounded-full bg-blue-500" />
                         <h3 className="font-semibold text-slate-800">{payment.name}</h3>
                         <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700">
-                          {payment.frequency === 'MONTHLY' ? 'Aylık' : 
-                           payment.frequency === 'WEEKLY' ? 'Haftalık' :
-                           payment.frequency === 'YEARLY' ? 'Yıllık' : 'Diğer'}
+                          {payment.frequency === 'MONTHLY'
+                            ? 'Aylık'
+                            : payment.frequency === 'WEEKLY'
+                              ? 'Haftalık'
+                              : payment.frequency === 'YEARLY'
+                                ? 'Yıllık'
+                                : 'Diğer'}
                         </span>
                       </div>
-                      
+
                       {payment.description && (
                         <p className="text-sm text-slate-600 mb-2">{payment.description}</p>
                       )}
-                      
+
                       <div className="flex items-center gap-4 text-xs text-slate-500">
                         <div className="flex items-center gap-1">
                           <Tag className="h-3 w-3" />
@@ -247,15 +250,19 @@ export default function AutoPaymentsPage() {
                         )}
                       </div>
                     </div>
-                    
+
                     <div className="text-right">
                       <p className="text-lg font-bold text-blue-600">
                         {formatCurrency(parseFloat(payment.amount), 'TRY')}
                       </p>
                       <p className="text-xs text-slate-500">
-                        {payment.frequency === 'MONTHLY' ? 'Aylık' : 
-                         payment.frequency === 'WEEKLY' ? 'Haftalık' :
-                         payment.frequency === 'YEARLY' ? 'Yıllık' : 'Diğer'}
+                        {payment.frequency === 'MONTHLY'
+                          ? 'Aylık'
+                          : payment.frequency === 'WEEKLY'
+                            ? 'Haftalık'
+                            : payment.frequency === 'YEARLY'
+                              ? 'Yıllık'
+                              : 'Diğer'}
                       </p>
                     </div>
                   </div>
@@ -268,4 +275,3 @@ export default function AutoPaymentsPage() {
     </div>
   )
 }
-

@@ -1,5 +1,5 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import * as React from 'react'
+import { cn } from '@/lib/utils'
 
 const DatePicker = React.forwardRef<
   HTMLDivElement,
@@ -22,15 +22,11 @@ const DatePicker = React.forwardRef<
   }
 
   return (
-    <div
-      ref={ref}
-      className={cn("relative", className)}
-      {...props}
-    >
+    <div ref={ref} className={cn('relative', className)} {...props}>
       <input
         type="date"
         value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
-        onChange={(e) => {
+        onChange={e => {
           const date = e.target.value ? new Date(e.target.value) : undefined
           handleDateChange(date)
         }}
@@ -39,6 +35,6 @@ const DatePicker = React.forwardRef<
     </div>
   )
 })
-DatePicker.displayName = "DatePicker"
+DatePicker.displayName = 'DatePicker'
 
 export { DatePicker }

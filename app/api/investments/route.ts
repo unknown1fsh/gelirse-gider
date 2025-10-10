@@ -1,35 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { getCurrentUser } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth-refactored'
 
 export async function GET(request: NextRequest) {
   try {
     // Kullanıcı doğrulama
     const user = await getCurrentUser(request)
     if (!user) {
-      return NextResponse.json(
-        { error: 'Oturum bulunamadı' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Oturum bulunamadı' }, { status: 401 })
     }
 
     // Premium kontrolü - Gelişmiş yatırım araçları sadece premium kullanıcılar için
     const subscription = await prisma.userSubscription.findFirst({
       where: {
         userId: user.id,
-        status: 'active'
+        status: 'active',
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     })
 
     const currentPlan = subscription?.planId || 'free'
-    
+
+    // Premium kontrolü - Gelişmiş yatırım araçları sadece premium kullanıcılar için
     if (currentPlan === 'free') {
       return NextResponse.json(
-        { 
-          error: 'Gelişmiş yatırım araçları Premium üyelik gerektirir. Premium plana geçerek tüm yatırım araçlarına erişebilirsiniz.',
+        {
+          error:
+            'Gelişmiş yatırım araçları Premium üyelik gerektirir. Premium plana geçerek tüm yatırım araçlarına erişebilirsiniz.',
           requiresPremium: true,
-          feature: 'Gelişmiş Yatırım Araçları'
+          feature: 'Gelişmiş Yatırım Araçları',
         },
         { status: 403 }
       )
@@ -38,24 +37,29 @@ export async function GET(request: NextRequest) {
     // Kullanıcının yatırımlarını getir
     const investments = await prisma.investment.findMany({
       where: {
-        userId: user.id
+        userId: user.id,
+        active: true,
       },
       include: {
-        investmentType: true,
-        currency: true
+        currency: true,
       },
       orderBy: {
-        createdAt: 'desc'
-      }
+        createdAt: 'desc',
+      },
     })
 
-    return NextResponse.json(investments)
+    // Decimal'ları string'e çevir
+    const formattedInvestments = investments.map(inv => ({
+      ...inv,
+      quantity: inv.quantity.toString(),
+      purchasePrice: inv.purchasePrice.toString(),
+      currentPrice: inv.currentPrice?.toString() || null,
+    }))
+
+    return NextResponse.json(formattedInvestments)
   } catch (error) {
     console.error('Yatırımlar yüklenirken hata:', error)
-    return NextResponse.json(
-      { error: 'Yatırımlar yüklenirken hata oluştu' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Yatırımlar yüklenirken hata oluştu' }, { status: 500 })
   }
 }
 
@@ -64,29 +68,27 @@ export async function POST(request: NextRequest) {
     // Kullanıcı doğrulama
     const user = await getCurrentUser(request)
     if (!user) {
-      return NextResponse.json(
-        { error: 'Oturum bulunamadı' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Oturum bulunamadı' }, { status: 401 })
     }
 
     // Premium kontrolü - Yatırım ekleme sadece premium kullanıcılar için
     const subscription = await prisma.userSubscription.findFirst({
       where: {
         userId: user.id,
-        status: 'active'
+        status: 'active',
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     })
 
     const currentPlan = subscription?.planId || 'free'
-    
+
     if (currentPlan === 'free') {
       return NextResponse.json(
-        { 
-          error: 'Yatırım ekleme özelliği Premium üyelik gerektirir. Premium plana geçerek yatırımlarınızı yönetebilirsiniz.',
+        {
+          error:
+            'Yatırım ekleme özelliği Premium üyelik gerektirir. Premium plana geçerek yatırımlarınızı yönetebilirsiniz.',
           requiresPremium: true,
-          feature: 'Yatırım Yönetimi'
+          feature: 'Yatırım Yönetimi',
         },
         { status: 403 }
       )
@@ -94,65 +96,59 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
     const {
-      type,
+      investmentType,
       name,
       symbol,
       quantity,
       purchasePrice,
       currentPrice,
       purchaseDate,
-      description,
+      notes,
       category,
       riskLevel,
-      currencyId
+      currencyId,
+      metadata,
     } = body
 
-    // Yatırım türünü kontrol et veya oluştur
-    let investmentType = await prisma.investmentType.findFirst({
-      where: { name: type }
-    })
-
-    if (!investmentType) {
-      investmentType = await prisma.investmentType.create({
-        data: {
-          name: type,
-          description: `${type} yatırım aracı`,
-          riskLevel: riskLevel || 'medium'
-        }
-      })
+    // Validasyon
+    if (!investmentType || !name || !quantity || !purchasePrice || !currencyId) {
+      return NextResponse.json(
+        { error: 'Zorunlu alanlar: investmentType, name, quantity, purchasePrice, currencyId' },
+        { status: 400 }
+      )
     }
 
     // Yatırım oluştur
     const investment = await prisma.investment.create({
       data: {
         userId: user.id,
-        investmentTypeId: investmentType.id,
+        investmentType,
         name,
         symbol,
         quantity: parseFloat(quantity),
         purchasePrice: parseFloat(purchasePrice),
-        currentPrice: parseFloat(currentPrice),
+        currentPrice: currentPrice ? parseFloat(currentPrice) : parseFloat(purchasePrice),
         purchaseDate: new Date(purchaseDate),
-        description,
+        notes,
         category,
         riskLevel: riskLevel || 'medium',
-        currencyId: currencyId || 1, // Varsayılan TRY
-        totalValue: parseFloat(quantity) * parseFloat(currentPrice),
-        profitLoss: parseFloat(quantity) * (parseFloat(currentPrice) - parseFloat(purchasePrice)),
-        profitLossPercentage: ((parseFloat(currentPrice) - parseFloat(purchasePrice)) / parseFloat(purchasePrice)) * 100
+        currencyId,
+        metadata: metadata || {},
+        lastPriceUpdate: currentPrice ? new Date() : null,
       },
       include: {
-        investmentType: true,
-        currency: true
-      }
+        currency: true,
+      },
     })
 
-    return NextResponse.json(investment, { status: 201 })
+    return NextResponse.json({
+      ...investment,
+      quantity: investment.quantity.toString(),
+      purchasePrice: investment.purchasePrice.toString(),
+      currentPrice: investment.currentPrice?.toString() || null,
+    }, { status: 201 })
   } catch (error) {
     console.error('Yatırım oluşturulurken hata:', error)
-    return NextResponse.json(
-      { error: 'Yatırım oluşturulurken hata oluştu' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Yatırım oluşturulurken hata oluştu' }, { status: 500 })
   }
 }

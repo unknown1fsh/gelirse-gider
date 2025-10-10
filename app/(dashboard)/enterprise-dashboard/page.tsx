@@ -9,7 +9,6 @@ import { formatCurrency } from '@/lib/validators'
 import {
   TrendingUp,
   TrendingDown,
-  DollarSign,
   CreditCard,
   Calendar,
   AlertCircle,
@@ -63,7 +62,7 @@ import {
   Info,
   ArrowLeft,
   Home,
-  Loader2
+  Loader2,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -110,7 +109,7 @@ export default function EnterpriseDashboardPage() {
         setError(null)
 
         const response = await fetch('/api/dashboard', {
-          credentials: 'include'
+          credentials: 'include',
         })
 
         if (!response.ok) {
@@ -146,7 +145,9 @@ export default function EnterpriseDashboardPage() {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="h-24 w-24 text-red-500 mx-auto mb-8" />
-          <p className="text-2xl font-bold text-red-400">{error || 'Dashboard verileri yüklenemedi'}</p>
+          <p className="text-2xl font-bold text-red-400">
+            {error || 'Dashboard verileri yüklenemedi'}
+          </p>
         </div>
       </div>
     )
@@ -171,7 +172,7 @@ export default function EnterpriseDashboardPage() {
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 3}s`
+              animationDuration: `${2 + Math.random() * 3}s`,
             }}
           ></div>
         ))}
@@ -220,7 +221,8 @@ export default function EnterpriseDashboardPage() {
                     Hoş geldin, <span className="text-amber-400">{user?.name}</span>! 👑
                   </h2>
                   <p className="text-amber-200 text-lg">
-                    Ultra Premium Enterprise üyeliğiniz aktif. Tüm gelişmiş özellikler kullanımınızda.
+                    Ultra Premium Enterprise üyeliğiniz aktif. Tüm gelişmiş özellikler
+                    kullanımınızda.
                   </p>
                 </div>
                 <div className="text-right">
@@ -273,21 +275,21 @@ export default function EnterpriseDashboardPage() {
               <Card className="group hover:shadow-2xl transition-all duration-300 border-0 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border-2 border-blue-500/30 hover:scale-105">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-lg font-bold text-blue-200">Net Durum</CardTitle>
-                  <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-xl group-hover:scale-110 transition-transform">
-                    <DollarSign className="h-6 w-6 text-white" />
+                  <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-xl group-hover:scale-110 transition-transform flex items-center justify-center">
+                    <span className="text-3xl font-bold text-white">₺</span>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className={`text-4xl font-black bg-clip-text text-transparent ${
-                    parseFloat(data.kpi.net_amount) >= 0
-                      ? 'bg-gradient-to-r from-emerald-400 to-teal-400'
-                      : 'bg-gradient-to-r from-red-400 to-rose-400'
-                  }`}>
+                  <div
+                    className={`text-4xl font-black bg-clip-text text-transparent ${
+                      parseFloat(data.kpi.net_amount) >= 0
+                        ? 'bg-gradient-to-r from-emerald-400 to-teal-400'
+                        : 'bg-gradient-to-r from-red-400 to-rose-400'
+                    }`}
+                  >
                     {formatCurrency(parseFloat(data.kpi.net_amount), 'TRY')}
                   </div>
-                  <p className="text-blue-200 text-sm mt-2">
-                    Son 30 gün net sonuç
-                  </p>
+                  <p className="text-blue-200 text-sm mt-2">Son 30 gün net sonuç</p>
                 </CardContent>
               </Card>
 
@@ -302,9 +304,7 @@ export default function EnterpriseDashboardPage() {
                   <div className="text-4xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                     {parseInt(data.kpi.income_count) + parseInt(data.kpi.expense_count)}
                   </div>
-                  <p className="text-purple-200 text-sm mt-2">
-                    Son 30 günde toplam işlem
-                  </p>
+                  <p className="text-purple-200 text-sm mt-2">Son 30 günde toplam işlem</p>
                 </CardContent>
               </Card>
             </div>
@@ -328,8 +328,11 @@ export default function EnterpriseDashboardPage() {
               <CardContent className="p-8">
                 {data.upcomingPayments.length > 0 ? (
                   <div className="space-y-6">
-                    {data.upcomingPayments.map((payment) => (
-                      <div key={payment.id} className="group p-6 border-2 border-amber-500/30 rounded-2xl hover:bg-amber-500/10 transition-all duration-200 bg-gradient-to-r from-amber-500/5 to-orange-500/5">
+                    {data.upcomingPayments.map(payment => (
+                      <div
+                        key={payment.id}
+                        className="group p-6 border-2 border-amber-500/30 rounded-2xl hover:bg-amber-500/10 transition-all duration-200 bg-gradient-to-r from-amber-500/5 to-orange-500/5"
+                      >
                         <div className="flex items-center justify-between">
                           <div className="flex-1">
                             <p className="font-black text-xl text-amber-200">{payment.name}</p>
@@ -379,21 +382,30 @@ export default function EnterpriseDashboardPage() {
                 {data.categoryBreakdown.length > 0 ? (
                   <div className="space-y-6">
                     {data.categoryBreakdown.slice(0, 8).map((category, index) => (
-                      <div key={index} className="group flex items-center justify-between p-4 rounded-2xl hover:bg-purple-500/10 transition-colors border border-purple-500/20">
+                      <div
+                        key={index}
+                        className="group flex items-center justify-between p-4 rounded-2xl hover:bg-purple-500/10 transition-colors border border-purple-500/20"
+                      >
                         <div className="flex items-center gap-4">
-                          <div className={`w-6 h-6 rounded-full shadow-lg ${
-                            category.tx_type_name === 'Gelir'
-                              ? 'bg-gradient-to-br from-emerald-400 to-teal-500'
-                              : 'bg-gradient-to-br from-red-400 to-rose-500'
-                          }`} />
-                          <span className="text-lg font-bold text-purple-200">{category.category_name}</span>
+                          <div
+                            className={`w-6 h-6 rounded-full shadow-lg ${
+                              category.tx_type_name === 'Gelir'
+                                ? 'bg-gradient-to-br from-emerald-400 to-teal-500'
+                                : 'bg-gradient-to-br from-red-400 to-rose-500'
+                            }`}
+                          />
+                          <span className="text-lg font-bold text-purple-200">
+                            {category.category_name}
+                          </span>
                         </div>
                         <div className="text-right">
-                          <p className={`text-lg font-black ${
-                            category.tx_type_name === 'Gelir'
-                              ? 'text-emerald-400'
-                              : 'text-red-400'
-                          }`}>
+                          <p
+                            className={`text-lg font-black ${
+                              category.tx_type_name === 'Gelir'
+                                ? 'text-emerald-400'
+                                : 'text-red-400'
+                            }`}
+                          >
                             {formatCurrency(parseFloat(category.total_amount), 'TRY')}
                           </p>
                           <p className="text-purple-400 text-sm">

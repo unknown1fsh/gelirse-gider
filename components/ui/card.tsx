@@ -5,13 +5,14 @@ interface CardProps {
   children: React.ReactNode
 }
 
-export function Card({ className, children, ...props }: CardProps & React.HTMLAttributes<HTMLDivElement>) {
+export function Card({
+  className,
+  children,
+  ...props
+}: CardProps & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn(
-        'rounded-lg border bg-card text-card-foreground shadow-sm',
-        className
-      )}
+      className={cn('rounded-lg border bg-card text-card-foreground shadow-sm', className)}
       {...props}
     >
       {children}
@@ -24,12 +25,13 @@ interface CardHeaderProps {
   children: React.ReactNode
 }
 
-export function CardHeader({ className, children, ...props }: CardHeaderProps & React.HTMLAttributes<HTMLDivElement>) {
+export function CardHeader({
+  className,
+  children,
+  ...props
+}: CardHeaderProps & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div
-      className={cn('flex flex-col space-y-1.5 p-6', className)}
-      {...props}
-    >
+    <div className={cn('flex flex-col space-y-1.5 p-6', className)} {...props}>
       {children}
     </div>
   )
@@ -40,15 +42,13 @@ interface CardTitleProps {
   children: React.ReactNode
 }
 
-export function CardTitle({ className, children, ...props }: CardTitleProps & React.HTMLAttributes<HTMLHeadingElement>) {
+export function CardTitle({
+  className,
+  children,
+  ...props
+}: CardTitleProps & React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h3
-      className={cn(
-        'text-2xl font-semibold leading-none tracking-tight',
-        className
-      )}
-      {...props}
-    >
+    <h3 className={cn('text-2xl font-semibold leading-none tracking-tight', className)} {...props}>
       {children}
     </h3>
   )
@@ -59,12 +59,13 @@ interface CardDescriptionProps {
   children: React.ReactNode
 }
 
-export function CardDescription({ className, children, ...props }: CardDescriptionProps & React.HTMLAttributes<HTMLParagraphElement>) {
+export function CardDescription({
+  className,
+  children,
+  ...props
+}: CardDescriptionProps & React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p
-      className={cn('text-sm text-muted-foreground', className)}
-      {...props}
-    >
+    <p className={cn('text-sm text-muted-foreground', className)} {...props}>
       {children}
     </p>
   )
@@ -75,7 +76,11 @@ interface CardContentProps {
   children: React.ReactNode
 }
 
-export function CardContent({ className, children, ...props }: CardContentProps & React.HTMLAttributes<HTMLDivElement>) {
+export function CardContent({
+  className,
+  children,
+  ...props
+}: CardContentProps & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={cn('p-6 pt-0', className)} {...props}>
       {children}
@@ -88,11 +93,14 @@ interface CardFooterProps {
   children: React.ReactNode
 }
 
-export function CardFooter({ className, children, ...props }: CardFooterProps & React.HTMLAttributes<HTMLDivElement>) {
+export function CardFooter({
+  className,
+  children,
+  ...props
+}: CardFooterProps & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={cn('flex items-center p-6 pt-0', className)} {...props}>
       {children}
     </div>
   )
 }
-

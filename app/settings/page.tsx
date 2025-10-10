@@ -5,18 +5,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { useUser } from '@/lib/user-context'
-import { 
-  Settings, 
-  User, 
-  Bell, 
-  Shield, 
-  Palette, 
-  Globe, 
-  Database, 
-  Download, 
+import {
+  Settings,
+  User,
+  Bell,
+  Shield,
+  Palette,
+  Globe,
+  Database,
+  Download,
   Upload,
   Trash2,
   Save,
@@ -37,7 +43,7 @@ import {
   Home,
   Loader2,
   Crown,
-  Sparkles
+  Sparkles,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -49,7 +55,7 @@ export default function SettingsPage() {
     name: '',
     email: '',
     phone: '',
-    
+
     // Bildirim Ayarları
     emailNotifications: true,
     pushNotifications: true,
@@ -57,25 +63,25 @@ export default function SettingsPage() {
     weeklyReports: true,
     monthlyReports: true,
     paymentReminders: true,
-    
+
     // Görünüm Ayarları
     theme: 'light',
     language: 'tr',
     currency: 'TRY',
     dateFormat: 'DD/MM/YYYY',
     numberFormat: '1.234,56',
-    
+
     // Güvenlik Ayarları
     twoFactorAuth: false,
     biometricAuth: true,
     autoLogout: true,
     sessionTimeout: 30,
-    
+
     // Veri Ayarları
     autoBackup: true,
     backupFrequency: 'daily',
     dataRetention: 365,
-    exportFormat: 'csv'
+    exportFormat: 'csv',
   })
 
   const [activeTab, setActiveTab] = useState('profile')
@@ -95,7 +101,7 @@ export default function SettingsPage() {
         language: 'tr',
         currency: 'TRY',
         dateFormat: 'DD/MM/YYYY',
-        numberFormat: '1.234,56'
+        numberFormat: '1.234,56',
       }))
     }
   }, [user])
@@ -106,15 +112,15 @@ export default function SettingsPage() {
     { id: 'appearance', name: 'Görünüm', icon: Palette },
     { id: 'security', name: 'Güvenlik', icon: Shield },
     { id: 'data', name: 'Veri Yönetimi', icon: Database },
-    { id: 'privacy', name: 'Gizlilik', icon: Lock }
+    { id: 'privacy', name: 'Gizlilik', icon: Lock },
   ]
 
   const handleSave = async () => {
     if (!user) return
-    
+
     setIsSaving(true)
     setSaveMessage('')
-    
+
     try {
       const success = await updateUser({
         name: settings.name,
@@ -123,9 +129,9 @@ export default function SettingsPage() {
         language: settings.language,
         currency: settings.currency,
         dateFormat: settings.dateFormat,
-        numberFormat: settings.numberFormat
+        numberFormat: settings.numberFormat,
       })
-      
+
       if (success) {
         setSaveMessage('Ayarlar başarıyla kaydedildi!')
         setTimeout(() => setSaveMessage(''), 3000)
@@ -156,38 +162,38 @@ export default function SettingsPage() {
 
   const handleResetAllData = async () => {
     if (!user) return
-    
+
     // Kullanıcıdan onay al
     const confirmed = window.confirm(
       '⚠️ UYARI: Bu işlem tüm verilerinizi kalıcı olarak silecektir!\n\n' +
-      '• Tüm işlem geçmişi\n' +
-      '• Tüm hesaplar\n' +
-      '• Tüm kredi kartları\n' +
-      '• Otomatik ödemeler\n' +
-      '• Altın ve yatırım verileri\n\n' +
-      'Bu işlem geri alınamaz!\n\n' +
-      'Devam etmek istediğinizden emin misiniz?'
+        '• Tüm işlem geçmişi\n' +
+        '• Tüm hesaplar\n' +
+        '• Tüm kredi kartları\n' +
+        '• Otomatik ödemeler\n' +
+        '• Altın ve yatırım verileri\n\n' +
+        'Bu işlem geri alınamaz!\n\n' +
+        'Devam etmek istediğinizden emin misiniz?'
     )
-    
+
     if (!confirmed) return
-    
+
     // İkinci onay
     const doubleConfirmed = window.confirm(
       'Son uyarı: Tüm verileriniz silinecek!\n\n' +
-      'Bu işlem geri alınamaz!\n\n' +
-      'Kesinlikle devam etmek istiyor musunuz?'
+        'Bu işlem geri alınamaz!\n\n' +
+        'Kesinlikle devam etmek istiyor musunuz?'
     )
-    
+
     if (!doubleConfirmed) return
-    
+
     try {
       setIsSaving(true)
-      
+
       const response = await fetch('/api/user/reset-all-data', {
         method: 'POST',
-        credentials: 'include'
+        credentials: 'include',
       })
-      
+
       if (response.ok) {
         alert('✅ Tüm verileriniz başarıyla silindi!')
         // Sayfayı yenile
@@ -221,12 +227,10 @@ export default function SettingsPage() {
               <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
                 Ayarlar
               </h1>
-              <p className="text-slate-600 mt-1">
-                Uygulama ve hesap ayarlarınızı yönetin
-              </p>
+              <p className="text-slate-600 mt-1">Uygulama ve hesap ayarlarınızı yönetin</p>
             </div>
             <div className="flex items-center space-x-3">
-              <Button 
+              <Button
                 onClick={handleGoBack}
                 variant="outline"
                 className="border-slate-200 hover:border-slate-300 hover:bg-slate-50"
@@ -234,7 +238,7 @@ export default function SettingsPage() {
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Geri
               </Button>
-              <Button 
+              <Button
                 onClick={handleGoHome}
                 variant="outline"
                 className="border-slate-200 hover:border-slate-300 hover:bg-slate-50"
@@ -242,7 +246,7 @@ export default function SettingsPage() {
                 <Home className="h-4 w-4 mr-2" />
                 Anasayfa
               </Button>
-              <Button 
+              <Button
                 onClick={handleSave}
                 disabled={isSaving || loading}
                 className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg"
@@ -267,11 +271,13 @@ export default function SettingsPage() {
       {/* Save Message */}
       {saveMessage && (
         <div className="px-8">
-          <div className={`p-4 rounded-lg ${
-            saveMessage.includes('başarıyla') 
-              ? 'bg-green-100 border border-green-200 text-green-800' 
-              : 'bg-red-100 border border-red-200 text-red-800'
-          }`}>
+          <div
+            className={`p-4 rounded-lg ${
+              saveMessage.includes('başarıyla')
+                ? 'bg-green-100 border border-green-200 text-green-800'
+                : 'bg-red-100 border border-red-200 text-red-800'
+            }`}
+          >
             <div className="flex items-center space-x-2">
               {saveMessage.includes('başarıyla') ? (
                 <CheckCircle className="h-4 w-4" />
@@ -292,11 +298,13 @@ export default function SettingsPage() {
             {user && (
               <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200/50">
                 <div className="flex items-center space-x-3">
-                  <div className={`p-2 rounded-lg ${
-                    user.plan === 'premium' 
-                      ? 'bg-gradient-to-br from-purple-500 to-pink-600' 
-                      : 'bg-gradient-to-br from-blue-500 to-indigo-600'
-                  }`}>
+                  <div
+                    className={`p-2 rounded-lg ${
+                      user.plan === 'premium'
+                        ? 'bg-gradient-to-br from-purple-500 to-pink-600'
+                        : 'bg-gradient-to-br from-blue-500 to-indigo-600'
+                    }`}
+                  >
                     <User className="h-4 w-4 text-white" />
                   </div>
                   <div className="flex-1">
@@ -318,9 +326,9 @@ export default function SettingsPage() {
                 </div>
               </div>
             )}
-            
+
             <nav className="space-y-2">
-              {tabs.map((tab) => {
+              {tabs.map(tab => {
                 const Icon = tab.icon
                 return (
                   <button
@@ -332,11 +340,13 @@ export default function SettingsPage() {
                         : 'text-slate-600 hover:bg-slate-100/50 hover:text-slate-800'
                     }`}
                   >
-                    <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${
-                      activeTab === tab.id 
-                        ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md' 
-                        : 'bg-slate-200/50 text-slate-600'
-                    }`}>
+                    <div
+                      className={`flex h-8 w-8 items-center justify-center rounded-lg ${
+                        activeTab === tab.id
+                          ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md'
+                          : 'bg-slate-200/50 text-slate-600'
+                      }`}
+                    >
                       <Icon className="h-4 w-4" />
                     </div>
                     <span className="font-medium">{tab.name}</span>
@@ -369,7 +379,7 @@ export default function SettingsPage() {
                       <label className="text-sm font-medium text-slate-700">Ad Soyad</label>
                       <Input
                         value={settings.name}
-                        onChange={(e) => setSettings({...settings, name: e.target.value})}
+                        onChange={e => setSettings({ ...settings, name: e.target.value })}
                         placeholder="Adınızı girin"
                         className="border-slate-200 focus:border-blue-500"
                       />
@@ -379,7 +389,7 @@ export default function SettingsPage() {
                       <Input
                         type="email"
                         value={settings.email}
-                        onChange={(e) => setSettings({...settings, email: e.target.value})}
+                        onChange={e => setSettings({ ...settings, email: e.target.value })}
                         placeholder="E-posta adresinizi girin"
                         className="border-slate-200 focus:border-blue-500"
                       />
@@ -388,7 +398,7 @@ export default function SettingsPage() {
                       <label className="text-sm font-medium text-slate-700">Telefon</label>
                       <Input
                         value={settings.phone}
-                        onChange={(e) => setSettings({...settings, phone: e.target.value})}
+                        onChange={e => setSettings({ ...settings, phone: e.target.value })}
                         placeholder="Telefon numaranızı girin"
                         className="border-slate-200 focus:border-blue-500"
                       />
@@ -397,7 +407,7 @@ export default function SettingsPage() {
                       <label className="text-sm font-medium text-slate-700">Şifre</label>
                       <div className="relative">
                         <Input
-                          type={showPassword ? "text" : "password"}
+                          type={showPassword ? 'text' : 'password'}
                           placeholder="Yeni şifre girin"
                           className="border-slate-200 focus:border-blue-500 pr-10"
                         />
@@ -406,7 +416,11 @@ export default function SettingsPage() {
                           onClick={() => setShowPassword(!showPassword)}
                           className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                         >
-                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
                         </button>
                       </div>
                     </div>
@@ -442,7 +456,9 @@ export default function SettingsPage() {
                       </div>
                       <Switch
                         checked={settings.emailNotifications}
-                        onCheckedChange={(checked) => setSettings({...settings, emailNotifications: checked})}
+                        onCheckedChange={checked =>
+                          setSettings({ ...settings, emailNotifications: checked })
+                        }
                       />
                     </div>
 
@@ -456,7 +472,9 @@ export default function SettingsPage() {
                       </div>
                       <Switch
                         checked={settings.pushNotifications}
-                        onCheckedChange={(checked) => setSettings({...settings, pushNotifications: checked})}
+                        onCheckedChange={checked =>
+                          setSettings({ ...settings, pushNotifications: checked })
+                        }
                       />
                     </div>
 
@@ -470,7 +488,9 @@ export default function SettingsPage() {
                       </div>
                       <Switch
                         checked={settings.paymentReminders}
-                        onCheckedChange={(checked) => setSettings({...settings, paymentReminders: checked})}
+                        onCheckedChange={checked =>
+                          setSettings({ ...settings, paymentReminders: checked })
+                        }
                       />
                     </div>
 
@@ -484,7 +504,9 @@ export default function SettingsPage() {
                       </div>
                       <Switch
                         checked={settings.weeklyReports}
-                        onCheckedChange={(checked) => setSettings({...settings, weeklyReports: checked})}
+                        onCheckedChange={checked =>
+                          setSettings({ ...settings, weeklyReports: checked })
+                        }
                       />
                     </div>
 
@@ -498,7 +520,9 @@ export default function SettingsPage() {
                       </div>
                       <Switch
                         checked={settings.monthlyReports}
-                        onCheckedChange={(checked) => setSettings({...settings, monthlyReports: checked})}
+                        onCheckedChange={checked =>
+                          setSettings({ ...settings, monthlyReports: checked })
+                        }
                       />
                     </div>
                   </div>
@@ -525,7 +549,10 @@ export default function SettingsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-slate-700">Tema</label>
-                      <Select value={settings.theme} onValueChange={(value) => setSettings({...settings, theme: value})}>
+                      <Select
+                        value={settings.theme}
+                        onValueChange={value => setSettings({ ...settings, theme: value })}
+                      >
                         <SelectTrigger className="border-slate-200 focus:border-purple-500">
                           <SelectValue />
                         </SelectTrigger>
@@ -554,7 +581,10 @@ export default function SettingsPage() {
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-slate-700">Dil</label>
-                      <Select value={settings.language} onValueChange={(value) => setSettings({...settings, language: value})}>
+                      <Select
+                        value={settings.language}
+                        onValueChange={value => setSettings({ ...settings, language: value })}
+                      >
                         <SelectTrigger className="border-slate-200 focus:border-purple-500">
                           <SelectValue />
                         </SelectTrigger>
@@ -567,7 +597,10 @@ export default function SettingsPage() {
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-slate-700">Para Birimi</label>
-                      <Select value={settings.currency} onValueChange={(value) => setSettings({...settings, currency: value})}>
+                      <Select
+                        value={settings.currency}
+                        onValueChange={value => setSettings({ ...settings, currency: value })}
+                      >
                         <SelectTrigger className="border-slate-200 focus:border-purple-500">
                           <SelectValue />
                         </SelectTrigger>
@@ -581,7 +614,10 @@ export default function SettingsPage() {
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-slate-700">Tarih Formatı</label>
-                      <Select value={settings.dateFormat} onValueChange={(value) => setSettings({...settings, dateFormat: value})}>
+                      <Select
+                        value={settings.dateFormat}
+                        onValueChange={value => setSettings({ ...settings, dateFormat: value })}
+                      >
                         <SelectTrigger className="border-slate-200 focus:border-purple-500">
                           <SelectValue />
                         </SelectTrigger>
@@ -624,7 +660,9 @@ export default function SettingsPage() {
                       </div>
                       <Switch
                         checked={settings.twoFactorAuth}
-                        onCheckedChange={(checked) => setSettings({...settings, twoFactorAuth: checked})}
+                        onCheckedChange={checked =>
+                          setSettings({ ...settings, twoFactorAuth: checked })
+                        }
                       />
                     </div>
 
@@ -638,7 +676,9 @@ export default function SettingsPage() {
                       </div>
                       <Switch
                         checked={settings.biometricAuth}
-                        onCheckedChange={(checked) => setSettings({...settings, biometricAuth: checked})}
+                        onCheckedChange={checked =>
+                          setSettings({ ...settings, biometricAuth: checked })
+                        }
                       />
                     </div>
 
@@ -647,22 +687,30 @@ export default function SettingsPage() {
                         <Lock className="h-5 w-5 text-orange-500" />
                         <div>
                           <p className="font-medium text-slate-800">Otomatik Çıkış</p>
-                          <p className="text-sm text-slate-600">Belirli süre sonra otomatik çıkış</p>
+                          <p className="text-sm text-slate-600">
+                            Belirli süre sonra otomatik çıkış
+                          </p>
                         </div>
                       </div>
                       <Switch
                         checked={settings.autoLogout}
-                        onCheckedChange={(checked) => setSettings({...settings, autoLogout: checked})}
+                        onCheckedChange={checked =>
+                          setSettings({ ...settings, autoLogout: checked })
+                        }
                       />
                     </div>
 
                     {settings.autoLogout && (
                       <div className="ml-6 space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Oturum Zaman Aşımı (dakika)</label>
+                        <label className="text-sm font-medium text-slate-700">
+                          Oturum Zaman Aşımı (dakika)
+                        </label>
                         <Input
                           type="number"
                           value={settings.sessionTimeout}
-                          onChange={(e) => setSettings({...settings, sessionTimeout: parseInt(e.target.value)})}
+                          onChange={e =>
+                            setSettings({ ...settings, sessionTimeout: parseInt(e.target.value) })
+                          }
                           className="border-slate-200 focus:border-red-500 w-32"
                         />
                       </div>
@@ -694,19 +742,30 @@ export default function SettingsPage() {
                         <Database className="h-5 w-5 text-green-500" />
                         <div>
                           <p className="font-medium text-slate-800">Otomatik Yedekleme</p>
-                          <p className="text-sm text-slate-600">Verilerinizi otomatik olarak yedekleyin</p>
+                          <p className="text-sm text-slate-600">
+                            Verilerinizi otomatik olarak yedekleyin
+                          </p>
                         </div>
                       </div>
                       <Switch
                         checked={settings.autoBackup}
-                        onCheckedChange={(checked) => setSettings({...settings, autoBackup: checked})}
+                        onCheckedChange={checked =>
+                          setSettings({ ...settings, autoBackup: checked })
+                        }
                       />
                     </div>
 
                     {settings.autoBackup && (
                       <div className="ml-6 space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Yedekleme Sıklığı</label>
-                        <Select value={settings.backupFrequency} onValueChange={(value) => setSettings({...settings, backupFrequency: value})}>
+                        <label className="text-sm font-medium text-slate-700">
+                          Yedekleme Sıklığı
+                        </label>
+                        <Select
+                          value={settings.backupFrequency}
+                          onValueChange={value =>
+                            setSettings({ ...settings, backupFrequency: value })
+                          }
+                        >
                           <SelectTrigger className="border-slate-200 focus:border-indigo-500 w-48">
                             <SelectValue />
                           </SelectTrigger>
@@ -722,7 +781,7 @@ export default function SettingsPage() {
                     <Separator className="my-6" />
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Button 
+                      <Button
                         onClick={handleExport}
                         variant="outline"
                         className="flex items-center space-x-2 border-slate-200 hover:border-indigo-500 hover:text-indigo-600"
@@ -730,7 +789,7 @@ export default function SettingsPage() {
                         <Download className="h-4 w-4" />
                         <span>Veri Dışa Aktar</span>
                       </Button>
-                      <Button 
+                      <Button
                         onClick={handleImport}
                         variant="outline"
                         className="flex items-center space-x-2 border-slate-200 hover:border-indigo-500 hover:text-indigo-600"
@@ -747,9 +806,13 @@ export default function SettingsPage() {
                       <div className="flex items-start space-x-3">
                         <AlertTriangle className="h-6 w-6 text-red-500 mt-0.5" />
                         <div className="flex-1">
-                          <p className="font-semibold text-red-800 text-lg">Tüm Verilerimi Sıfırla</p>
+                          <p className="font-semibold text-red-800 text-lg">
+                            Tüm Verilerimi Sıfırla
+                          </p>
                           <p className="text-sm text-red-700 mt-2 mb-4">
-                            ⚠️ <strong>UYARI:</strong> Bu işlem tüm işlemlerinizi, hesaplarınızı, kredi kartlarınızı ve diğer tüm verilerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz!
+                            ⚠️ <strong>UYARI:</strong> Bu işlem tüm işlemlerinizi, hesaplarınızı,
+                            kredi kartlarınızı ve diğer tüm verilerinizi kalıcı olarak silecektir.
+                            Bu işlem geri alınamaz!
                           </p>
                           <div className="space-y-2 text-sm text-red-600">
                             <p>• Tüm işlem geçmişi silinecek</p>
@@ -758,7 +821,7 @@ export default function SettingsPage() {
                             <p>• Otomatik ödemeler silinecek</p>
                             <p>• Altın ve yatırım verileri silinecek</p>
                           </div>
-                          <Button 
+                          <Button
                             onClick={handleResetAllData}
                             variant="destructive"
                             className="mt-4 bg-red-600 hover:bg-red-700 text-white font-semibold"
@@ -776,7 +839,8 @@ export default function SettingsPage() {
                         <div>
                           <p className="font-medium text-amber-800">Veri Saklama</p>
                           <p className="text-sm text-amber-700 mt-1">
-                            Verileriniz {settings.dataRetention} gün boyunca saklanır. Bu süre sonunda otomatik olarak silinir.
+                            Verileriniz {settings.dataRetention} gün boyunca saklanır. Bu süre
+                            sonunda otomatik olarak silinir.
                           </p>
                         </div>
                       </div>
@@ -835,9 +899,10 @@ export default function SettingsPage() {
                         <div className="flex-1">
                           <p className="font-medium text-red-800">Hesabı Sil</p>
                           <p className="text-sm text-red-700 mt-1 mb-4">
-                            Hesabınızı kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+                            Hesabınızı kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem
+                            geri alınamaz.
                           </p>
-                          <Button 
+                          <Button
                             onClick={handleDeleteAccount}
                             variant="destructive"
                             className="bg-red-600 hover:bg-red-700"

@@ -5,14 +5,13 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { 
-  BarChart3, 
-  TrendingUp, 
-  PieChart, 
-  FileText, 
-  ArrowLeft, 
+import {
+  BarChart3,
+  TrendingUp,
+  PieChart,
+  FileText,
+  ArrowLeft,
   Home,
-  DollarSign,
   Calendar,
   Target,
   AlertTriangle,
@@ -27,7 +26,7 @@ import {
   Zap,
   Eye,
   Filter,
-  RefreshCw
+  RefreshCw,
 } from 'lucide-react'
 import { formatCurrency } from '@/lib/validators'
 
@@ -40,12 +39,12 @@ interface AnalysisData {
   monthlyIncome: number
   monthlyExpense: number
   monthlyNet: number
-  
+
   // Trend verileri
   incomeGrowth: number
   expenseGrowth: number
   savingsRate: number
-  
+
   // Kategori analizi
   topCategories: Array<{
     name: string
@@ -53,7 +52,7 @@ interface AnalysisData {
     percentage: number
     trend: 'up' | 'down' | 'stable'
   }>
-  
+
   // Son işlemler
   recentTransactions: Array<{
     id: number
@@ -63,7 +62,7 @@ interface AnalysisData {
     category: string
     date: string
   }>
-  
+
   // AI önerileri
   aiInsights: Array<{
     type: 'warning' | 'suggestion' | 'achievement'
@@ -71,7 +70,7 @@ interface AnalysisData {
     description: string
     priority: 'high' | 'medium' | 'low'
   }>
-  
+
   // Nakit akışı
   cashFlowData: Array<{
     month: string
@@ -92,7 +91,7 @@ export default function AnalysisPage() {
     async function fetchAnalysisData() {
       try {
         const response = await fetch(`/api/analysis?period=${selectedPeriod}`, {
-          credentials: 'include'
+          credentials: 'include',
         })
         if (response.ok) {
           const data = await response.json()
@@ -113,27 +112,38 @@ export default function AnalysisPage() {
 
   const getInsightIcon = (type: string) => {
     switch (type) {
-      case 'warning': return <AlertTriangle className="h-4 w-4 text-orange-500" />
-      case 'suggestion': return <Lightbulb className="h-4 w-4 text-blue-500" />
-      case 'achievement': return <CheckCircle className="h-4 w-4 text-green-500" />
-      default: return <Brain className="h-4 w-4 text-purple-500" />
+      case 'warning':
+        return <AlertTriangle className="h-4 w-4 text-orange-500" />
+      case 'suggestion':
+        return <Lightbulb className="h-4 w-4 text-blue-500" />
+      case 'achievement':
+        return <CheckCircle className="h-4 w-4 text-green-500" />
+      default:
+        return <Brain className="h-4 w-4 text-purple-500" />
     }
   }
 
   const getInsightColor = (type: string) => {
     switch (type) {
-      case 'warning': return 'border-orange-200 bg-orange-50'
-      case 'suggestion': return 'border-blue-200 bg-blue-50'
-      case 'achievement': return 'border-green-200 bg-green-50'
-      default: return 'border-purple-200 bg-purple-50'
+      case 'warning':
+        return 'border-orange-200 bg-orange-50'
+      case 'suggestion':
+        return 'border-blue-200 bg-blue-50'
+      case 'achievement':
+        return 'border-green-200 bg-green-50'
+      default:
+        return 'border-purple-200 bg-purple-50'
     }
   }
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case 'up': return <TrendingUp className="h-3 w-3 text-green-500" />
-      case 'down': return <TrendingDown className="h-3 w-3 text-red-500" />
-      default: return <div className="h-3 w-3 rounded-full bg-gray-400" />
+      case 'up':
+        return <TrendingUp className="h-3 w-3 text-green-500" />
+      case 'down':
+        return <TrendingDown className="h-3 w-3 text-red-500" />
+      default:
+        return <div className="h-3 w-3 rounded-full bg-gray-400" />
     }
   }
 
@@ -179,16 +189,14 @@ export default function AnalysisPage() {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Finansal Analiz Merkezi
             </h1>
-            <p className="text-slate-600">
-              AI destekli finansal analiz ve akıllı öneriler
-            </p>
+            <p className="text-slate-600">AI destekli finansal analiz ve akıllı öneriler</p>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-3">
           <select
             value={selectedPeriod}
-            onChange={(e) => setSelectedPeriod(e.target.value)}
+            onChange={e => setSelectedPeriod(e.target.value)}
             className="px-3 py-2 border border-gray-300 rounded-lg bg-white/80 backdrop-blur-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="7d">Son 7 Gün</option>
@@ -268,15 +276,13 @@ export default function AnalysisPage() {
         <Card className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white border-0 shadow-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium opacity-90">Toplam Varlık</CardTitle>
-            <DollarSign className="h-4 w-4 opacity-90" />
+            <span className="text-xl font-bold opacity-90">₺</span>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {formatCurrency(analysisData?.totalAssets || 0, 'TRY')}
             </div>
-            <p className="text-xs opacity-80">
-              Portföy değeri
-            </p>
+            <p className="text-xs opacity-80">Portföy değeri</p>
           </CardContent>
         </Card>
       </div>
@@ -295,24 +301,27 @@ export default function AnalysisPage() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {analysisData?.aiInsights?.map((insight, index) => (
-              <div
-                key={index}
-                className={`p-4 rounded-lg border ${getInsightColor(insight.type)}`}
-              >
+              <div key={index} className={`p-4 rounded-lg border ${getInsightColor(insight.type)}`}>
                 <div className="flex items-start gap-3">
                   {getInsightIcon(insight.type)}
                   <div className="flex-1">
                     <h4 className="font-semibold text-sm mb-1">{insight.title}</h4>
                     <p className="text-xs text-gray-600">{insight.description}</p>
                     <div className="mt-2">
-                      <span className={`text-xs px-2 py-1 rounded-full ${
-                        insight.priority === 'high' ? 'bg-red-100 text-red-700' :
-                        insight.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-green-100 text-green-700'
-                      }`}>
-                        {insight.priority === 'high' ? 'Yüksek Öncelik' :
-                         insight.priority === 'medium' ? 'Orta Öncelik' :
-                         'Düşük Öncelik'}
+                      <span
+                        className={`text-xs px-2 py-1 rounded-full ${
+                          insight.priority === 'high'
+                            ? 'bg-red-100 text-red-700'
+                            : insight.priority === 'medium'
+                              ? 'bg-yellow-100 text-yellow-700'
+                              : 'bg-green-100 text-green-700'
+                        }`}
+                      >
+                        {insight.priority === 'high'
+                          ? 'Yüksek Öncelik'
+                          : insight.priority === 'medium'
+                            ? 'Orta Öncelik'
+                            : 'Düşük Öncelik'}
                       </span>
                     </div>
                   </div>
@@ -331,9 +340,7 @@ export default function AnalysisPage() {
               <PieChart className="h-5 w-5 text-green-600" />
               Harcama Kategorileri
             </CardTitle>
-            <CardDescription>
-              En çok harcama yaptığınız kategoriler
-            </CardDescription>
+            <CardDescription>En çok harcama yaptığınız kategoriler</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -348,9 +355,7 @@ export default function AnalysisPage() {
                     <div className="text-sm font-bold">
                       {formatCurrency(category.amount, 'TRY')}
                     </div>
-                    <div className="text-xs text-gray-500">
-                      %{category.percentage.toFixed(1)}
-                    </div>
+                    <div className="text-xs text-gray-500">%{category.percentage.toFixed(1)}</div>
                   </div>
                 </div>
               ))}
@@ -365,27 +370,32 @@ export default function AnalysisPage() {
               <Calendar className="h-5 w-5 text-blue-600" />
               Son İşlemler
             </CardTitle>
-            <CardDescription>
-              En son gerçekleşen finansal işlemleriniz
-            </CardDescription>
+            <CardDescription>En son gerçekleşen finansal işlemleriniz</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {analysisData?.recentTransactions?.slice(0, 5).map((transaction) => (
-                <div key={transaction.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              {analysisData?.recentTransactions?.slice(0, 5).map(transaction => (
+                <div
+                  key={transaction.id}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                >
                   <div className="flex items-center gap-3">
-                    <div className={`w-2 h-2 rounded-full ${
-                      transaction.type === 'income' ? 'bg-green-500' : 'bg-red-500'
-                    }`} />
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        transaction.type === 'income' ? 'bg-green-500' : 'bg-red-500'
+                      }`}
+                    />
                     <div>
                       <p className="text-sm font-medium">{transaction.description}</p>
                       <p className="text-xs text-gray-500">{transaction.category}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className={`text-sm font-bold ${
-                      transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
-                    }`}>
+                    <p
+                      className={`text-sm font-bold ${
+                        transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
+                      }`}
+                    >
                       {transaction.type === 'income' ? '+' : '-'}
                       {formatCurrency(transaction.amount, 'TRY')}
                     </p>
@@ -407,15 +417,13 @@ export default function AnalysisPage() {
             <Zap className="h-5 w-5 text-blue-600" />
             Hızlı Aksiyonlar
           </CardTitle>
-          <CardDescription>
-            Finansal durumunuzu iyileştirmek için hızlı adımlar
-          </CardDescription>
+          <CardDescription>Finansal durumunuzu iyileştirmek için hızlı adımlar</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Link href="/transactions/new">
               <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0">
-                <DollarSign className="h-4 w-4 mr-2" />
+                <span className="text-lg font-bold mr-2">₺</span>
                 Gelir Ekle
               </Button>
             </Link>
@@ -450,9 +458,7 @@ export default function AnalysisPage() {
                 <BarChart3 className="h-6 w-6 text-white" />
               </div>
               <CardTitle className="text-lg">Nakit Akışı</CardTitle>
-              <CardDescription>
-                Detaylı nakit akış analizi ve tahminleri
-              </CardDescription>
+              <CardDescription>Detaylı nakit akış analizi ve tahminleri</CardDescription>
             </CardHeader>
           </Card>
         </Link>
@@ -464,9 +470,7 @@ export default function AnalysisPage() {
                 <PieChart className="h-6 w-6 text-white" />
               </div>
               <CardTitle className="text-lg">Kategori Analizi</CardTitle>
-              <CardDescription>
-                Harcama kategorileri detaylı analizi
-              </CardDescription>
+              <CardDescription>Harcama kategorileri detaylı analizi</CardDescription>
             </CardHeader>
           </Card>
         </Link>
@@ -478,9 +482,7 @@ export default function AnalysisPage() {
                 <TrendingUp className="h-6 w-6 text-white" />
               </div>
               <CardTitle className="text-lg">Trend Analizi</CardTitle>
-              <CardDescription>
-                Gelir ve gider trend analizleri
-              </CardDescription>
+              <CardDescription>Gelir ve gider trend analizleri</CardDescription>
             </CardHeader>
           </Card>
         </Link>
@@ -492,9 +494,7 @@ export default function AnalysisPage() {
                 <FileText className="h-6 w-6 text-white" />
               </div>
               <CardTitle className="text-lg">Rapor Export</CardTitle>
-              <CardDescription>
-                PDF ve Excel raporları oluştur
-              </CardDescription>
+              <CardDescription>PDF ve Excel raporları oluştur</CardDescription>
             </CardHeader>
           </Card>
         </Link>

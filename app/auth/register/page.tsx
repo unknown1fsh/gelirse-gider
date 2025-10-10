@@ -4,20 +4,19 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { 
-  DollarSign, 
-  Eye, 
-  EyeOff, 
-  ArrowLeft, 
-  Mail, 
-  Lock, 
+import {
+  Eye,
+  EyeOff,
+  ArrowLeft,
+  Mail,
+  Lock,
   User,
   Phone,
   AlertCircle,
   CheckCircle,
   Loader2,
   Crown,
-  Sparkles
+  Sparkles,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -30,7 +29,7 @@ export default function RegisterPage() {
     phone: '',
     password: '',
     confirmPassword: '',
-    plan: 'free'
+    plan: 'free',
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -67,7 +66,7 @@ export default function RegisterPage() {
           email: formData.email,
           phone: formData.phone,
           password: formData.password,
-          plan: formData.plan
+          plan: formData.plan,
         }),
       })
 
@@ -90,7 +89,7 @@ export default function RegisterPage() {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
@@ -100,7 +99,7 @@ export default function RegisterPage() {
       name: 'Ücretsiz',
       price: '0',
       description: 'Temel özellikler',
-      features: ['Aylık 50 işlem', 'Temel raporlar', 'Mobil erişim']
+      features: ['Aylık 50 işlem', 'Temel raporlar', 'Mobil erişim'],
     },
     {
       id: 'premium',
@@ -108,19 +107,19 @@ export default function RegisterPage() {
       price: '29',
       description: 'Tüm özellikler',
       features: ['Sınırsız işlem', 'Gelişmiş analizler', 'Öncelikli destek', 'Veri dışa aktarma'],
-      popular: true
-    }
+      popular: true,
+    },
   ]
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
-      
+
       <div className="relative w-full max-w-2xl">
         {/* Back Button */}
         <div className="mb-6">
-          <Link 
+          <Link
             href="/landing"
             className="inline-flex items-center text-white/70 hover:text-white transition-colors"
           >
@@ -133,7 +132,7 @@ export default function RegisterPage() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center space-x-3 mb-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
-              <DollarSign className="h-7 w-7 text-white" />
+              <span className="text-3xl font-bold text-white">₺</span>
             </div>
             <div>
               <h1 className="text-2xl font-bold text-white">GiderSE-Gelir</h1>
@@ -163,7 +162,7 @@ export default function RegisterPage() {
               <div className="space-y-3">
                 <label className="text-sm font-medium text-slate-300">Plan Seçin</label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {plans.map((plan) => (
+                  {plans.map(plan => (
                     <div
                       key={plan.id}
                       className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all ${
@@ -191,7 +190,10 @@ export default function RegisterPage() {
                       <p className="text-slate-300 text-sm mb-3">{plan.description}</p>
                       <ul className="space-y-1">
                         {plan.features.map((feature, index) => (
-                          <li key={index} className="flex items-center space-x-2 text-xs text-slate-400">
+                          <li
+                            key={index}
+                            className="flex items-center space-x-2 text-xs text-slate-400"
+                          >
                             <CheckCircle className="h-3 w-3 text-green-400" />
                             <span>{feature}</span>
                           </li>
@@ -259,7 +261,7 @@ export default function RegisterPage() {
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                     <Input
-                      type={showPassword ? "text" : "password"}
+                      type={showPassword ? 'text' : 'password'}
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
@@ -282,7 +284,7 @@ export default function RegisterPage() {
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                     <Input
-                      type={showConfirmPassword ? "text" : "password"}
+                      type={showConfirmPassword ? 'text' : 'password'}
                       name="confirmPassword"
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
@@ -295,7 +297,11 @@ export default function RegisterPage() {
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300"
                     >
-                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -305,7 +311,7 @@ export default function RegisterPage() {
                 <input
                   type="checkbox"
                   checked={agreedToTerms}
-                  onChange={(e) => setAgreedToTerms(e.target.checked)}
+                  onChange={e => setAgreedToTerms(e.target.checked)}
                   className="mt-1 rounded border-white/20 bg-white/5 text-purple-600 focus:ring-purple-500"
                 />
                 <label className="text-sm text-slate-300">
@@ -342,7 +348,7 @@ export default function RegisterPage() {
             <div className="text-center">
               <p className="text-slate-300 text-sm">
                 Zaten hesabınız var mı?{' '}
-                <Link 
+                <Link
                   href="/auth/login"
                   className="text-purple-400 hover:text-purple-300 font-semibold transition-colors"
                 >

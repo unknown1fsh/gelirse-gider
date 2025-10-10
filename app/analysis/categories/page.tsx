@@ -2,20 +2,19 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { usePremium } from '@/lib/use-premium'
 import { useUser } from '@/lib/user-context'
-import { 
-  PieChart, 
-  TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
-  Target, 
-  Brain, 
-  FileText, 
-  Settings, 
+import {
+  PieChart,
+  TrendingUp,
+  TrendingDown,
+  Target,
+  Brain,
+  FileText,
+  Settings,
   Lightbulb,
   Sparkles,
   Zap,
@@ -231,8 +230,8 @@ import {
   CalendarDinar as CalendarDinarIcon2,
   CalendarDirham as CalendarDirhamIcon2,
   CalendarShekel as CalendarShekelIcon2,
-  CalendarRiyal as CalendarRiyalIcon2
-} from "lucide-react"
+  CalendarRiyal as CalendarRiyalIcon2,
+} from 'lucide-react'
 
 interface CategoryData {
   name: string
@@ -263,7 +262,8 @@ export default function CategoriesAnalysis() {
   const { handlePremiumFeature } = usePremium()
 
   // Kullanıcı tipi tespiti
-  const isEnterpriseUser = user?.email?.includes('enterprise') || user?.plan === 'enterprise_premium'
+  const isEnterpriseUser =
+    user?.email?.includes('enterprise') || user?.plan === 'enterprise_premium'
   const isIndividualUser = user?.email?.includes('demo') || user?.plan === 'premium'
 
   const handleBack = () => {
@@ -279,35 +279,171 @@ export default function CategoriesAnalysis() {
     const loadCategoryData = () => {
       // Kullanıcı planına göre farklı veriler
       let data = []
-      
+
       if (user?.plan === 'free') {
         data = [
-          { name: 'Gıda & İçecek', amount: 465, percentage: 26.4, trend: 5.2, budget: 400, color: 'from-red-400 to-red-600', status: 'over' },
-          { name: 'Ulaşım', amount: 610, percentage: 34.6, trend: -2.1, budget: 500, color: 'from-blue-400 to-blue-600', status: 'over' },
-          { name: 'Eğlence', amount: 830, percentage: 47.1, trend: 8.7, budget: 600, color: 'from-purple-400 to-purple-600', status: 'over' },
-          { name: 'Sağlık', amount: 1250, percentage: 70.9, trend: 12.3, budget: 800, color: 'from-green-400 to-green-600', status: 'over' },
-          { name: 'Alışveriş', amount: 1850, percentage: 100, trend: 3.4, budget: 1000, color: 'from-orange-400 to-orange-600', status: 'over' }
+          {
+            name: 'Gıda & İçecek',
+            amount: 465,
+            percentage: 26.4,
+            trend: 5.2,
+            budget: 400,
+            color: 'from-red-400 to-red-600',
+            status: 'over',
+          },
+          {
+            name: 'Ulaşım',
+            amount: 610,
+            percentage: 34.6,
+            trend: -2.1,
+            budget: 500,
+            color: 'from-blue-400 to-blue-600',
+            status: 'over',
+          },
+          {
+            name: 'Eğlence',
+            amount: 830,
+            percentage: 47.1,
+            trend: 8.7,
+            budget: 600,
+            color: 'from-purple-400 to-purple-600',
+            status: 'over',
+          },
+          {
+            name: 'Sağlık',
+            amount: 1250,
+            percentage: 70.9,
+            trend: 12.3,
+            budget: 800,
+            color: 'from-green-400 to-green-600',
+            status: 'over',
+          },
+          {
+            name: 'Alışveriş',
+            amount: 1850,
+            percentage: 100,
+            trend: 3.4,
+            budget: 1000,
+            color: 'from-orange-400 to-orange-600',
+            status: 'over',
+          },
         ]
       } else if (user?.plan === 'premium') {
         data = [
-          { name: 'Gıda & İçecek', amount: 465, percentage: 8.2, trend: 5.2, budget: 400, color: 'from-red-400 to-red-600', status: 'over' },
-          { name: 'Ulaşım', amount: 610, percentage: 10.8, trend: -2.1, budget: 500, color: 'from-blue-400 to-blue-600', status: 'over' },
-          { name: 'Eğlence', amount: 830, percentage: 14.7, trend: 8.7, budget: 600, color: 'from-purple-400 to-purple-600', status: 'over' },
-          { name: 'Sağlık', amount: 1250, percentage: 22.1, trend: 12.3, budget: 800, color: 'from-green-400 to-green-600', status: 'over' },
-          { name: 'Alışveriş', amount: 1850, percentage: 32.7, trend: 3.4, budget: 1000, color: 'from-orange-400 to-orange-600', status: 'over' },
-          { name: 'Diğer', amount: 650, percentage: 11.5, trend: -1.8, budget: 500, color: 'from-gray-400 to-gray-600', status: 'over' }
+          {
+            name: 'Gıda & İçecek',
+            amount: 465,
+            percentage: 8.2,
+            trend: 5.2,
+            budget: 400,
+            color: 'from-red-400 to-red-600',
+            status: 'over',
+          },
+          {
+            name: 'Ulaşım',
+            amount: 610,
+            percentage: 10.8,
+            trend: -2.1,
+            budget: 500,
+            color: 'from-blue-400 to-blue-600',
+            status: 'over',
+          },
+          {
+            name: 'Eğlence',
+            amount: 830,
+            percentage: 14.7,
+            trend: 8.7,
+            budget: 600,
+            color: 'from-purple-400 to-purple-600',
+            status: 'over',
+          },
+          {
+            name: 'Sağlık',
+            amount: 1250,
+            percentage: 22.1,
+            trend: 12.3,
+            budget: 800,
+            color: 'from-green-400 to-green-600',
+            status: 'over',
+          },
+          {
+            name: 'Alışveriş',
+            amount: 1850,
+            percentage: 32.7,
+            trend: 3.4,
+            budget: 1000,
+            color: 'from-orange-400 to-orange-600',
+            status: 'over',
+          },
+          {
+            name: 'Diğer',
+            amount: 650,
+            percentage: 11.5,
+            trend: -1.8,
+            budget: 500,
+            color: 'from-gray-400 to-gray-600',
+            status: 'over',
+          },
         ]
       } else if (user?.plan === 'enterprise') {
         data = [
-          { name: 'Gıda & İçecek', amount: 8500, percentage: 17.0, trend: 5.2, budget: 7000, color: 'from-red-400 to-red-600', status: 'over' },
-          { name: 'Ulaşım', amount: 12200, percentage: 24.4, trend: -2.1, budget: 10000, color: 'from-blue-400 to-blue-600', status: 'over' },
-          { name: 'Eğlence', amount: 16600, percentage: 33.2, trend: 8.7, budget: 12000, color: 'from-purple-400 to-purple-600', status: 'over' },
-          { name: 'Sağlık', amount: 25000, percentage: 50.0, trend: 12.3, budget: 15000, color: 'from-green-400 to-green-600', status: 'over' },
-          { name: 'Alışveriş', amount: 37000, percentage: 74.0, trend: 3.4, budget: 20000, color: 'from-orange-400 to-orange-600', status: 'over' },
-          { name: 'Diğer', amount: 13000, percentage: 26.0, trend: -1.8, budget: 8000, color: 'from-gray-400 to-gray-600', status: 'over' }
+          {
+            name: 'Gıda & İçecek',
+            amount: 8500,
+            percentage: 17.0,
+            trend: 5.2,
+            budget: 7000,
+            color: 'from-red-400 to-red-600',
+            status: 'over',
+          },
+          {
+            name: 'Ulaşım',
+            amount: 12200,
+            percentage: 24.4,
+            trend: -2.1,
+            budget: 10000,
+            color: 'from-blue-400 to-blue-600',
+            status: 'over',
+          },
+          {
+            name: 'Eğlence',
+            amount: 16600,
+            percentage: 33.2,
+            trend: 8.7,
+            budget: 12000,
+            color: 'from-purple-400 to-purple-600',
+            status: 'over',
+          },
+          {
+            name: 'Sağlık',
+            amount: 25000,
+            percentage: 50.0,
+            trend: 12.3,
+            budget: 15000,
+            color: 'from-green-400 to-green-600',
+            status: 'over',
+          },
+          {
+            name: 'Alışveriş',
+            amount: 37000,
+            percentage: 74.0,
+            trend: 3.4,
+            budget: 20000,
+            color: 'from-orange-400 to-orange-600',
+            status: 'over',
+          },
+          {
+            name: 'Diğer',
+            amount: 13000,
+            percentage: 26.0,
+            trend: -1.8,
+            budget: 8000,
+            color: 'from-gray-400 to-gray-600',
+            status: 'over',
+          },
         ]
       }
-      
+
       setCategoryData(data)
       setIsLoading(false)
     }
@@ -325,7 +461,7 @@ export default function CategoriesAnalysis() {
       gradient: 'from-blue-500 to-cyan-600',
       performance: 'Smart',
       action: 'Bütçe Oluştur',
-      onClick: () => handlePremiumFeature('Akıllı Bütçe', () => setSelectedFeature('smart-budget'))
+      onClick: () => handlePremiumFeature('Akıllı Bütçe', () => setSelectedFeature('smart-budget')),
     },
     {
       id: 'expense-tracking',
@@ -335,7 +471,8 @@ export default function CategoriesAnalysis() {
       gradient: 'from-green-500 to-emerald-600',
       performance: 'Auto',
       action: 'Takip Başlat',
-      onClick: () => handlePremiumFeature('Harcama Takibi', () => setSelectedFeature('expense-tracking'))
+      onClick: () =>
+        handlePremiumFeature('Harcama Takibi', () => setSelectedFeature('expense-tracking')),
     },
     {
       id: 'saving-opportunities',
@@ -345,7 +482,10 @@ export default function CategoriesAnalysis() {
       gradient: 'from-yellow-500 to-orange-600',
       performance: 'Save',
       action: 'Fırsatları Gör',
-      onClick: () => handlePremiumFeature('Tasarruf Fırsatları', () => setSelectedFeature('saving-opportunities'))
+      onClick: () =>
+        handlePremiumFeature('Tasarruf Fırsatları', () =>
+          setSelectedFeature('saving-opportunities')
+        ),
     },
     {
       id: 'category-insights',
@@ -355,7 +495,8 @@ export default function CategoriesAnalysis() {
       gradient: 'from-purple-500 to-pink-600',
       performance: 'Insight',
       action: 'Analiz Et',
-      onClick: () => handlePremiumFeature('Kategori Analizi', () => setSelectedFeature('category-insights'))
+      onClick: () =>
+        handlePremiumFeature('Kategori Analizi', () => setSelectedFeature('category-insights')),
     },
     {
       id: 'budget-alerts',
@@ -365,7 +506,8 @@ export default function CategoriesAnalysis() {
       gradient: 'from-red-500 to-pink-600',
       performance: 'Alert',
       action: 'Uyarı Kur',
-      onClick: () => handlePremiumFeature('Bütçe Uyarıları', () => setSelectedFeature('budget-alerts'))
+      onClick: () =>
+        handlePremiumFeature('Bütçe Uyarıları', () => setSelectedFeature('budget-alerts')),
     },
     {
       id: 'ai-spending-patterns',
@@ -375,7 +517,10 @@ export default function CategoriesAnalysis() {
       gradient: 'from-indigo-500 to-purple-600',
       performance: 'AI',
       action: 'Kalıpları Analiz Et',
-      onClick: () => handlePremiumFeature('AI Harcama Kalıpları', () => setSelectedFeature('ai-spending-patterns'))
+      onClick: () =>
+        handlePremiumFeature('AI Harcama Kalıpları', () =>
+          setSelectedFeature('ai-spending-patterns')
+        ),
     },
     {
       id: 'category-reports',
@@ -385,8 +530,9 @@ export default function CategoriesAnalysis() {
       gradient: 'from-orange-500 to-red-600',
       performance: 'PDF',
       action: 'Rapor Oluştur',
-      onClick: () => handlePremiumFeature('Kategori Raporları', () => setSelectedFeature('category-reports'))
-    }
+      onClick: () =>
+        handlePremiumFeature('Kategori Raporları', () => setSelectedFeature('category-reports')),
+    },
   ]
 
   // Kurumsal Premium özellikler
@@ -399,7 +545,8 @@ export default function CategoriesAnalysis() {
       gradient: 'from-blue-500 to-cyan-600',
       performance: 'Smart',
       action: 'Bütçe Oluştur',
-      onClick: () => handlePremiumFeature('Kurumsal Bütçe', () => setSelectedFeature('enterprise-budget'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Bütçe', () => setSelectedFeature('enterprise-budget')),
     },
     {
       id: 'enterprise-tracking',
@@ -409,7 +556,8 @@ export default function CategoriesAnalysis() {
       gradient: 'from-green-500 to-emerald-600',
       performance: 'Auto',
       action: 'Takip Başlat',
-      onClick: () => handlePremiumFeature('Kurumsal Takip', () => setSelectedFeature('enterprise-tracking'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Takip', () => setSelectedFeature('enterprise-tracking')),
     },
     {
       id: 'enterprise-optimization',
@@ -419,7 +567,10 @@ export default function CategoriesAnalysis() {
       gradient: 'from-yellow-500 to-orange-600',
       performance: 'Save',
       action: 'Optimize Et',
-      onClick: () => handlePremiumFeature('Kurumsal Optimizasyon', () => setSelectedFeature('enterprise-optimization'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Optimizasyon', () =>
+          setSelectedFeature('enterprise-optimization')
+        ),
     },
     {
       id: 'enterprise-analytics',
@@ -429,7 +580,8 @@ export default function CategoriesAnalysis() {
       gradient: 'from-purple-500 to-pink-600',
       performance: 'Insight',
       action: 'Analiz Et',
-      onClick: () => handlePremiumFeature('Kurumsal Analitik', () => setSelectedFeature('enterprise-analytics'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Analitik', () => setSelectedFeature('enterprise-analytics')),
     },
     {
       id: 'enterprise-alerts',
@@ -439,7 +591,8 @@ export default function CategoriesAnalysis() {
       gradient: 'from-red-500 to-rose-600',
       performance: 'Alert',
       action: 'Uyarı Kur',
-      onClick: () => handlePremiumFeature('Bütçe Uyarıları', () => setSelectedFeature('budget-alerts'))
+      onClick: () =>
+        handlePremiumFeature('Bütçe Uyarıları', () => setSelectedFeature('budget-alerts')),
     },
     {
       id: 'enterprise-patterns',
@@ -449,7 +602,8 @@ export default function CategoriesAnalysis() {
       gradient: 'from-indigo-500 to-purple-600',
       performance: 'AI',
       action: 'Kalıpları Analiz Et',
-      onClick: () => handlePremiumFeature('Kurumsal Kalıplar', () => setSelectedFeature('enterprise-patterns'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Kalıplar', () => setSelectedFeature('enterprise-patterns')),
     },
     {
       id: 'enterprise-reports',
@@ -459,8 +613,8 @@ export default function CategoriesAnalysis() {
       gradient: 'from-teal-500 to-cyan-600',
       performance: 'PDF',
       action: 'Rapor Oluştur',
-      onClick: () => setSelectedFeature('enterprise-reports')
-    }
+      onClick: () => setSelectedFeature('enterprise-reports'),
+    },
   ]
 
   // Kullanıcı tipine göre premium özellikleri seç
@@ -477,7 +631,7 @@ export default function CategoriesAnalysis() {
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
           <div className={`h-2 bg-gradient-to-r ${feature.gradient} rounded-t-2xl`} />
-          
+
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
@@ -499,33 +653,19 @@ export default function CategoriesAnalysis() {
               </Button>
             </div>
 
-            {selectedFeature === 'smart-budget' && (
-              <SmartBudgetModal />
-            )}
-            
-            {selectedFeature === 'expense-tracking' && (
-              <ExpenseTrackingModal />
-            )}
-            
-            {selectedFeature === 'saving-opportunities' && (
-              <SavingOpportunitiesModal />
-            )}
-            
-            {selectedFeature === 'category-insights' && (
-              <CategoryInsightsModal />
-            )}
-            
-            {selectedFeature === 'budget-alerts' && (
-              <BudgetAlertsModal />
-            )}
-            
-            {selectedFeature === 'spending-patterns' && (
-              <SpendingPatternsModal />
-            )}
-            
-            {selectedFeature === 'category-reports' && (
-              <CategoryReportsModal />
-            )}
+            {selectedFeature === 'smart-budget' && <SmartBudgetModal />}
+
+            {selectedFeature === 'expense-tracking' && <ExpenseTrackingModal />}
+
+            {selectedFeature === 'saving-opportunities' && <SavingOpportunitiesModal />}
+
+            {selectedFeature === 'category-insights' && <CategoryInsightsModal />}
+
+            {selectedFeature === 'budget-alerts' && <BudgetAlertsModal />}
+
+            {selectedFeature === 'spending-patterns' && <SpendingPatternsModal />}
+
+            {selectedFeature === 'category-reports' && <CategoryReportsModal />}
           </div>
         </div>
       </div>
@@ -570,7 +710,7 @@ export default function CategoriesAnalysis() {
               Anasayfa
             </Button>
           </div>
-          
+
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white">
               <PieChart className="w-8 h-8" />
@@ -580,10 +720,9 @@ export default function CategoriesAnalysis() {
                 {isEnterpriseUser ? 'Kurumsal Kategori Analizi' : 'Kategori Analizi'}
               </h1>
               <p className="text-gray-600">
-                {isEnterpriseUser 
+                {isEnterpriseUser
                   ? 'Enterprise AI destekli kurumsal kategori bazlı harcama analizi'
-                  : 'Premium AI destekli kategori bazlı harcama analizi'
-                }
+                  : 'Premium AI destekli kategori bazlı harcama analizi'}
               </p>
             </div>
           </div>
@@ -594,21 +733,25 @@ export default function CategoriesAnalysis() {
           <CardHeader className="pb-4">
             <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
               <Crown className="w-6 h-6 text-yellow-500" />
-              {isEnterpriseUser ? 'Kurumsal Premium Kategori Aksiyonları' : 'Premium Kategori Aksiyonları'}
-              <Badge variant="secondary" className="bg-gradient-to-r from-green-400 to-emerald-500 text-white">
+              {isEnterpriseUser
+                ? 'Kurumsal Premium Kategori Aksiyonları'
+                : 'Premium Kategori Aksiyonları'}
+              <Badge
+                variant="secondary"
+                className="bg-gradient-to-r from-green-400 to-emerald-500 text-white"
+              >
                 {isEnterpriseUser ? 'Enterprise AI' : 'AI Destekli'}
               </Badge>
             </CardTitle>
             <p className="text-gray-600">
-              {isEnterpriseUser 
+              {isEnterpriseUser
                 ? 'Kurumsal kategori bazlı tasarruf ve optimizasyon aksiyonları'
-                : 'Kategori bazlı tasarruf ve optimizasyon aksiyonları'
-              }
+                : 'Kategori bazlı tasarruf ve optimizasyon aksiyonları'}
             </p>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {premiumFeatures.map((feature) => (
+              {premiumFeatures.map(feature => (
                 <div
                   key={feature.id}
                   className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${feature.gradient} p-6 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl`}
@@ -630,10 +773,10 @@ export default function CategoriesAnalysis() {
                   <div className="text-white">
                     <h3 className="text-lg font-bold mb-2">{feature.title}</h3>
                     <p className="text-sm text-white/90 mb-4">{feature.description}</p>
-                    
+
                     {/* Action Button */}
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
                     >
                       {feature.action}
@@ -652,15 +795,27 @@ export default function CategoriesAnalysis() {
         {/* Ana Kategori Kartları */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {categoryData.map((category, index) => (
-            <Card key={index} className="border-0 shadow-lg bg-gradient-to-br from-slate-50 to-slate-100 hover:shadow-xl transition-all duration-300">
+            <Card
+              key={index}
+              className="border-0 shadow-lg bg-gradient-to-br from-slate-50 to-slate-100 hover:shadow-xl transition-all duration-300"
+            >
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <p className="text-sm font-medium text-slate-600">{category.name}</p>
-                    <p className="text-2xl font-bold text-slate-700">₺{category.amount.toLocaleString()}</p>
-                    <p className={`text-xs flex items-center mt-1 ${category.trend > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {category.trend > 0 ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
-                      {category.trend > 0 ? '+' : ''}{category.trend}%
+                    <p className="text-2xl font-bold text-slate-700">
+                      ₺{category.amount.toLocaleString()}
+                    </p>
+                    <p
+                      className={`text-xs flex items-center mt-1 ${category.trend > 0 ? 'text-green-600' : 'text-red-600'}`}
+                    >
+                      {category.trend > 0 ? (
+                        <TrendingUp className="w-3 h-3 mr-1" />
+                      ) : (
+                        <TrendingDown className="w-3 h-3 mr-1" />
+                      )}
+                      {category.trend > 0 ? '+' : ''}
+                      {category.trend}%
                     </p>
                   </div>
                   <div className={`p-3 rounded-full bg-gradient-to-r ${category.color} text-white`}>
@@ -673,17 +828,23 @@ export default function CategoriesAnalysis() {
                     <span className="text-gray-900">₺{category.budget.toLocaleString()}</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className={`h-2 rounded-full bg-gradient-to-r ${category.color}`} style={{width: `${Math.min(category.percentage, 100)}%`}}></div>
+                    <div
+                      className={`h-2 rounded-full bg-gradient-to-r ${category.color}`}
+                      style={{ width: `${Math.min(category.percentage, 100)}%` }}
+                    ></div>
                   </div>
-                  <p className={`text-xs ${category.status === 'over' ? 'text-red-600' : 'text-green-600'}`}>
-                    {category.status === 'over' ? `%${Math.round(category.percentage - 100)} aşım` : 'Bütçe içinde'}
+                  <p
+                    className={`text-xs ${category.status === 'over' ? 'text-red-600' : 'text-green-600'}`}
+                  >
+                    {category.status === 'over'
+                      ? `%${Math.round(category.percentage - 100)} aşım`
+                      : 'Bütçe içinde'}
                   </p>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
-
 
         {/* Detaylı Kategori Analizi */}
         <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
@@ -696,7 +857,10 @@ export default function CategoriesAnalysis() {
           <CardContent>
             <div className="space-y-4">
               {categoryData.map((category, index) => (
-                <div key={index} className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors"
+                >
                   <div className="flex items-center gap-4">
                     <div className={`w-4 h-4 rounded-full bg-gradient-to-r ${category.color}`} />
                     <div>
@@ -707,16 +871,28 @@ export default function CategoriesAnalysis() {
                   <div className="flex items-center gap-6">
                     <div className="text-right">
                       <p className="font-medium text-gray-900">%{category.percentage}</p>
-                      <p className={`text-sm flex items-center ${category.trend > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {category.trend > 0 ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
+                      <p
+                        className={`text-sm flex items-center ${category.trend > 0 ? 'text-green-600' : 'text-red-600'}`}
+                      >
+                        {category.trend > 0 ? (
+                          <TrendingUp className="w-3 h-3 mr-1" />
+                        ) : (
+                          <TrendingDown className="w-3 h-3 mr-1" />
+                        )}
                         %{Math.abs(category.trend)}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm text-gray-600">Bütçe: ₺{category.budget.toLocaleString()}</p>
-                      <Badge 
+                      <p className="text-sm text-gray-600">
+                        Bütçe: ₺{category.budget.toLocaleString()}
+                      </p>
+                      <Badge
                         variant={category.status === 'over' ? 'destructive' : 'secondary'}
-                        className={category.status === 'over' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}
+                        className={
+                          category.status === 'over'
+                            ? 'bg-red-100 text-red-700'
+                            : 'bg-green-100 text-green-700'
+                        }
                       >
                         {category.status === 'over' ? 'Aşım' : 'İyi'}
                       </Badge>
@@ -756,7 +932,7 @@ function SmartBudgetModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white">
           <Sparkles className="w-4 h-4 mr-2" />
@@ -791,7 +967,7 @@ function ExpenseTrackingModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-green-500 to-emerald-600 text-white">
           <Play className="w-4 h-4 mr-2" />
@@ -826,7 +1002,7 @@ function SavingOpportunitiesModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white">
           <Gift className="w-4 h-4 mr-2" />
@@ -861,7 +1037,7 @@ function CategoryInsightsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-purple-500 to-pink-600 text-white">
           <BarChart3 className="w-4 h-4 mr-2" />
@@ -896,7 +1072,7 @@ function BudgetAlertsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-red-500 to-rose-600 text-white">
           <Settings className="w-4 h-4 mr-2" />
@@ -931,7 +1107,7 @@ function SpendingPatternsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
           <Brain className="w-4 h-4 mr-2" />
@@ -966,7 +1142,7 @@ function CategoryReportsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-teal-500 to-cyan-600 text-white">
           <Download className="w-4 h-4 mr-2" />

@@ -6,18 +6,18 @@ import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Wallet, 
-  ArrowLeft, 
-  Home, 
-  Plus, 
-  Building2, 
+import {
+  Wallet,
+  ArrowLeft,
+  Home,
+  Plus,
+  Building2,
   CreditCard,
   TrendingUp,
   Eye,
   Edit,
   Trash2,
-  Copy
+  Copy,
 } from 'lucide-react'
 import { formatCurrency } from '@/lib/validators'
 
@@ -78,7 +78,7 @@ export default function BankAccountsPage() {
   const totalBalance = bankAccounts.reduce((sum, account) => {
     // Basit döviz dönüşümü (gerçek uygulamada API'den alınmalı)
     const rate = account.currency.code === 'USD' ? 30 : account.currency.code === 'EUR' ? 32 : 1
-    return sum + (parseFloat(account.balance) * rate)
+    return sum + parseFloat(account.balance) * rate
   }, 0)
 
   const handleCopyIban = (iban: string) => {
@@ -100,17 +100,12 @@ export default function BankAccountsPage() {
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <Link
-          href="/dashboard"
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-        >
+        <Link href="/dashboard" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
           <Home className="h-5 w-5" />
         </Link>
         <div className="flex-1">
           <h1 className="text-3xl font-bold">Banka Hesapları</h1>
-          <p className="text-muted-foreground">
-            Banka hesaplarınızı görüntüleyin ve yönetin
-          </p>
+          <p className="text-muted-foreground">Banka hesaplarınızı görüntüleyin ve yönetin</p>
         </div>
         <Link href="/accounts/new">
           <Button>
@@ -129,9 +124,7 @@ export default function BankAccountsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">{bankAccounts.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Aktif banka hesabı
-            </p>
+            <p className="text-xs text-muted-foreground">Aktif banka hesabı</p>
           </CardContent>
         </Card>
 
@@ -144,9 +137,7 @@ export default function BankAccountsPage() {
             <div className="text-2xl font-bold text-green-600">
               {formatCurrency(totalBalance, 'TRY')}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Tüm hesaplar toplamı
-            </p>
+            <p className="text-xs text-muted-foreground">Tüm hesaplar toplamı</p>
           </CardContent>
         </Card>
 
@@ -159,9 +150,7 @@ export default function BankAccountsPage() {
             <div className="text-2xl font-bold text-purple-600">
               {new Set(bankAccounts.map(acc => acc.bank.name)).size}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Farklı banka sayısı
-            </p>
+            <p className="text-xs text-muted-foreground">Farklı banka sayısı</p>
           </CardContent>
         </Card>
       </div>
@@ -170,9 +159,7 @@ export default function BankAccountsPage() {
       <Card>
         <CardHeader>
           <CardTitle>Hesap Detayları</CardTitle>
-          <CardDescription>
-            Tüm banka hesaplarınızın detaylı listesi
-          </CardDescription>
+          <CardDescription>Tüm banka hesaplarınızın detaylı listesi</CardDescription>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -188,17 +175,17 @@ export default function BankAccountsPage() {
             <div className="text-center py-8 text-muted-foreground">
               <Wallet className="h-8 w-8 mx-auto mb-2" />
               <p>Henüz banka hesabı eklenmemiş</p>
-              <Link 
-                href="/accounts/new"
-                className="text-blue-600 hover:underline"
-              >
+              <Link href="/accounts/new" className="text-blue-600 hover:underline">
                 İlk hesabınızı ekleyin
               </Link>
             </div>
           ) : (
             <div className="space-y-4">
-              {bankAccounts.map((account) => (
-                <div key={account.uniqueId} className="p-6 border border-slate-200 rounded-xl hover:shadow-md transition-all duration-200 bg-gradient-to-r from-blue-50 to-blue-100/50">
+              {bankAccounts.map(account => (
+                <div
+                  key={account.uniqueId}
+                  className="p-6 border border-slate-200 rounded-xl hover:shadow-md transition-all duration-200 bg-gradient-to-r from-blue-50 to-blue-100/50"
+                >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
@@ -208,7 +195,7 @@ export default function BankAccountsPage() {
                           {account.accountType.name}
                         </Badge>
                       </div>
-                      
+
                       <div className="flex items-center gap-2 mb-2">
                         <Building2 className="h-4 w-4 text-slate-500" />
                         <span className="text-slate-600 font-medium">{account.bank.name}</span>
@@ -227,7 +214,7 @@ export default function BankAccountsPage() {
                             </button>
                           </div>
                         )}
-                        
+
                         {account.iban && (
                           <div className="flex items-center gap-2">
                             <Wallet className="h-4 w-4" />
@@ -242,7 +229,7 @@ export default function BankAccountsPage() {
                         )}
                       </div>
                     </div>
-                    
+
                     <div className="text-right">
                       <div className="text-3xl font-bold text-blue-600 mb-1">
                         {formatCurrency(parseFloat(account.balance), account.currency.code)}
@@ -259,17 +246,21 @@ export default function BankAccountsPage() {
                           <Edit className="h-4 w-4 mr-1" />
                           Düzenle
                         </Button>
-                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700"
+                        >
                           <Trash2 className="h-4 w-4 mr-1" />
                           Sil
                         </Button>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="text-xs text-slate-400 pt-2 border-t border-slate-200">
-                    Oluşturulma: {new Date(account.createdAt).toLocaleDateString('tr-TR')} • 
-                    Son güncelleme: {new Date(account.updatedAt).toLocaleDateString('tr-TR')}
+                    Oluşturulma: {new Date(account.createdAt).toLocaleDateString('tr-TR')} • Son
+                    güncelleme: {new Date(account.updatedAt).toLocaleDateString('tr-TR')}
                   </div>
                 </div>
               ))}

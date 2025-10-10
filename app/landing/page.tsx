@@ -3,28 +3,27 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { 
-  DollarSign, 
-  TrendingUp, 
-  Shield, 
-  Smartphone, 
-  BarChart3, 
-  CreditCard, 
-  Calendar, 
-  Coins, 
-  Sparkles, 
-  Check, 
-  Star, 
-  Crown, 
-  Zap, 
-  Target, 
-  PieChart, 
-  Wallet, 
-  Bell, 
-  Lock, 
-  Globe, 
-  Download, 
-  ArrowRight, 
+import {
+  TrendingUp,
+  Shield,
+  Smartphone,
+  BarChart3,
+  CreditCard,
+  Calendar,
+  Coins,
+  Sparkles,
+  Check,
+  Star,
+  Crown,
+  Zap,
+  Target,
+  PieChart,
+  Wallet,
+  Bell,
+  Lock,
+  Globe,
+  Download,
+  ArrowRight,
   Play,
   Users,
   Award,
@@ -33,7 +32,7 @@ import {
   Gift,
   Rocket,
   Infinity,
-  Brain
+  Brain,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -46,38 +45,38 @@ export default function LandingPage() {
       icon: BarChart3,
       title: 'Gelişmiş Analizler',
       description: 'Detaylı finansal raporlar ve trend analizleri',
-      color: 'from-blue-500 to-indigo-600'
+      color: 'from-blue-500 to-indigo-600',
     },
     {
       icon: CreditCard,
       title: 'Kredi Kartı Yönetimi',
       description: 'Tüm kartlarınızı tek yerden yönetin',
-      color: 'from-green-500 to-emerald-600'
+      color: 'from-green-500 to-emerald-600',
     },
     {
       icon: Calendar,
       title: 'Otomatik Ödemeler',
       description: 'Tekrarlayan ödemeleri otomatik takip edin',
-      color: 'from-purple-500 to-violet-600'
+      color: 'from-purple-500 to-violet-600',
     },
     {
       icon: Coins,
       title: 'Altın ve Yatırım',
       description: 'Altın fiyatları ve yatırım portföyü',
-      color: 'from-yellow-500 to-amber-600'
+      color: 'from-yellow-500 to-amber-600',
     },
     {
       icon: Shield,
       title: 'Güvenli Veri',
       description: 'End-to-end şifreleme ile güvenli saklama',
-      color: 'from-red-500 to-rose-600'
+      color: 'from-red-500 to-rose-600',
     },
     {
       icon: Smartphone,
       title: 'Mobil Uyumlu',
       description: 'Her cihazdan erişim imkanı',
-      color: 'from-indigo-500 to-blue-600'
-    }
+      color: 'from-indigo-500 to-blue-600',
+    },
   ]
 
   const premiumFeatures = [
@@ -85,38 +84,38 @@ export default function LandingPage() {
       icon: Infinity,
       title: 'Sınırsız İşlem',
       description: 'İstediğiniz kadar gelir-gider kaydı',
-      color: 'text-purple-600'
+      color: 'text-purple-600',
     },
     {
       icon: BarChart3,
       title: 'Gelişmiş Raporlar',
       description: 'Detaylı analiz ve öngörüler',
-      color: 'text-blue-600'
+      color: 'text-blue-600',
     },
     {
       icon: Zap,
       title: 'Hızlı İşlemler',
       description: 'Premium hız ve performans',
-      color: 'text-yellow-600'
+      color: 'text-yellow-600',
     },
     {
       icon: Crown,
       title: 'Öncelikli Destek',
       description: '7/24 premium müşteri desteği',
-      color: 'text-orange-600'
+      color: 'text-orange-600',
     },
     {
       icon: Download,
       title: 'Veri Dışa Aktarma',
       description: 'Excel, PDF formatlarında raporlar',
-      color: 'text-green-600'
+      color: 'text-green-600',
     },
     {
       icon: Bell,
       title: 'Akıllı Bildirimler',
       description: 'Kişiselleştirilmiş uyarılar',
-      color: 'text-pink-600'
-    }
+      color: 'text-pink-600',
+    },
   ]
 
   const pricingPlans = [
@@ -131,10 +130,10 @@ export default function LandingPage() {
         'Mobil erişim',
         'E-posta desteği',
         'Kişisel bütçe takibi',
-        'Temel analizler'
+        'Temel analizler',
       ],
       color: 'from-slate-500 to-slate-600',
-      popular: false
+      popular: false,
     },
     {
       name: 'Premium',
@@ -149,10 +148,10 @@ export default function LandingPage() {
         'Akıllı bildirimler',
         'Premium tema',
         'Yatırım takibi',
-        'Hedef belirleme'
+        'Hedef belirleme',
       ],
       color: 'from-purple-500 to-pink-600',
-      popular: true
+      popular: true,
     },
     {
       name: 'Kurumsal',
@@ -169,10 +168,10 @@ export default function LandingPage() {
         'API erişimi',
         'Özel entegrasyonlar',
         'Dedicated destek',
-        'Özel raporlar'
+        'Özel raporlar',
       ],
       color: 'from-blue-500 to-indigo-600',
-      popular: false
+      popular: false,
     },
     {
       name: 'Kurumsal Premium',
@@ -194,19 +193,19 @@ export default function LandingPage() {
         'API limiti yok',
         'Holding yapısı desteği',
         'Çoklu şirket yönetimi',
-        'Konsolide raporlama'
+        'Konsolide raporlama',
       ],
       color: 'from-amber-500 to-orange-600',
       popular: false,
-      ultra: true
-    }
+      ultra: true,
+    },
   ]
 
   const stats = [
     { number: '50K+', label: 'Aktif Kullanıcı', icon: Users },
     { number: '1M+', label: 'İşlem Kaydı', icon: TrendingUp },
     { number: '99.9%', label: 'Uptime', icon: Shield },
-    { number: '4.9/5', label: 'Kullanıcı Puanı', icon: Star }
+    { number: '4.9/5', label: 'Kullanıcı Puanı', icon: Star },
   ]
 
   return (
@@ -219,12 +218,12 @@ export default function LandingPage() {
             <div className="flex justify-center mb-8">
               <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600">
-                  <DollarSign className="h-5 w-5 text-white" />
+                  <span className="text-2xl font-bold text-white">₺</span>
                 </div>
                 <span className="text-white font-medium">GiderSE-Gelir</span>
               </div>
             </div>
-            
+
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
               <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Finansal
@@ -232,15 +231,15 @@ export default function LandingPage() {
               <br />
               <span className="text-white">Özgürlüğünüz</span>
             </h1>
-            
+
             <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-3xl mx-auto">
-              Gelir ve giderlerinizi akıllıca yönetin, finansal hedeflerinize ulaşın. 
-              <span className="text-purple-400 font-semibold"> Premium özellikler</span> ile 
+              Gelir ve giderlerinizi akıllıca yönetin, finansal hedeflerinize ulaşın.
+              <span className="text-purple-400 font-semibold"> Premium özellikler</span> ile
               finansal hayatınızı kontrol altına alın.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button 
+              <Button
                 size="lg"
                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl"
                 onClick={() => router.push('/auth/register')}
@@ -248,7 +247,7 @@ export default function LandingPage() {
                 <Rocket className="h-5 w-5 mr-2" />
                 Ücretsiz Başla
               </Button>
-              <Button 
+              <Button
                 size="lg"
                 variant="outline"
                 className="border-white/30 text-white hover:bg-white/10 px-8 py-4 text-lg font-semibold"
@@ -285,20 +284,29 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">
-              Neden <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">GiderSE-Gelir</span>?
+              Neden{' '}
+              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                GiderSE-Gelir
+              </span>
+              ?
             </h2>
             <p className="text-xl text-slate-300 max-w-2xl mx-auto">
               Modern finansal yönetim araçları ile hayatınızı kolaylaştırın
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => {
               const Icon = feature.icon
               return (
-                <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 group">
+                <Card
+                  key={index}
+                  className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 group"
+                >
                   <CardContent className="p-6">
-                    <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${feature.color} mb-4 group-hover:scale-110 transition-transform`}>
+                    <div
+                      className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${feature.color} mb-4 group-hover:scale-110 transition-transform`}
+                    >
                       <Icon className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
@@ -320,20 +328,27 @@ export default function LandingPage() {
               <span className="text-purple-400 font-semibold">Premium Üyelik</span>
             </div>
             <h2 className="text-4xl font-bold text-white mb-4">
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Premium</span> ile
+              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Premium
+              </span>{' '}
+              ile
               <br />
               Finansal Kontrolünüzü Artırın
             </h2>
             <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-              Gelişmiş özellikler, sınırsız işlem ve öncelikli destek ile finansal hedeflerinize daha hızlı ulaşın.
+              Gelişmiş özellikler, sınırsız işlem ve öncelikli destek ile finansal hedeflerinize
+              daha hızlı ulaşın.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
             {premiumFeatures.map((feature, index) => {
               const Icon = feature.icon
               return (
-                <div key={index} className="flex items-start space-x-4 p-6 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300">
+                <div
+                  key={index}
+                  className="flex items-start space-x-4 p-6 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300"
+                >
                   <div className={`p-2 rounded-lg bg-white/10 ${feature.color}`}>
                     <Icon className="h-5 w-5 text-white" />
                   </div>
@@ -347,7 +362,7 @@ export default function LandingPage() {
           </div>
 
           <div className="text-center">
-            <Button 
+            <Button
               size="lg"
               className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl"
               onClick={() => router.push('/auth/register')}
@@ -368,16 +383,19 @@ export default function LandingPage() {
               <span className="text-amber-400 font-semibold">Kurumsal Premium</span>
             </div>
             <h2 className="text-4xl font-bold text-white mb-4">
-              <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">Kurumsal Premium</span> ile
+              <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+                Kurumsal Premium
+              </span>{' '}
+              ile
               <br />
               Büyük Şirketler için Ultra Lüks Yönetim
             </h2>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-              Holdingler, büyük şirketler ve tüzel kişilikler için tasarlanmış ultra lüks finansal yönetim platformu. 
-              AI, Blockchain, IoT ve siber güvenlik teknolojileri ile donatılmış.
+              Holdingler, büyük şirketler ve tüzel kişilikler için tasarlanmış ultra lüks finansal
+              yönetim platformu. AI, Blockchain, IoT ve siber güvenlik teknolojileri ile donatılmış.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             <div className="p-6 bg-gradient-to-br from-amber-500/20 to-orange-600/20 backdrop-blur-sm rounded-xl border border-amber-500/30 hover:bg-amber-500/30 transition-all duration-300">
               <div className="flex items-center space-x-3 mb-4">
@@ -386,9 +404,11 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-lg font-semibold text-white">8 Hesap Türü</h3>
               </div>
-              <p className="text-slate-300 text-sm">Ana operasyon, yatırım portföyü, uluslararası işlemler ve daha fazlası</p>
+              <p className="text-slate-300 text-sm">
+                Ana operasyon, yatırım portföyü, uluslararası işlemler ve daha fazlası
+              </p>
             </div>
-            
+
             <div className="p-6 bg-gradient-to-br from-amber-500/20 to-orange-600/20 backdrop-blur-sm rounded-xl border border-amber-500/30 hover:bg-amber-500/30 transition-all duration-300">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="p-2 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600">
@@ -396,9 +416,11 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-lg font-semibold text-white">5 Premium Kart</h3>
               </div>
-              <p className="text-slate-300 text-sm">Black Diamond, Executive Platinum, Corporate Elite ve daha fazlası</p>
+              <p className="text-slate-300 text-sm">
+                Black Diamond, Executive Platinum, Corporate Elite ve daha fazlası
+              </p>
             </div>
-            
+
             <div className="p-6 bg-gradient-to-br from-amber-500/20 to-orange-600/20 backdrop-blur-sm rounded-xl border border-amber-500/30 hover:bg-amber-500/30 transition-all duration-300">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="p-2 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600">
@@ -406,9 +428,11 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-lg font-semibold text-white">Uluslararası</h3>
               </div>
-              <p className="text-slate-300 text-sm">Çoklu para birimi, global transferler ve uluslararası işlemler</p>
+              <p className="text-slate-300 text-sm">
+                Çoklu para birimi, global transferler ve uluslararası işlemler
+              </p>
             </div>
-            
+
             <div className="p-6 bg-gradient-to-br from-amber-500/20 to-orange-600/20 backdrop-blur-sm rounded-xl border border-amber-500/30 hover:bg-amber-500/30 transition-all duration-300">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="p-2 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600">
@@ -416,7 +440,9 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-lg font-semibold text-white">AI Teknolojisi</h3>
               </div>
-              <p className="text-slate-300 text-sm">Yapay zeka destekli analizler, tahminler ve öneriler</p>
+              <p className="text-slate-300 text-sm">
+                Yapay zeka destekli analizler, tahminler ve öneriler
+              </p>
             </div>
           </div>
 
@@ -445,7 +471,7 @@ export default function LandingPage() {
                 </li>
               </ul>
             </div>
-            
+
             <div className="p-8 bg-gradient-to-br from-amber-500/10 to-orange-600/10 backdrop-blur-sm rounded-2xl border border-amber-500/20">
               <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
                 <Award className="h-6 w-6 text-amber-400 mr-3" />
@@ -473,7 +499,7 @@ export default function LandingPage() {
           </div>
 
           <div className="text-center">
-            <Button 
+            <Button
               size="lg"
               className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl"
               onClick={() => router.push('/enterprise')}
@@ -490,20 +516,32 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">
-              Size Uygun <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Planı</span> Seçin
+              Size Uygun{' '}
+              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Planı
+              </span>{' '}
+              Seçin
             </h2>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-              <span className="text-purple-400 font-semibold">Bireysel kullanıcılar</span> için Ücretsiz ve Premium planlar, 
-              <span className="text-blue-400 font-semibold"> şirketler ve tüzel kişilikler</span> için Kurumsal planlar
+              <span className="text-purple-400 font-semibold">Bireysel kullanıcılar</span> için
+              Ücretsiz ve Premium planlar,
+              <span className="text-blue-400 font-semibold">
+                {' '}
+                şirketler ve tüzel kişilikler
+              </span>{' '}
+              için Kurumsal planlar
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
             {pricingPlans.map((plan, index) => {
               return (
-                <Card key={index} className={`relative bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 ${
-                  plan.popular ? 'ring-2 ring-purple-500/50 scale-105' : ''
-                } ${plan.ultra ? 'ring-2 ring-amber-500/50 scale-110' : ''}`}>
+                <Card
+                  key={index}
+                  className={`relative bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 ${
+                    plan.popular ? 'ring-2 ring-purple-500/50 scale-105' : ''
+                  } ${plan.ultra ? 'ring-2 ring-amber-500/50 scale-110' : ''}`}
+                >
                   {plan.popular && (
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                       <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
@@ -524,7 +562,9 @@ export default function LandingPage() {
                       <span className="text-4xl font-bold text-white">₺{plan.price}</span>
                       <span className="text-slate-400">/{plan.period}</span>
                     </div>
-                    <CardDescription className="text-slate-300 mt-2">{plan.description}</CardDescription>
+                    <CardDescription className="text-slate-300 mt-2">
+                      {plan.description}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="pt-0">
                     <ul className="space-y-3 mb-8">
@@ -535,13 +575,13 @@ export default function LandingPage() {
                         </li>
                       ))}
                     </ul>
-                    <Button 
+                    <Button
                       className={`w-full ${
-                        plan.popular 
-                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white' 
+                        plan.popular
+                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white'
                           : plan.ultra
-                          ? 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white'
-                          : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
+                            ? 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white'
+                            : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
                       }`}
                       onClick={() => router.push('/auth/register')}
                     >
@@ -561,13 +601,17 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl p-12 border border-purple-500/30">
             <h2 className="text-4xl font-bold text-white mb-4">
-              Finansal Geleceğinizi <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Bugün</span> Şekillendirin
+              Finansal Geleceğinizi{' '}
+              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Bugün
+              </span>{' '}
+              Şekillendirin
             </h2>
             <p className="text-xl text-slate-300 mb-8">
               Binlerce kullanıcı zaten finansal özgürlüklerine kavuştu. Sıra sizde!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
+              <Button
                 size="lg"
                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl"
                 onClick={() => router.push('/auth/register')}
@@ -575,7 +619,7 @@ export default function LandingPage() {
                 <Rocket className="h-5 w-5 mr-2" />
                 Hemen Başla
               </Button>
-              <Button 
+              <Button
                 size="lg"
                 variant="outline"
                 className="border-white/30 text-white hover:bg-white/10 px-8 py-4 text-lg font-semibold"
@@ -595,13 +639,11 @@ export default function LandingPage() {
           <div className="text-center">
             <div className="flex items-center justify-center space-x-3 mb-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
-                <DollarSign className="h-6 w-6 text-white" />
+                <span className="text-3xl font-bold text-white">₺</span>
               </div>
               <span className="text-2xl font-bold text-white">GiderSE-Gelir</span>
             </div>
-            <p className="text-slate-400 mb-4">
-              Finansal özgürlüğünüz için güvenilir partneriniz
-            </p>
+            <p className="text-slate-400 mb-4">Finansal özgürlüğünüz için güvenilir partneriniz</p>
             <div className="flex justify-center space-x-6 text-sm text-slate-400">
               <span>© 2024 GiderSE-Gelir</span>
               <span>•</span>

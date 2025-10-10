@@ -17,16 +17,12 @@ export async function GET() {
             'Temel raporlar',
             'Mobil erişim',
             'E-posta desteği',
-            'Temel kategoriler'
-          ]
-        }
+            'Temel kategoriler',
+          ],
+        },
       ],
-      limitations: [
-        'Sınırlı işlem sayısı',
-        'Temel raporlar',
-        'Standart destek'
-      ],
-      popular: false
+      limitations: ['Sınırlı işlem sayısı', 'Temel raporlar', 'Standart destek'],
+      popular: false,
     },
     {
       id: 'premium',
@@ -42,8 +38,8 @@ export async function GET() {
             'AI Finansal Asistan',
             'Otomatik Kategorileme',
             'Tahmin Modelleri',
-            'Akıllı Öneriler'
-          ]
+            'Akıllı Öneriler',
+          ],
         },
         {
           name: '📊 Gelişmiş Raporlama',
@@ -51,40 +47,25 @@ export async function GET() {
             'İnteraktif Grafikler',
             'Harcama Dağılımı',
             'Trend Analizleri',
-            'PDF/Excel Raporları'
-          ]
+            'PDF/Excel Raporları',
+          ],
         },
         {
           name: '🎯 Akıllı Hedefleme',
-          features: [
-            'Kişisel Hedefler',
-            'Mevsimsel Analiz',
-            'Akıllı Bildirimler',
-            'Başarı Takibi'
-          ]
+          features: ['Kişisel Hedefler', 'Mevsimsel Analiz', 'Akıllı Bildirimler', 'Başarı Takibi'],
         },
         {
           name: '⚡ Otomasyon & Verimlilik',
-          features: [
-            'Otomatik Takip',
-            'Akıllı Tekrarlar',
-            'Zaman Tasarrufu',
-            'Özelleştirilebilir'
-          ]
+          features: ['Otomatik Takip', 'Akıllı Tekrarlar', 'Zaman Tasarrufu', 'Özelleştirilebilir'],
         },
         {
           name: '🛡️ Premium Destek',
-          features: [
-            '7/24 Premium Destek',
-            'Gelişmiş Güvenlik',
-            'Premium Tema',
-            'Bulut Yedekleme'
-          ]
-        }
+          features: ['7/24 Premium Destek', 'Gelişmiş Güvenlik', 'Premium Tema', 'Bulut Yedekleme'],
+        },
       ],
       limitations: [],
       popular: true,
-      savings: 'Yıllık ödeme ile %20 indirim'
+      savings: 'Yıllık ödeme ile %20 indirim',
     },
     {
       id: 'enterprise_premium',
@@ -100,8 +81,8 @@ export async function GET() {
             'Çoklu Şirket Konsolidasyonu',
             'Sınırsız Departman Yönetimi',
             'Hiyerarşik Yetki Sistemi',
-            'Global Şube Ağı'
-          ]
+            'Global Şube Ağı',
+          ],
         },
         {
           name: '🔒 Enterprise Güvenlik',
@@ -109,8 +90,8 @@ export async function GET() {
             'Kurumsal Quantum Şifreleme',
             'Enterprise Sıfır Güven',
             'Siber Tehdit İzleme',
-            'Uyumluluk Yönetimi'
-          ]
+            'Uyumluluk Yönetimi',
+          ],
         },
         {
           name: '🤖 AI Süper Zeka',
@@ -118,8 +99,8 @@ export async function GET() {
             'Kurumsal AI Süper Zeka',
             'Kurumsal Gelir Optimizasyonu',
             'Operasyonel Verimlilik',
-            'Kurumsal Süreç Otomasyonu'
-          ]
+            'Kurumsal Süreç Otomasyonu',
+          ],
         },
         {
           name: '🌐 Global Altyapı',
@@ -127,8 +108,8 @@ export async function GET() {
             'Global İş Ağı',
             'Enterprise Bulut Altyapısı',
             'Çoklu Para Birimi Yönetimi',
-            'VIP Kurumsal Destek'
-          ]
+            'VIP Kurumsal Destek',
+          ],
         },
         {
           name: '💰 Kurumsal Gelir Artırma',
@@ -136,8 +117,8 @@ export async function GET() {
             'Pazar Genişletme',
             'Müşteri Segmentasyonu',
             'Ürün Portföy Optimizasyonu',
-            'Kurumsal Ortaklıklar'
-          ]
+            'Kurumsal Ortaklıklar',
+          ],
         },
         {
           name: '📈 İş Zekası & Analytics',
@@ -145,19 +126,19 @@ export async function GET() {
             'Kurumsal Dashboard',
             'Enterprise API',
             'Özel Sistem Entegrasyonları',
-            'Beyaz Etiket Çözümü'
-          ]
-        }
+            'Beyaz Etiket Çözümü',
+          ],
+        },
       ],
       limitations: [],
       popular: false,
-      custom: 'Özel fiyatlandırma mevcut'
-    }
+      custom: 'Özel fiyatlandırma mevcut',
+    },
   ]
 
   return NextResponse.json({
     success: true,
     plans,
-    lastUpdated: new Date().toISOString()
+    lastUpdated: new Date().toISOString(),
   })
 }

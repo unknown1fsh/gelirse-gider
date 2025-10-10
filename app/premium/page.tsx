@@ -6,14 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useUser } from '@/lib/user-context'
-import { 
-  Crown, 
-  Check, 
-  Star, 
-  Zap, 
-  Shield, 
-  Brain, 
-  BarChart3, 
+import {
+  Crown,
+  Check,
+  Star,
+  Zap,
+  Shield,
+  Brain,
+  BarChart3,
   FileText,
   Target,
   TrendingUp,
@@ -606,7 +606,7 @@ import {
   Moscovium,
   Livermorium,
   Tennessine,
-  Oganesson
+  Oganesson,
 } from 'lucide-react'
 
 export default function PremiumPage() {
@@ -630,27 +630,27 @@ export default function PremiumPage() {
           icon: Brain,
           title: 'AI Finansal Asistan',
           description: 'Kişiselleştirilmiş finansal öneriler ve akıllı analizler',
-          color: 'text-purple-600'
+          color: 'text-purple-600',
         },
         {
           icon: Bot,
           title: 'Otomatik Kategorileme',
           description: 'AI ile harcamalarınızı otomatik olarak kategorilere ayırır',
-          color: 'text-purple-600'
+          color: 'text-purple-600',
         },
         {
           icon: TrendingUp,
           title: 'Tahmin Modelleri',
           description: 'Gelecek gelir ve harcama trendlerini öngörür',
-          color: 'text-purple-600'
+          color: 'text-purple-600',
         },
         {
           icon: Lightbulb,
           title: 'Akıllı Öneriler',
           description: 'Tasarruf fırsatları ve yatırım önerileri',
-          color: 'text-purple-600'
-        }
-      ]
+          color: 'text-purple-600',
+        },
+      ],
     },
     {
       id: 'advanced-reporting',
@@ -664,27 +664,27 @@ export default function PremiumPage() {
           icon: BarChart3,
           title: 'İnteraktif Grafikler',
           description: 'Detaylı finansal verilerin görsel analizi',
-          color: 'text-blue-600'
+          color: 'text-blue-600',
         },
         {
           icon: PieChart,
           title: 'Harcama Dağılımı',
           description: 'Kategorilere göre harcama analizi ve dağılımı',
-          color: 'text-blue-600'
+          color: 'text-blue-600',
         },
         {
           icon: LineChart,
           title: 'Trend Analizleri',
           description: 'Zaman bazlı gelir ve harcama trendleri',
-          color: 'text-blue-600'
+          color: 'text-blue-600',
         },
         {
           icon: FileText,
           title: 'PDF/Excel Raporları',
           description: 'Profesyonel raporları indirme ve paylaşma',
-          color: 'text-blue-600'
-        }
-      ]
+          color: 'text-blue-600',
+        },
+      ],
     },
     {
       id: 'smart-goals',
@@ -698,27 +698,27 @@ export default function PremiumPage() {
           icon: Target,
           title: 'Kişisel Hedefler',
           description: 'Tasarruf, yatırım ve harcama hedefleri belirleme',
-          color: 'text-orange-600'
+          color: 'text-orange-600',
         },
         {
           icon: Calendar,
           title: 'Mevsimsel Analiz',
           description: 'Mevsimsel harcama kalıpları ve öngörüler',
-          color: 'text-orange-600'
+          color: 'text-orange-600',
         },
         {
           icon: Bell,
           title: 'Akıllı Bildirimler',
           description: 'Hedef ilerlemesi ve bütçe uyarıları',
-          color: 'text-orange-600'
+          color: 'text-orange-600',
         },
         {
           icon: Award,
           title: 'Başarı Takibi',
           description: 'Hedeflere ulaşma oranı ve ödül sistemi',
-          color: 'text-orange-600'
-        }
-      ]
+          color: 'text-orange-600',
+        },
+      ],
     },
     {
       id: 'automation',
@@ -732,27 +732,27 @@ export default function PremiumPage() {
           icon: Activity,
           title: 'Otomatik Takip',
           description: 'Nakit akışı ve harcamaları otomatik izleme',
-          color: 'text-green-600'
+          color: 'text-green-600',
         },
         {
           icon: Zap,
           title: 'Akıllı Tekrarlar',
           description: 'Düzenli ödemeleri otomatik tanıma ve kaydetme',
-          color: 'text-green-600'
+          color: 'text-green-600',
         },
         {
           icon: Clock,
           title: 'Zaman Tasarrufu',
           description: 'Günlük finansal işlemleri hızlandırma',
-          color: 'text-green-600'
+          color: 'text-green-600',
         },
         {
           icon: Settings,
           title: 'Özelleştirilebilir',
           description: 'İhtiyaçlarınıza göre otomasyon kuralları',
-          color: 'text-green-600'
-        }
-      ]
+          color: 'text-green-600',
+        },
+      ],
     },
     {
       id: 'premium-support',
@@ -766,28 +766,28 @@ export default function PremiumPage() {
           icon: Headphones,
           title: '7/24 Premium Destek',
           description: 'Öncelikli müşteri hizmetleri ve teknik destek',
-          color: 'text-slate-600'
+          color: 'text-slate-600',
         },
         {
           icon: Shield,
           title: 'Gelişmiş Güvenlik',
           description: 'Premium güvenlik özellikleri ve veri koruma',
-          color: 'text-slate-600'
+          color: 'text-slate-600',
         },
         {
           icon: Palette,
           title: 'Premium Tema',
           description: 'Özel tasarım ve koyu/açık tema seçenekleri',
-          color: 'text-slate-600'
+          color: 'text-slate-600',
         },
         {
           icon: Cloud,
           title: 'Bulut Yedekleme',
           description: 'Otomatik veri yedekleme ve senkronizasyon',
-          color: 'text-slate-600'
-        }
-      ]
-    }
+          color: 'text-slate-600',
+        },
+      ],
+    },
   ]
 
   const pricingPlans = [
@@ -802,16 +802,12 @@ export default function PremiumPage() {
         'Temel raporlar',
         'Mobil erişim',
         'E-posta desteği',
-        'Temel kategoriler'
+        'Temel kategoriler',
       ],
-      limitations: [
-        'Sınırlı işlem sayısı',
-        'Temel raporlar',
-        'Standart destek'
-      ],
+      limitations: ['Sınırlı işlem sayısı', 'Temel raporlar', 'Standart destek'],
       color: 'from-slate-500 to-slate-600',
       popular: false,
-      disabled: isAlreadyPremium
+      disabled: isAlreadyPremium,
     },
     {
       id: 'premium',
@@ -827,13 +823,13 @@ export default function PremiumPage() {
         'Akıllı bildirimler',
         'Öncelikli destek',
         'Premium tema',
-        'Otomatik yedekleme'
+        'Otomatik yedekleme',
       ],
       limitations: [],
       color: 'from-purple-500 to-pink-600',
       popular: true,
       disabled: isAlreadyPremium,
-      savings: 'Yıllık ödeme ile %20 indirim'
+      savings: 'Yıllık ödeme ile %20 indirim',
     },
     {
       id: 'enterprise',
@@ -849,24 +845,24 @@ export default function PremiumPage() {
         'Dedicated destek',
         'Özel raporlar',
         'Beyaz etiket çözümü',
-        'Gelişmiş güvenlik'
+        'Gelişmiş güvenlik',
       ],
       limitations: [],
       color: 'from-blue-500 to-indigo-600',
       popular: false,
       disabled: isAlreadyPremium,
-      custom: 'Özel fiyatlandırma mevcut'
-    }
+      custom: 'Özel fiyatlandırma mevcut',
+    },
   ]
 
   const handleUpgrade = async () => {
     if (isAlreadyPremium) return
-    
+
     setIsProcessing(true)
     try {
       // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000))
-      
+
       // Redirect to success page or update user
       router.push('/dashboard?upgraded=true')
     } catch (error) {
@@ -897,11 +893,9 @@ export default function PremiumPage() {
                 <span>Geri</span>
               </Button>
               <div className="h-6 w-px bg-slate-300" />
-              <h1 className="text-xl font-semibold text-slate-900">
-                Premium Üyelik
-              </h1>
+              <h1 className="text-xl font-semibold text-slate-900">Premium Üyelik</h1>
             </div>
-            
+
             {isAlreadyPremium && (
               <div className="flex items-center space-x-2 px-3 py-1 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full border border-purple-200">
                 <Crown className="h-4 w-4 text-purple-600" />
@@ -919,15 +913,18 @@ export default function PremiumPage() {
             <Crown className="h-5 w-5 text-purple-600" />
             <span className="text-sm font-medium text-purple-700">Premium Özellikler</span>
           </div>
-          
+
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
             Finansal Yolculuğunuzu
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"> Yükseltin</span>
+            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              {' '}
+              Yükseltin
+            </span>
           </h1>
-          
+
           <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
-            AI destekli analizler, gelişmiş raporlar ve kişiselleştirilmiş önerilerle 
-            finansal hedeflerinize daha hızlı ulaşın.
+            AI destekli analizler, gelişmiş raporlar ve kişiselleştirilmiş önerilerle finansal
+            hedeflerinize daha hızlı ulaşın.
           </p>
 
           {isAlreadyPremium ? (
@@ -937,7 +934,10 @@ export default function PremiumPage() {
             </div>
           ) : (
             <div className="flex items-center justify-center space-x-4">
-              <Badge variant="secondary" className="bg-gradient-to-r from-purple-400 to-pink-500 text-white px-4 py-2">
+              <Badge
+                variant="secondary"
+                className="bg-gradient-to-r from-purple-400 to-pink-500 text-white px-4 py-2"
+              >
                 <Star className="h-4 w-4 mr-1" />
                 En Popüler
               </Badge>
@@ -948,48 +948,46 @@ export default function PremiumPage() {
 
         {/* Categorized Features */}
         <div className="mb-16">
-          <h2 className="text-4xl font-bold text-center text-slate-900 mb-4">
-            Premium Özellikler
-          </h2>
+          <h2 className="text-4xl font-bold text-center text-slate-900 mb-4">Premium Özellikler</h2>
           <p className="text-xl text-center text-slate-600 mb-16 max-w-3xl mx-auto">
             Finansal hayatınızı dönüştürecek 5 ana kategori altında düzenlenmiş premium özellikler
           </p>
-          
+
           <div className="space-y-16">
             {premiumCategories.map((category, categoryIndex) => (
               <div key={category.id} className="relative">
                 {/* Category Header */}
                 <div className="text-center mb-12">
-                  <div className={`inline-flex items-center space-x-3 px-6 py-3 bg-gradient-to-r ${category.bgColor} rounded-full border-2 ${category.borderColor} mb-6`}>
+                  <div
+                    className={`inline-flex items-center space-x-3 px-6 py-3 bg-gradient-to-r ${category.bgColor} rounded-full border-2 ${category.borderColor} mb-6`}
+                  >
                     <span className="text-2xl">{category.title.split(' ')[0]}</span>
-                    <span className="text-lg font-bold text-slate-900">{category.title.split(' ').slice(1).join(' ')}</span>
+                    <span className="text-lg font-bold text-slate-900">
+                      {category.title.split(' ').slice(1).join(' ')}
+                    </span>
                   </div>
-                  
-                  <h3 className="text-2xl font-bold text-slate-900 mb-4">
-                    {category.title}
-                  </h3>
-                  
-                  <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                    {category.description}
-                  </p>
+
+                  <h3 className="text-2xl font-bold text-slate-900 mb-4">{category.title}</h3>
+
+                  <p className="text-lg text-slate-600 max-w-2xl mx-auto">{category.description}</p>
                 </div>
 
                 {/* Category Features Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {category.features.map((feature, featureIndex) => (
-                    <Card 
-                      key={featureIndex} 
+                    <Card
+                      key={featureIndex}
                       className={`group hover:shadow-xl transition-all duration-300 border-0 bg-white/90 backdrop-blur-sm hover:scale-105 ${category.borderColor} hover:border-opacity-50`}
                     >
                       <CardContent className="p-6">
-                        <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${category.color} mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                        <div
+                          className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${category.color} mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+                        >
                           <feature.icon className="h-6 w-6 text-white" />
                         </div>
-                        
-                        <h4 className="font-bold text-slate-900 mb-3 text-lg">
-                          {feature.title}
-                        </h4>
-                        
+
+                        <h4 className="font-bold text-slate-900 mb-3 text-lg">{feature.title}</h4>
+
                         <p className="text-sm text-slate-600 leading-relaxed">
                           {feature.description}
                         </p>
@@ -1016,20 +1014,18 @@ export default function PremiumPage() {
         {/* Enhanced Pricing Plans */}
         {!isAlreadyPremium && (
           <div className="mb-16">
-            <h2 className="text-4xl font-bold text-center text-slate-900 mb-4">
-              Plan Seçin
-            </h2>
+            <h2 className="text-4xl font-bold text-center text-slate-900 mb-4">Plan Seçin</h2>
             <p className="text-xl text-center text-slate-600 mb-16 max-w-3xl mx-auto">
               İhtiyaçlarınıza en uygun planı seçin ve finansal yolculuğunuza başlayın
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-              {pricingPlans.map((plan) => (
-                <Card 
-                  key={plan.id} 
+              {pricingPlans.map(plan => (
+                <Card
+                  key={plan.id}
                   className={`relative overflow-hidden transition-all duration-300 border-2 ${
-                    plan.popular 
-                      ? 'ring-4 ring-purple-500/50 shadow-2xl scale-105 border-purple-200' 
+                    plan.popular
+                      ? 'ring-4 ring-purple-500/50 shadow-2xl scale-105 border-purple-200'
                       : 'hover:shadow-xl border-slate-200'
                   } ${plan.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:scale-102'}`}
                   onClick={() => !plan.disabled && setSelectedPlan(plan.id)}
@@ -1040,30 +1036,30 @@ export default function PremiumPage() {
                       En Popüler
                     </div>
                   )}
-                  
+
                   {plan.savings && (
                     <div className="absolute top-4 left-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-1 text-xs font-bold rounded-full">
                       {plan.savings}
                     </div>
                   )}
-                  
+
                   <CardHeader className="text-center pb-6 pt-8">
                     <CardTitle className="text-3xl font-black text-slate-900 mb-2">
                       {plan.name}
                     </CardTitle>
-                    
+
                     <div className="mt-6 mb-4">
                       <span className="text-5xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                         {plan.price}₺
                       </span>
                       <span className="text-xl text-slate-600 font-medium">/{plan.period}</span>
                     </div>
-                    
+
                     <CardDescription className="text-lg text-slate-600 font-medium">
                       {plan.description}
                     </CardDescription>
                   </CardHeader>
-                  
+
                   <CardContent className="px-8 pb-8">
                     <ul className="space-y-4 mb-8">
                       {plan.features.map((feature, index) => (
@@ -1075,7 +1071,7 @@ export default function PremiumPage() {
                         </li>
                       ))}
                     </ul>
-                    
+
                     {plan.limitations && plan.limitations.length > 0 && (
                       <div className="mb-6 p-4 bg-slate-50 rounded-lg">
                         <h4 className="text-sm font-bold text-slate-600 mb-2">Sınırlamalar:</h4>
@@ -1089,15 +1085,15 @@ export default function PremiumPage() {
                         </ul>
                       </div>
                     )}
-                    
+
                     {plan.custom && (
                       <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                         <p className="text-sm font-bold text-blue-700">{plan.custom}</p>
                       </div>
                     )}
-                    
+
                     {plan.id === 'premium' && (
-                      <Button 
+                      <Button
                         onClick={handleUpgrade}
                         disabled={isProcessing}
                         size="lg"
@@ -1116,9 +1112,9 @@ export default function PremiumPage() {
                         )}
                       </Button>
                     )}
-                    
+
                     {plan.id === 'enterprise' && (
-                      <Button 
+                      <Button
                         onClick={() => router.push('/enterprise-premium')}
                         size="lg"
                         className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300"
@@ -1129,9 +1125,9 @@ export default function PremiumPage() {
                         </div>
                       </Button>
                     )}
-                    
+
                     {plan.id === 'free' && (
-                      <Button 
+                      <Button
                         variant="outline"
                         size="lg"
                         className="w-full border-2 border-slate-300 text-slate-700 hover:bg-slate-50 font-bold py-4 text-lg"
@@ -1157,17 +1153,15 @@ export default function PremiumPage() {
               <CardContent className="p-8">
                 <div className="flex items-center justify-center space-x-2 mb-4">
                   <Zap className="h-6 w-6 text-purple-600" />
-                  <h3 className="text-2xl font-bold text-slate-900">
-                    Hemen Başlayın
-                  </h3>
+                  <h3 className="text-2xl font-bold text-slate-900">Hemen Başlayın</h3>
                 </div>
-                
+
                 <p className="text-slate-600 mb-6">
                   Premium üyeliğinizle birlikte tüm gelişmiş özelliklere anında erişim sağlayın.
                 </p>
-                
+
                 <div className="flex items-center justify-center space-x-4">
-                  <Button 
+                  <Button
                     onClick={handleUpgrade}
                     disabled={isProcessing}
                     size="lg"

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getCurrentUser } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth-refactored'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -9,28 +9,25 @@ export async function GET(request: NextRequest) {
     const user = await getCurrentUser(request)
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, message: 'Oturum bulunamadı' },
-        { status: 401 }
-      )
+      return NextResponse.json({ success: false, message: 'Oturum bulunamadı' }, { status: 401 })
     }
 
     // Mevcut abonelik bilgilerini al
     const subscription = await prisma.userSubscription.findFirst({
       where: {
         userId: user.id,
-        status: 'active'
+        status: 'active',
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     })
 
     // Abonelik geçmişi
     const subscriptionHistory = await prisma.userSubscription.findMany({
       where: {
-        userId: user.id
+        userId: user.id,
       },
       orderBy: { createdAt: 'desc' },
-      take: 10
+      take: 10,
     })
 
     // Kullanım istatistikleri
@@ -38,25 +35,40 @@ export async function GET(request: NextRequest) {
       where: {
         userId: user.id,
         createdAt: {
-          gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1) // Bu ay
-        }
-      }
+          gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1), // Bu ay
+        },
+      },
     })
 
     // Plan limitleri
     const planLimits: { [key: string]: { transactions: number; features: string[] } } = {
       free: {
         transactions: 50,
-        features: ['Temel raporlar', 'Mobil erişim', 'E-posta desteği']
+        features: ['Temel raporlar', 'Mobil erişim', 'E-posta desteği'],
       },
       premium: {
         transactions: -1, // Sınırsız
-        features: ['Sınırsız işlem', 'Gelişmiş analizler', 'Öncelikli destek', 'Veri dışa aktarma']
+        features: ['Sınırsız işlem', 'Gelişmiş analizler', 'Öncelikli destek', 'Veri dışa aktarma'],
       },
       enterprise: {
         transactions: -1,
-        features: ['Tüm Premium özellikler', 'Çoklu kullanıcı', 'API erişimi', 'Özel entegrasyonlar']
-      }
+        features: [
+          'Tüm Premium özellikler',
+          'Çoklu kullanıcı',
+          'API erişimi',
+          'Özel entegrasyonlar',
+        ],
+      },
+      enterprise_premium: {
+        transactions: -1,
+        features: [
+          'Tüm Enterprise özellikler',
+          'Öncelikli destek 7/24',
+          'Özel raporlama',
+          'Özel eğitim',
+          'SLA garantisi',
+        ],
+      },
     }
 
     const currentPlan = subscription?.planId || 'free'
@@ -64,22 +76,25 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      subscription: subscription ? {
-        id: subscription.id,
-        planId: subscription.planId,
-        status: subscription.status,
-        startDate: subscription.startDate,
-        endDate: subscription.endDate,
-        amount: subscription.amount,
-        currency: subscription.currency,
-        autoRenew: subscription.autoRenew
-      } : null,
+      subscription: subscription
+        ? {
+            id: subscription.id,
+            planId: subscription.planId,
+            status: subscription.status,
+            startDate: subscription.startDate,
+            endDate: subscription.endDate,
+            amount: subscription.amount,
+            currency: subscription.currency,
+            autoRenew: subscription.autoRenew,
+          }
+        : null,
       usage: {
         currentPlan,
         transactionsThisMonth: usageStats,
         transactionLimit: limits.transactions,
         isUnlimited: limits.transactions === -1,
-        remainingTransactions: limits.transactions === -1 ? -1 : Math.max(0, limits.transactions - usageStats)
+        remainingTransactions:
+          limits.transactions === -1 ? -1 : Math.max(0, limits.transactions - usageStats),
       },
       features: limits.features,
       history: subscriptionHistory.map(sub => ({
@@ -90,14 +105,11 @@ export async function GET(request: NextRequest) {
         endDate: sub.endDate,
         amount: sub.amount,
         currency: sub.currency,
-        createdAt: sub.createdAt
-      }))
+        createdAt: sub.createdAt,
+      })),
     })
   } catch (error) {
     console.error('Get subscription status error:', error)
-    return NextResponse.json(
-      { success: false, message: 'Sunucu hatası' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, message: 'Sunucu hatası' }, { status: 500 })
   }
 }

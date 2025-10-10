@@ -6,15 +6,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useUser } from '@/lib/user-context'
-import { 
-  Building2, 
-  Users, 
-  Shield, 
-  Zap, 
-  BarChart3, 
-  Globe, 
-  Headphones, 
-  Check, 
+import {
+  Building2,
+  Users,
+  Shield,
+  Zap,
+  BarChart3,
+  Globe,
+  Headphones,
+  Check,
   ArrowRight,
   Star,
   Award,
@@ -53,7 +53,6 @@ import {
   LineChart,
   BarChart,
   TrendingDown,
-  DollarSign,
   Wallet,
   Coins,
   Banknote,
@@ -655,7 +654,7 @@ import {
   Moscovium,
   Livermorium,
   Tennessine,
-  Oganesson
+  Oganesson,
 } from 'lucide-react'
 
 export default function EnterprisePage() {
@@ -668,7 +667,7 @@ export default function EnterprisePage() {
     email: '',
     company: '',
     phone: '',
-    message: ''
+    message: '',
   })
 
   const isAlreadyEnterprise = user?.plan === 'enterprise'
@@ -693,7 +692,7 @@ export default function EnterprisePage() {
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 3}s`
+              animationDuration: `${2 + Math.random() * 3}s`,
             }}
           ></div>
         ))}
@@ -720,9 +719,10 @@ export default function EnterprisePage() {
             </h1>
 
             <p className="text-xl md:text-2xl text-blue-100 max-w-4xl mx-auto mb-12 leading-relaxed">
-              Dünyanın en güçlü finansal yönetim platformu. 
-              <span className="text-amber-400 font-bold"> AI, Blockchain, IoT</span> ve 
-              <span className="text-emerald-400 font-bold"> Siber Güvenlik</span> teknolojileri ile donatılmış.
+              Dünyanın en güçlü finansal yönetim platformu.
+              <span className="text-amber-400 font-bold"> AI, Blockchain, IoT</span> ve
+              <span className="text-emerald-400 font-bold"> Siber Güvenlik</span> teknolojileri ile
+              donatılmış.
             </p>
 
             {/* Action Buttons */}
@@ -735,7 +735,7 @@ export default function EnterprisePage() {
                 <Rocket className="h-6 w-6 mr-3" />
                 ULTRA PREMIUM'U KEŞFET
               </Button>
-              
+
               <Button
                 size="lg"
                 variant="outline"
@@ -794,46 +794,48 @@ export default function EnterprisePage() {
               {[
                 {
                   icon: Building2,
-                  title: "Multi-Company Management",
-                  description: "Manage unlimited companies, subsidiaries, and business units",
-                  color: "from-blue-500 to-indigo-600"
+                  title: 'Multi-Company Management',
+                  description: 'Manage unlimited companies, subsidiaries, and business units',
+                  color: 'from-blue-500 to-indigo-600',
                 },
                 {
                   icon: Users,
-                  title: "Unlimited Users",
-                  description: "Add unlimited team members with role-based access",
-                  color: "from-emerald-500 to-teal-600"
+                  title: 'Unlimited Users',
+                  description: 'Add unlimited team members with role-based access',
+                  color: 'from-emerald-500 to-teal-600',
                 },
                 {
                   icon: Shield,
-                  title: "Enterprise Security",
-                  description: "SOC 2, ISO 27001, GDPR compliant security",
-                  color: "from-red-500 to-rose-600"
+                  title: 'Enterprise Security',
+                  description: 'SOC 2, ISO 27001, GDPR compliant security',
+                  color: 'from-red-500 to-rose-600',
                 },
                 {
                   icon: BarChart3,
-                  title: "Advanced Analytics",
-                  description: "Real-time dashboards and predictive insights",
-                  color: "from-purple-500 to-pink-600"
+                  title: 'Advanced Analytics',
+                  description: 'Real-time dashboards and predictive insights',
+                  color: 'from-purple-500 to-pink-600',
                 },
                 {
                   icon: Globe,
-                  title: "Global Operations",
-                  description: "Multi-currency, multi-language, multi-timezone",
-                  color: "from-amber-500 to-orange-600"
+                  title: 'Global Operations',
+                  description: 'Multi-currency, multi-language, multi-timezone',
+                  color: 'from-amber-500 to-orange-600',
                 },
                 {
                   icon: Headphones,
-                  title: "24/7 VIP Support",
-                  description: "Dedicated account manager and priority support",
-                  color: "from-cyan-500 to-blue-600"
-                }
+                  title: '24/7 VIP Support',
+                  description: 'Dedicated account manager and priority support',
+                  color: 'from-cyan-500 to-blue-600',
+                },
               ].map((feature, index) => (
                 <div
                   key={index}
                   className="group bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-105"
                 >
-                  <div className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform`}>
+                  <div
+                    className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform`}
+                  >
                     <feature.icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
@@ -850,7 +852,10 @@ export default function EnterprisePage() {
             <div className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 backdrop-blur-sm rounded-3xl p-12 border border-amber-500/30">
               <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
                 READY FOR
-                <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent"> ULTRA POWER?</span>
+                <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+                  {' '}
+                  ULTRA POWER?
+                </span>
               </h2>
               <p className="text-xl text-blue-100 mb-8">
                 Join the world's most powerful companies using our Enterprise solutions

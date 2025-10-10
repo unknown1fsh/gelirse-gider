@@ -2,17 +2,17 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { usePremium } from '@/lib/use-premium'
 import { useUser } from '@/lib/user-context'
 import PremiumUpgradeModal from '@/components/premium-upgrade-modal'
-import { 
-  Download, 
-  FileText, 
-  Share2, 
-  Settings, 
+import {
+  Download,
+  FileText,
+  Share2,
+  Settings,
   Eye,
   Calendar,
   Clock,
@@ -231,8 +231,8 @@ import {
   CalendarDinar as CalendarDinarIcon2,
   CalendarDirham as CalendarDirhamIcon2,
   CalendarShekel as CalendarShekelIcon2,
-  CalendarRiyal as CalendarRiyalIcon2
-} from "lucide-react"
+  CalendarRiyal as CalendarRiyalIcon2,
+} from 'lucide-react'
 
 interface ExportData {
   type: string
@@ -261,7 +261,8 @@ export default function ExportAnalysis() {
   const { user } = useUser()
 
   // Kullanıcı tipi tespiti
-  const isEnterpriseUser = user?.email?.includes('enterprise') || user?.plan === 'enterprise_premium'
+  const isEnterpriseUser =
+    user?.email?.includes('enterprise') || user?.plan === 'enterprise_premium'
   const isIndividualUser = user?.email?.includes('demo') || user?.plan === 'premium'
 
   const handleBack = () => {
@@ -283,7 +284,7 @@ export default function ExportAnalysis() {
       gradient: 'from-blue-500 to-cyan-600',
       performance: 'Quick',
       action: 'Export Başlat',
-      onClick: () => handlePremiumFeature('Hızlı Export', () => setSelectedFeature('quick-export'))
+      onClick: () => handlePremiumFeature('Hızlı Export', () => setSelectedFeature('quick-export')),
     },
     {
       id: 'custom-reports',
@@ -293,7 +294,8 @@ export default function ExportAnalysis() {
       gradient: 'from-green-500 to-emerald-600',
       performance: 'Custom',
       action: 'Şablon Oluştur',
-      onClick: () => handlePremiumFeature('Özel Raporlar', () => setSelectedFeature('custom-reports'))
+      onClick: () =>
+        handlePremiumFeature('Özel Raporlar', () => setSelectedFeature('custom-reports')),
     },
     {
       id: 'scheduled-exports',
@@ -303,7 +305,8 @@ export default function ExportAnalysis() {
       gradient: 'from-purple-500 to-pink-600',
       performance: 'Auto',
       action: 'Zamanla',
-      onClick: () => handlePremiumFeature('Otomatik Export', () => setSelectedFeature('scheduled-exports'))
+      onClick: () =>
+        handlePremiumFeature('Otomatik Export', () => setSelectedFeature('scheduled-exports')),
     },
     {
       id: 'multi-format',
@@ -313,7 +316,7 @@ export default function ExportAnalysis() {
       gradient: 'from-orange-500 to-red-600',
       performance: 'Multi',
       action: 'Format Seç',
-      onClick: () => handlePremiumFeature('Çoklu Format', () => setSelectedFeature('multi-format'))
+      onClick: () => handlePremiumFeature('Çoklu Format', () => setSelectedFeature('multi-format')),
     },
     {
       id: 'secure-sharing',
@@ -323,7 +326,7 @@ export default function ExportAnalysis() {
       gradient: 'from-indigo-500 to-purple-600',
       performance: 'Secure',
       action: 'Paylaşım Ayarla',
-      onClick: () => setSelectedFeature('secure-sharing')
+      onClick: () => setSelectedFeature('secure-sharing'),
     },
     {
       id: 'cloud-sync',
@@ -333,7 +336,7 @@ export default function ExportAnalysis() {
       gradient: 'from-teal-500 to-cyan-600',
       performance: 'Cloud',
       action: 'Senkronize Et',
-      onClick: () => setSelectedFeature('cloud-sync')
+      onClick: () => setSelectedFeature('cloud-sync'),
     },
     {
       id: 'advanced-analytics',
@@ -343,8 +346,8 @@ export default function ExportAnalysis() {
       gradient: 'from-pink-500 to-rose-600',
       performance: 'Advanced',
       action: 'Analitik Oluştur',
-      onClick: () => setSelectedFeature('advanced-analytics')
-    }
+      onClick: () => setSelectedFeature('advanced-analytics'),
+    },
   ]
 
   // Kurumsal Premium özellikler
@@ -357,7 +360,8 @@ export default function ExportAnalysis() {
       gradient: 'from-blue-500 to-cyan-600',
       performance: 'Quick',
       action: 'Export Başlat',
-      onClick: () => handlePremiumFeature('Kurumsal Export', () => setSelectedFeature('enterprise-export'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Export', () => setSelectedFeature('enterprise-export')),
     },
     {
       id: 'enterprise-reports',
@@ -367,7 +371,8 @@ export default function ExportAnalysis() {
       gradient: 'from-green-500 to-emerald-600',
       performance: 'Custom',
       action: 'Şablon Oluştur',
-      onClick: () => handlePremiumFeature('Kurumsal Raporlar', () => setSelectedFeature('enterprise-reports'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Raporlar', () => setSelectedFeature('enterprise-reports')),
     },
     {
       id: 'enterprise-automation',
@@ -377,7 +382,10 @@ export default function ExportAnalysis() {
       gradient: 'from-purple-500 to-pink-600',
       performance: 'Auto',
       action: 'Zamanla',
-      onClick: () => handlePremiumFeature('Kurumsal Otomasyon', () => setSelectedFeature('enterprise-automation'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Otomasyon', () =>
+          setSelectedFeature('enterprise-automation')
+        ),
     },
     {
       id: 'enterprise-formats',
@@ -387,7 +395,8 @@ export default function ExportAnalysis() {
       gradient: 'from-orange-500 to-red-600',
       performance: 'Multi',
       action: 'Format Seç',
-      onClick: () => handlePremiumFeature('Kurumsal Formatlar', () => setSelectedFeature('enterprise-formats'))
+      onClick: () =>
+        handlePremiumFeature('Kurumsal Formatlar', () => setSelectedFeature('enterprise-formats')),
     },
     {
       id: 'enterprise-security',
@@ -397,7 +406,7 @@ export default function ExportAnalysis() {
       gradient: 'from-indigo-500 to-purple-600',
       performance: 'Secure',
       action: 'Paylaşım Ayarla',
-      onClick: () => setSelectedFeature('enterprise-security')
+      onClick: () => setSelectedFeature('enterprise-security'),
     },
     {
       id: 'enterprise-cloud',
@@ -407,7 +416,7 @@ export default function ExportAnalysis() {
       gradient: 'from-teal-500 to-cyan-600',
       performance: 'Cloud',
       action: 'Senkronize Et',
-      onClick: () => setSelectedFeature('enterprise-cloud')
+      onClick: () => setSelectedFeature('enterprise-cloud'),
     },
     {
       id: 'enterprise-analytics',
@@ -417,8 +426,8 @@ export default function ExportAnalysis() {
       gradient: 'from-pink-500 to-rose-600',
       performance: 'Advanced',
       action: 'Analitik Oluştur',
-      onClick: () => setSelectedFeature('enterprise-analytics')
-    }
+      onClick: () => setSelectedFeature('enterprise-analytics'),
+    },
   ]
 
   // Kullanıcı tipine göre premium özellikleri seç
@@ -435,7 +444,7 @@ export default function ExportAnalysis() {
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
           <div className={`h-2 bg-gradient-to-r ${feature.gradient} rounded-t-2xl`} />
-          
+
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
@@ -457,33 +466,19 @@ export default function ExportAnalysis() {
               </Button>
             </div>
 
-            {selectedFeature === 'quick-export' && (
-              <QuickExportModal />
-            )}
-            
-            {selectedFeature === 'custom-reports' && (
-              <CustomReportsModal />
-            )}
-            
-            {selectedFeature === 'scheduled-exports' && (
-              <ScheduledExportsModal />
-            )}
-            
-            {selectedFeature === 'multi-format' && (
-              <MultiFormatModal />
-            )}
-            
-            {selectedFeature === 'secure-sharing' && (
-              <SecureSharingModal />
-            )}
-            
-            {selectedFeature === 'cloud-sync' && (
-              <CloudSyncModal />
-            )}
-            
-            {selectedFeature === 'advanced-analytics' && (
-              <AdvancedAnalyticsModal />
-            )}
+            {selectedFeature === 'quick-export' && <QuickExportModal />}
+
+            {selectedFeature === 'custom-reports' && <CustomReportsModal />}
+
+            {selectedFeature === 'scheduled-exports' && <ScheduledExportsModal />}
+
+            {selectedFeature === 'multi-format' && <MultiFormatModal />}
+
+            {selectedFeature === 'secure-sharing' && <SecureSharingModal />}
+
+            {selectedFeature === 'cloud-sync' && <CloudSyncModal />}
+
+            {selectedFeature === 'advanced-analytics' && <AdvancedAnalyticsModal />}
           </div>
         </div>
       </div>
@@ -505,10 +500,9 @@ export default function ExportAnalysis() {
                   {isEnterpriseUser ? 'Kurumsal Export & Raporlar' : 'Export & Raporlar'}
                 </h1>
                 <p className="text-gray-600">
-                  {isEnterpriseUser 
+                  {isEnterpriseUser
                     ? 'Enterprise rapor oluşturma ve paylaşım seçenekleri'
-                    : 'Premium rapor oluşturma ve paylaşım seçenekleri'
-                  }
+                    : 'Premium rapor oluşturma ve paylaşım seçenekleri'}
                 </p>
               </div>
             </div>
@@ -540,21 +534,25 @@ export default function ExportAnalysis() {
           <CardHeader className="pb-4">
             <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
               <Crown className="w-6 h-6 text-yellow-500" />
-              {isEnterpriseUser ? 'Kurumsal Premium Export Aksiyonları' : 'Premium Export Aksiyonları'}
-              <Badge variant="secondary" className="bg-gradient-to-r from-orange-400 to-red-500 text-white">
+              {isEnterpriseUser
+                ? 'Kurumsal Premium Export Aksiyonları'
+                : 'Premium Export Aksiyonları'}
+              <Badge
+                variant="secondary"
+                className="bg-gradient-to-r from-orange-400 to-red-500 text-white"
+              >
                 {isEnterpriseUser ? 'Enterprise' : 'Premium'}
               </Badge>
             </CardTitle>
             <p className="text-gray-600">
-              {isEnterpriseUser 
+              {isEnterpriseUser
                 ? 'Kurumsal hızlı rapor oluşturma ve paylaşım seçenekleri'
-                : 'Hızlı rapor oluşturma ve paylaşım seçenekleri'
-              }
+                : 'Hızlı rapor oluşturma ve paylaşım seçenekleri'}
             </p>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {premiumFeatures.map((feature) => (
+              {premiumFeatures.map(feature => (
                 <div
                   key={feature.id}
                   className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${feature.gradient} p-6 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl`}
@@ -576,10 +574,10 @@ export default function ExportAnalysis() {
                   <div className="text-white">
                     <h3 className="text-lg font-bold mb-2">{feature.title}</h3>
                     <p className="text-sm text-white/90 mb-4">{feature.description}</p>
-                    
+
                     {/* Action Button */}
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
                     >
                       {feature.action}
@@ -697,26 +695,65 @@ export default function ExportAnalysis() {
           <CardContent>
             <div className="space-y-4">
               {[
-                { type: 'Tam Finansal Rapor', format: 'PDF', size: '2.3 MB', lastGenerated: '2 saat önce', status: 'ready' },
-                { type: 'Kategori Analizi', format: 'Excel', size: '1.8 MB', lastGenerated: '1 gün önce', status: 'ready' },
-                { type: 'Trend Analizi', format: 'PDF', size: '1.5 MB', lastGenerated: '3 gün önce', status: 'ready' },
-                { type: 'Nakit Akış Raporu', format: 'CSV', size: '0.9 MB', lastGenerated: '1 hafta önce', status: 'ready' },
-                { type: 'Yatırım Analizi', format: 'PDF', size: '2.1 MB', lastGenerated: '2 hafta önce', status: 'ready' }
+                {
+                  type: 'Tam Finansal Rapor',
+                  format: 'PDF',
+                  size: '2.3 MB',
+                  lastGenerated: '2 saat önce',
+                  status: 'ready',
+                },
+                {
+                  type: 'Kategori Analizi',
+                  format: 'Excel',
+                  size: '1.8 MB',
+                  lastGenerated: '1 gün önce',
+                  status: 'ready',
+                },
+                {
+                  type: 'Trend Analizi',
+                  format: 'PDF',
+                  size: '1.5 MB',
+                  lastGenerated: '3 gün önce',
+                  status: 'ready',
+                },
+                {
+                  type: 'Nakit Akış Raporu',
+                  format: 'CSV',
+                  size: '0.9 MB',
+                  lastGenerated: '1 hafta önce',
+                  status: 'ready',
+                },
+                {
+                  type: 'Yatırım Analizi',
+                  format: 'PDF',
+                  size: '2.1 MB',
+                  lastGenerated: '2 hafta önce',
+                  status: 'ready',
+                },
               ].map((exportItem, index) => (
-                <div key={index} className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors"
+                >
                   <div className="flex items-center gap-4">
                     <div className="p-2 rounded-lg bg-orange-100 text-orange-600">
                       <FileText className="w-5 h-5" />
                     </div>
                     <div>
                       <p className="font-medium text-gray-900">{exportItem.type}</p>
-                      <p className="text-sm text-gray-600">{exportItem.format} • {exportItem.size} • {exportItem.lastGenerated}</p>
+                      <p className="text-sm text-gray-600">
+                        {exportItem.format} • {exportItem.size} • {exportItem.lastGenerated}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge 
+                    <Badge
                       variant={exportItem.status === 'ready' ? 'secondary' : 'destructive'}
-                      className={exportItem.status === 'ready' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}
+                      className={
+                        exportItem.status === 'ready'
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-red-100 text-red-700'
+                      }
                     >
                       {exportItem.status === 'ready' ? 'Hazır' : 'Hata'}
                     </Badge>
@@ -801,7 +838,7 @@ function QuickExportModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white">
           <Zap className="w-4 h-4 mr-2" />
@@ -836,7 +873,7 @@ function CustomReportsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-green-500 to-emerald-600 text-white">
           <Plus className="w-4 h-4 mr-2" />
@@ -871,7 +908,7 @@ function ScheduledExportsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-purple-500 to-pink-600 text-white">
           <Calendar className="w-4 h-4 mr-2" />
@@ -906,7 +943,7 @@ function MultiFormatModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-orange-500 to-red-600 text-white">
           <Download className="w-4 h-4 mr-2" />
@@ -941,7 +978,7 @@ function SecureSharingModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
           <Shield className="w-4 h-4 mr-2" />
@@ -976,7 +1013,7 @@ function CloudSyncModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-teal-500 to-cyan-600 text-white">
           <Globe className="w-4 h-4 mr-2" />
@@ -1011,7 +1048,7 @@ function AdvancedAnalyticsModal() {
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button className="bg-gradient-to-r from-pink-500 to-rose-600 text-white">
           <BarChart3 className="w-4 h-4 mr-2" />
