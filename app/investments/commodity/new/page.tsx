@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument */
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -35,9 +36,10 @@ export default function NewCommodityInvestmentPage() {
       try {
         const response = await fetch('/api/reference-data')
         if (response.ok) {
-          const data = (await response.json()) as ReferenceData
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const data: ReferenceData = await response.json()
           setCurrencies(data.currencies)
-          const tryCurrency = data.currencies.find((c) => c.code === 'TRY')
+          const tryCurrency = data.currencies.find(c => c.code === 'TRY')
           if (tryCurrency) {
             setFormData(prev => ({ ...prev, currencyId: tryCurrency.id }))
           }
@@ -53,7 +55,9 @@ export default function NewCommodityInvestmentPage() {
 
   const handleFetchQuote = async () => {
     try {
-      const res = await fetch(`/api/market/commodities/quote?symbol=${encodeURIComponent(selectedCommodity.symbol)}`)
+      const res = await fetch(
+        `/api/market/commodities/quote?symbol=${encodeURIComponent(selectedCommodity.symbol)}`
+      )
       const data = (await res.json()) as { quote?: { price?: number } }
       const price = data?.quote?.price
       if (price) {
@@ -74,7 +78,9 @@ export default function NewCommodityInvestmentPage() {
         symbol: selectedCommodity.symbol,
         quantity: parseFloat(formData.quantity),
         purchasePrice: parseCurrencyInput(formData.purchasePrice),
-        currentPrice: formData.currentPrice ? parseCurrencyInput(formData.currentPrice) : parseCurrencyInput(formData.purchasePrice),
+        currentPrice: formData.currentPrice
+          ? parseCurrencyInput(formData.currentPrice)
+          : parseCurrencyInput(formData.purchasePrice),
         purchaseDate: formData.purchaseDate,
         currencyId: formData.currencyId,
         category: 'Emtia',
@@ -105,7 +111,9 @@ export default function NewCommodityInvestmentPage() {
     }
   }
 
-  if (loading) { return <div className="p-6">Yükleniyor...</div> }
+  if (loading) {
+    return <div className="p-6">Yükleniyor...</div>
+  }
 
   return (
     <div className="p-6 space-y-6 max-w-3xl mx-auto">
@@ -128,20 +136,33 @@ export default function NewCommodityInvestmentPage() {
           <CardDescription>Detayları doldurun</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
+          <form onSubmit={e => void handleSubmit(e)} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
                 <label className="block text-sm font-medium mb-2">Emtia *</label>
                 <select
                   value={selectedCommodity.symbol}
-                  onChange={e => setSelectedCommodity(DEFAULT_COMMODITIES.find(c => c.symbol === e.target.value) ?? DEFAULT_COMMODITIES[0])}
+                  onChange={e =>
+                    setSelectedCommodity(
+                      DEFAULT_COMMODITIES.find(c => c.symbol === e.target.value) ??
+                        DEFAULT_COMMODITIES[0]
+                    )
+                  }
                   className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500"
                 >
                   {DEFAULT_COMMODITIES.map(c => (
-                    <option key={c.symbol} value={c.symbol}>{c.name} ({c.symbol})</option>
+                    <option key={c.symbol} value={c.symbol}>
+                      {c.name} ({c.symbol})
+                    </option>
                   ))}
                 </select>
-                <button type="button" onClick={() => void handleFetchQuote()} className="mt-2 text-sm text-amber-700 hover:underline">Güncel fiyatı getir</button>
+                <button
+                  type="button"
+                  onClick={() => void handleFetchQuote()}
+                  className="mt-2 text-sm text-amber-700 hover:underline"
+                >
+                  Güncel fiyatı getir
+                </button>
               </div>
 
               <div>
@@ -194,11 +215,15 @@ export default function NewCommodityInvestmentPage() {
                 <label className="block text-sm font-medium mb-2">Para Birimi</label>
                 <select
                   value={formData.currencyId}
-                  onChange={e => setFormData(prev => ({ ...prev, currencyId: Number(e.target.value) }))}
+                  onChange={e =>
+                    setFormData(prev => ({ ...prev, currencyId: Number(e.target.value) }))
+                  }
                   className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500"
                 >
-                  {currencies.map((c) => (
-                    <option key={c.id} value={c.id}>{c.code} - {c.name}</option>
+                  {currencies.map(c => (
+                    <option key={c.id} value={c.id}>
+                      {c.code} - {c.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -228,7 +253,14 @@ export default function NewCommodityInvestmentPage() {
                 disabled={saving}
                 className="flex-1 px-6 py-3 bg-amber-600 text-white rounded-md hover:bg-amber-700 disabled:bg-gray-400 flex items-center justify-center gap-2"
               >
-                {saving ? 'Kaydediliyor...' : (<><Save className="h-5 w-5" />Yatırımı Kaydet</>)}
+                {saving ? (
+                  'Kaydediliyor...'
+                ) : (
+                  <>
+                    <Save className="h-5 w-5" />
+                    Yatırımı Kaydet
+                  </>
+                )}
               </button>
             </div>
           </form>

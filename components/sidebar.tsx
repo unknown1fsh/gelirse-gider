@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useUser } from '@/lib/user-context'
+import PeriodSelector from '@/components/period-selector'
 import {
   Wallet,
   Settings,
@@ -106,6 +107,13 @@ export default function Sidebar() {
               </div>
             </div>
           </Link>
+        </div>
+      )}
+
+      {/* Dönem Seçici */}
+      {user && (
+        <div className="px-6 mb-4 shrink-0">
+          <PeriodSelector />
         </div>
       )}
 

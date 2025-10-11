@@ -1,12 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-  TrendingUp,
   Shield,
-  Smartphone,
   BarChart3,
   CreditCard,
   Calendar,
@@ -16,31 +13,39 @@ import {
   Star,
   Crown,
   Zap,
-  Target,
-  PieChart,
   Wallet,
   Bell,
-  Lock,
   Globe,
   Download,
   ArrowRight,
   Play,
   Users,
   Award,
-  Clock,
-  Heart,
-  Gift,
   Rocket,
   Infinity,
   Brain,
+  TrendingUp,
+  type LucideIcon,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export default function LandingPage() {
   const router = useRouter()
-  const [activePlan, setActivePlan] = useState('premium')
 
-  const features = [
+  const features: {
+    icon: LucideIcon
+    title: string
+    description: string
+    color: string
+    highlight?: boolean
+  }[] = [
+    {
+      icon: Brain,
+      title: 'AI Destekli Analiz',
+      description: 'Yapay zeka ile akıllı harcama önerileri ve bütçe optimizasyonu',
+      color: 'from-amber-500 to-orange-600',
+      highlight: true,
+    },
     {
       icon: BarChart3,
       title: 'Gelişmiş Analizler',
@@ -70,12 +75,6 @@ export default function LandingPage() {
       title: 'Güvenli Veri',
       description: 'End-to-end şifreleme ile güvenli saklama',
       color: 'from-red-500 to-rose-600',
-    },
-    {
-      icon: Smartphone,
-      title: 'Mobil Uyumlu',
-      description: 'Her cihazdan erişim imkanı',
-      color: 'from-indigo-500 to-blue-600',
     },
   ]
 
@@ -201,7 +200,7 @@ export default function LandingPage() {
     },
   ]
 
-  const stats = [
+  const stats: { number: string; label: string; icon: LucideIcon }[] = [
     { number: '50K+', label: 'Aktif Kullanıcı', icon: Users },
     { number: '1M+', label: 'İşlem Kaydı', icon: TrendingUp },
     { number: '99.9%', label: 'Uptime', icon: Shield },
@@ -232,11 +231,32 @@ export default function LandingPage() {
               <span className="text-white">Özgürlüğünüz</span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-slate-300 mb-4 max-w-3xl mx-auto">
               Gelir ve giderlerinizi akıllıca yönetin, finansal hedeflerinize ulaşın.
               <span className="text-purple-400 font-semibold"> Premium özellikler</span> ile
               finansal hayatınızı kontrol altına alın.
             </p>
+
+            {/* Manifesto Banner */}
+            <div className="max-w-4xl mx-auto mb-8">
+              <div className="bg-gradient-to-r from-amber-500/30 via-orange-500/30 to-red-500/30 backdrop-blur-lg rounded-2xl p-6 border-2 border-amber-400/50 shadow-2xl animate-pulse">
+                <div className="flex items-center justify-center gap-3 mb-3">
+                  <Brain className="h-8 w-8 text-amber-300 animate-bounce" />
+                  <h3 className="text-2xl md:text-3xl font-bold text-white">
+                    💡 Hayat Pahalılığına Karşı Yapay Zeka Çözümleri
+                  </h3>
+                  <Sparkles className="h-8 w-8 text-amber-300 animate-spin" />
+                </div>
+                <p className="text-lg text-amber-100 font-semibold text-center">
+                  AI destekli akıllı bütçe yönetimi ile enflasyona karşı finansal stratejinizi
+                  güçlendirin!
+                  <span className="block mt-2 text-amber-200">
+                    🚀 Otomatik harcama analizi • 📊 Akıllı tasarruf önerileri • 💰 Fiyat
+                    karşılaştırma
+                  </span>
+                </p>
+              </div>
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Button
@@ -301,16 +321,42 @@ export default function LandingPage() {
               return (
                 <Card
                   key={index}
-                  className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 group"
+                  className={`backdrop-blur-sm transition-all duration-300 group ${
+                    feature.highlight
+                      ? 'bg-gradient-to-br from-amber-500/20 to-orange-600/20 border-2 border-amber-400/50 ring-2 ring-amber-400/30 hover:scale-105 shadow-2xl'
+                      : 'bg-white/10 border-white/20 hover:bg-white/15'
+                  }`}
                 >
                   <CardContent className="p-6">
+                    {feature.highlight && (
+                      <div className="mb-3 flex items-center gap-2">
+                        <Sparkles className="h-4 w-4 text-amber-400 animate-pulse" />
+                        <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">
+                          Hayat Pahalılığına Çözüm
+                        </span>
+                      </div>
+                    )}
                     <div
-                      className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${feature.color} mb-4 group-hover:scale-110 transition-transform`}
+                      className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${feature.color} mb-4 group-hover:scale-110 transition-transform ${
+                        feature.highlight ? 'shadow-lg shadow-amber-500/50' : ''
+                      }`}
                     >
                       <Icon className="h-6 w-6 text-white" />
                     </div>
-                    <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
-                    <p className="text-slate-300">{feature.description}</p>
+                    <h3
+                      className={`text-xl font-semibold mb-2 ${
+                        feature.highlight ? 'text-amber-200' : 'text-white'
+                      }`}
+                    >
+                      {feature.title}
+                    </h3>
+                    <p
+                      className={
+                        feature.highlight ? 'text-amber-100 font-medium' : 'text-slate-300'
+                      }
+                    >
+                      {feature.description}
+                    </p>
                   </CardContent>
                 </Card>
               )
@@ -368,7 +414,7 @@ export default function LandingPage() {
               onClick={() => router.push('/auth/register')}
             >
               <Crown className="h-5 w-5 mr-2" />
-              Premium'a Geç
+              Premium&apos;a Geç
             </Button>
           </div>
         </div>
@@ -505,7 +551,7 @@ export default function LandingPage() {
               onClick={() => router.push('/enterprise')}
             >
               <Award className="h-5 w-5 mr-2" />
-              Kurumsal Premium'u Keşfet
+              Kurumsal Premium&apos;u Keşfet
             </Button>
           </div>
         </div>

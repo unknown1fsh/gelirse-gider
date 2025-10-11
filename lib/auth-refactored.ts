@@ -57,5 +57,31 @@ export async function clearAuthCookie(): Promise<void> {
   cookieStore.delete('auth-token')
 }
 
+// Bu metot kullanıcının aktif dönemini getirir.
+// Girdi: NextRequest
+// Çıktı: Period veya null
+// Hata: -
+export async function getActivePeriod(request: NextRequest) {
+  try {
+    const token = request.cookies.get('auth-token')?.value
+
+    if (!token) {
+      return null
+    }
+
+    const session = await prisma.userSession.findUnique({
+      where: { token },
+      include: {
+        activePeriod: true,
+      },
+    })
+
+    return session?.activePeriod || null
+  } catch (error) {
+    console.error('Get active period error:', error)
+    return null
+  }
+}
+
 // Type exports
 export type { UserDTO }

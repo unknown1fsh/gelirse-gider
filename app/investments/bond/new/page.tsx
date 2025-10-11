@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument */
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -31,9 +32,10 @@ export default function NewBondInvestmentPage() {
       try {
         const response = await fetch('/api/reference-data')
         if (response.ok) {
-          const data = (await response.json()) as ReferenceData
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const data: ReferenceData = await response.json()
           setCurrencies(data.currencies)
-          const tryCurrency = data.currencies.find((c) => c.code === 'TRY')
+          const tryCurrency = data.currencies.find(c => c.code === 'TRY')
           if (tryCurrency) {
             setFormData(prev => ({ ...prev, currencyId: tryCurrency.id }))
           }
@@ -57,7 +59,9 @@ export default function NewBondInvestmentPage() {
         symbol: formData.isin || formData.name,
         quantity: parseFloat(formData.quantity),
         purchasePrice: parseCurrencyInput(formData.purchasePrice),
-        currentPrice: formData.currentPrice ? parseCurrencyInput(formData.currentPrice) : parseCurrencyInput(formData.purchasePrice),
+        currentPrice: formData.currentPrice
+          ? parseCurrencyInput(formData.currentPrice)
+          : parseCurrencyInput(formData.purchasePrice),
         purchaseDate: formData.purchaseDate,
         currencyId: formData.currencyId,
         category: 'Tahvil/Bono',
@@ -92,7 +96,9 @@ export default function NewBondInvestmentPage() {
     }
   }
 
-  if (loading) { return <div className="p-6">Yükleniyor...</div> }
+  if (loading) {
+    return <div className="p-6">Yükleniyor...</div>
+  }
 
   return (
     <div className="p-6 space-y-6 max-w-3xl mx-auto">
@@ -115,7 +121,7 @@ export default function NewBondInvestmentPage() {
           <CardDescription>Detayları doldurun</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
+          <form onSubmit={e => void handleSubmit(e)} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
                 <label className="block text-sm font-medium mb-2">Ad</label>
@@ -133,7 +139,9 @@ export default function NewBondInvestmentPage() {
                 <input
                   type="text"
                   value={formData.isin}
-                  onChange={e => setFormData(prev => ({ ...prev, isin: e.target.value.toUpperCase() }))}
+                  onChange={e =>
+                    setFormData(prev => ({ ...prev, isin: e.target.value.toUpperCase() }))
+                  }
                   placeholder="TRT..."
                   className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500"
                 />
@@ -211,11 +219,15 @@ export default function NewBondInvestmentPage() {
                 <label className="block text-sm font-medium mb-2">Para Birimi</label>
                 <select
                   value={formData.currencyId}
-                  onChange={e => setFormData(prev => ({ ...prev, currencyId: Number(e.target.value) }))}
+                  onChange={e =>
+                    setFormData(prev => ({ ...prev, currencyId: Number(e.target.value) }))
+                  }
                   className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500"
                 >
-                  {currencies.map((c) => (
-                    <option key={c.id} value={c.id}>{c.code} - {c.name}</option>
+                  {currencies.map(c => (
+                    <option key={c.id} value={c.id}>
+                      {c.code} - {c.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -245,7 +257,14 @@ export default function NewBondInvestmentPage() {
                 disabled={saving}
                 className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400 flex items-center justify-center gap-2"
               >
-                {saving ? 'Kaydediliyor...' : (<><Save className="h-5 w-5" />Yatırımı Kaydet</>)}
+                {saving ? (
+                  'Kaydediliyor...'
+                ) : (
+                  <>
+                    <Save className="h-5 w-5" />
+                    Yatırımı Kaydet
+                  </>
+                )}
               </button>
             </div>
           </form>
@@ -254,5 +273,3 @@ export default function NewBondInvestmentPage() {
     </div>
   )
 }
-
-

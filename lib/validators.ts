@@ -110,3 +110,33 @@ export function parseCurrencyInput(value: string): number {
 export function formatCurrencyInput(amount: number): string {
   return amount.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
+
+// Dönem validasyonu
+export const periodSchema = z.object({
+  name: z.string().min(3, 'Dönem adı en az 3 karakter olmalıdır').max(100, 'Dönem adı çok uzun'),
+  periodType: z.enum(['YEARLY', 'FISCAL_YEAR', 'MONTHLY', 'CUSTOM'], {
+    errorMap: () => ({ message: 'Geçerli bir dönem tipi seçiniz' }),
+  }),
+  startDate: z.date({ required_error: 'Başlangıç tarihi gereklidir' }),
+  endDate: z.date({ required_error: 'Bitiş tarihi gereklidir' }),
+  description: z.string().optional(),
+})
+
+// Dönem kapanış validasyonu
+export const periodClosingSchema = z.object({
+  periodId: z.number().int().positive('Geçerli dönem seçiniz'),
+  transferBalances: z.boolean().default(false),
+  closingNotes: z.string().optional(),
+})
+
+// Dönem transfer validasyonu
+export const periodTransferSchema = z.object({
+  fromPeriodId: z.number().int().positive('Kaynak dönem gereklidir'),
+  toPeriodId: z.number().int().positive('Hedef dönem gereklidir'),
+  accountId: z.number().int().positive().optional(),
+  transferAmount: z.number().positive('Transfer tutarı pozitif olmalıdır'),
+  transferType: z.enum(['OPENING_BALANCE', 'ASSET', 'LIABILITY'], {
+    errorMap: () => ({ message: 'Geçerli transfer tipi seçiniz' }),
+  }),
+  description: z.string().optional(),
+})

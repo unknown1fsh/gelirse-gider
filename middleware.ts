@@ -12,12 +12,16 @@ const protectedRoutes = [
   '/analysis',
   '/portfolio',
   '/settings',
+  '/periods',
+  '/investments',
+  '/beneficiaries',
+  '/ewallets',
 ]
 
 // Auth rotaları (giriş yapmış kullanıcılar erişemez)
 const authRoutes = ['/auth/login', '/auth/register', '/landing']
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Cookie'den token kontrolü (basit)

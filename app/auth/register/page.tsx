@@ -18,11 +18,9 @@ import {
   Crown,
   Sparkles,
 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function RegisterPage() {
-  const router = useRouter()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -70,11 +68,11 @@ export default function RegisterPage() {
         }),
       })
 
-      const data = await response.json()
+      const data = (await response.json()) as { success?: boolean; message?: string }
 
       if (data.success) {
-        // Başarılı kayıt sonrası dashboard'a yönlendir
-        router.push('/dashboard')
+        // Başarılı kayıt sonrası dashboard'a yönlendir (full page reload ile context'leri yenile)
+        window.location.href = '/dashboard'
       } else {
         setError(data.message || 'Kayıt olurken bir hata oluştu')
       }
@@ -157,7 +155,7 @@ export default function RegisterPage() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={e => void handleSubmit(e)} className="space-y-4">
               {/* Plan Selection */}
               <div className="space-y-3">
                 <label className="text-sm font-medium text-slate-300">Plan Seçin</label>

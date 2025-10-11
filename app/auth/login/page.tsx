@@ -15,11 +15,9 @@ import {
   Loader2,
   Crown,
 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function LoginPage() {
-  const router = useRouter()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -42,11 +40,11 @@ export default function LoginPage() {
         body: JSON.stringify(formData),
       })
 
-      const data = await response.json()
+      const data = (await response.json()) as { success?: boolean; message?: string }
 
       if (data.success) {
-        // Başarılı login sonrası dashboard'a yönlendir
-        router.push('/dashboard')
+        // Başarılı login sonrası dashboard'a yönlendir (full page reload ile context'leri yenile)
+        window.location.href = '/dashboard'
       } else {
         setError(data.message || 'Giriş yapılırken bir hata oluştu')
       }
@@ -109,7 +107,7 @@ export default function LoginPage() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={e => void handleSubmit(e)} className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-300">E-posta</label>
                 <div className="relative">

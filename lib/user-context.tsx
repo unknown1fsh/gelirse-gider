@@ -49,9 +49,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      const data = await response.json()
+      const data = (await response.json()) as { success?: boolean; user?: User }
 
-      if (data.success) {
+      if (data.success && data.user) {
         setUser(data.user)
       } else {
         // Kullanıcı giriş yapmamış, bu normal
@@ -74,15 +74,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       })
 
-      const data = await response.json()
+      const data = (await response.json()) as { success?: boolean; user?: User }
 
-      if (data.success) {
+      if (data.success && data.user) {
         setUser(data.user)
         // Kullanıcı bilgilerini hemen güncelle
         await fetchUser()
+
+        // Period context'e login olayını bildir
+        window.dispatchEvent(new CustomEvent('user-logged-in'))
+
         return true
       } else {
         return false
@@ -110,12 +115,16 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         body: JSON.stringify(data),
       })
 
-      const result = await response.json()
+      const result = (await response.json()) as { success?: boolean; user?: User }
 
-      if (result.success) {
+      if (result.success && result.user) {
         setUser(result.user)
         // Kullanıcı bilgilerini hemen güncelle
         await fetchUser()
+
+        // Period context'e register olayını bildir
+        window.dispatchEvent(new CustomEvent('user-logged-in'))
+
         return true
       } else {
         return false
@@ -151,9 +160,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         body: JSON.stringify(data),
       })
 
-      const result = await response.json()
+      const result = (await response.json()) as { success?: boolean; user?: User }
 
-      if (result.success) {
+      if (result.success && result.user) {
         setUser(result.user)
         return true
       } else {
@@ -172,7 +181,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   // Component mount olduğunda kullanıcı bilgilerini al
   useEffect(() => {
-    fetchUser()
+    void fetchUser()
   }, [])
 
   const value: UserContextType = {

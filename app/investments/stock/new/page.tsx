@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument */
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -5,85 +6,61 @@ import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft, Save, TrendingUp, Search, Building2 } from 'lucide-react'
 import { parseCurrencyInput } from '@/lib/validators'
+import type { MarketSearchResult } from '../types'
 
-const BIST100_STOCKS = [
-  { symbol: 'THYAO', name: 'Türk Hava Yolları', category: 'Ulaştırma', exchange: 'BIST' },
-  { symbol: 'GARAN', name: 'Garanti Bankası', category: 'Finans', exchange: 'BIST' },
-  { symbol: 'AKBNK', name: 'Akbank', category: 'Finans', exchange: 'BIST' },
-  { symbol: 'ISCTR', name: 'İş Bankası', category: 'Finans', exchange: 'BIST' },
-  { symbol: 'YKBNK', name: 'Yapı Kredi', category: 'Finans', exchange: 'BIST' },
-  { symbol: 'TUPRS', name: 'Tüpraş', category: 'Enerji', exchange: 'BIST' },
-  { symbol: 'EREGL', name: 'Ereğli Demir Çelik', category: 'Sanayi', exchange: 'BIST' },
-  { symbol: 'KCHOL', name: 'Koç Holding', category: 'Holding', exchange: 'BIST' },
-  { symbol: 'SAHOL', name: 'Sabancı Holding', category: 'Holding', exchange: 'BIST' },
-  { symbol: 'SISE', name: 'Şişe Cam', category: 'Sanayi', exchange: 'BIST' },
-  { symbol: 'TTKOM', name: 'Türk Telekom', category: 'Telekom', exchange: 'BIST' },
-  { symbol: 'BIMAS', name: 'BİM', category: 'Perakende', exchange: 'BIST' },
-  { symbol: 'MIGROS', name: 'Migros', category: 'Perakende', exchange: 'BIST' },
-  { symbol: 'KOZAL', name: 'Koza Altın', category: 'Madencilik', exchange: 'BIST' },
-  { symbol: 'ASELS', name: 'Aselsan', category: 'Savunma', exchange: 'BIST' },
-]
-
-const FOREIGN_STOCKS = [
-  { symbol: 'AAPL', name: 'Apple Inc.', category: 'Teknoloji', exchange: 'NASDAQ' },
-  { symbol: 'MSFT', name: 'Microsoft', category: 'Teknoloji', exchange: 'NASDAQ' },
-  { symbol: 'GOOGL', name: 'Alphabet (Google)', category: 'Teknoloji', exchange: 'NASDAQ' },
-  { symbol: 'AMZN', name: 'Amazon', category: 'E-Ticaret', exchange: 'NASDAQ' },
-  { symbol: 'TSLA', name: 'Tesla', category: 'Otomotiv', exchange: 'NASDAQ' },
-  { symbol: 'NVDA', name: 'NVIDIA', category: 'Teknoloji', exchange: 'NASDAQ' },
-  { symbol: 'META', name: 'Meta (Facebook)', category: 'Teknoloji', exchange: 'NASDAQ' },
-  { symbol: 'JPM', name: 'JPMorgan Chase', category: 'Finans', exchange: 'NYSE' },
-  { symbol: 'V', name: 'Visa', category: 'Finans', exchange: 'NYSE' },
-  { symbol: 'WMT', name: 'Walmart', category: 'Perakende', exchange: 'NYSE' },
-]
+interface SelectedStock {
+  symbol: string
+  name: string
+  category: string
+  exchange: string
+}
 
 export default function NewStockInvestmentPage() {
   const router = useRouter()
-  const [currencies, setCurrencies] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedExchange, setSelectedExchange] = useState<'BIST' | 'FOREIGN'>('BIST')
-  const [selectedStock, setSelectedStock] = useState<any>(null)
+  const [searchResults, setSearchResults] = useState<MarketSearchResult[]>([])
+  const [selectedStock, setSelectedStock] = useState<SelectedStock | null>(null)
 
   const [formData, setFormData] = useState({
     quantity: '',
     purchasePrice: '',
     currentPrice: '',
     purchaseDate: new Date().toISOString().split('T')[0],
-    currencyId: 0,
+    currencyId: 1, // TRY default
     notes: '',
   })
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch('/api/reference-data')
-        if (response.ok) {
-          const data = await response.json()
-          setCurrencies(data.currencies)
-          
-          const tryCurrency = data.currencies.find((c: any) => c.code === 'TRY')
-          if (tryCurrency) {
-            setFormData(prev => ({ ...prev, currencyId: tryCurrency.id }))
-          }
-        }
-      } catch (error) {
-        console.error('Veriler yüklenirken hata:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
+    setLoading(false)
   }, [])
 
-  const stockList = selectedExchange === 'BIST' ? BIST100_STOCKS : FOREIGN_STOCKS
-  const filteredStocks = stockList.filter(
-    stock =>
-      stock.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      stock.symbol.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  useEffect(() => {
+    const controller = new AbortController()
+    async function search() {
+      if (searchTerm.trim().length < 2) {
+        setSearchResults([])
+        return
+      }
+      try {
+        const res = await fetch(`/api/market/stocks/search?q=${encodeURIComponent(searchTerm)}`, {
+          signal: controller.signal,
+        })
+        if (res.ok) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const data: { results?: MarketSearchResult[] } = await res.json()
+          setSearchResults(data.results ?? [])
+        }
+      } catch (e) {
+        if ((e as Error).name !== 'AbortError') {
+          console.error('Hisse arama hatası', e)
+        }
+      }
+    }
+    void search()
+    return () => controller.abort()
+  }, [searchTerm])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -102,7 +79,9 @@ export default function NewStockInvestmentPage() {
         symbol: selectedStock.symbol,
         quantity: parseFloat(formData.quantity),
         purchasePrice: parseCurrencyInput(formData.purchasePrice),
-        currentPrice: formData.currentPrice ? parseCurrencyInput(formData.currentPrice) : parseCurrencyInput(formData.purchasePrice),
+        currentPrice: formData.currentPrice
+          ? parseCurrencyInput(formData.currentPrice)
+          : parseCurrencyInput(formData.purchasePrice),
         purchaseDate: formData.purchaseDate,
         currencyId: formData.currencyId,
         category: selectedStock.category,
@@ -124,8 +103,9 @@ export default function NewStockInvestmentPage() {
         alert('Hisse senedi yatırımı başarıyla eklendi')
         router.push('/investments')
       } else {
-        const errorData = await response.json()
-        alert('Hata: ' + (errorData.error || 'Yatırım eklenemedi'))
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const errorData: { error?: string } = await response.json()
+        alert('Hata: ' + (errorData.error ?? 'Yatırım eklenemedi'))
       }
     } catch (error) {
       console.error('Yatırım eklenirken hata:', error)
@@ -135,9 +115,11 @@ export default function NewStockInvestmentPage() {
     }
   }
 
-  const totalValue = selectedStock && formData.quantity && (formData.currentPrice || formData.purchasePrice)
-    ? parseFloat(formData.quantity) * parseCurrencyInput(formData.currentPrice || formData.purchasePrice)
-    : 0
+  const totalValue =
+    selectedStock && formData.quantity && (formData.currentPrice || formData.purchasePrice)
+      ? parseFloat(formData.quantity) *
+        parseCurrencyInput(formData.currentPrice || formData.purchasePrice)
+      : 0
 
   if (loading) {
     return <div className="p-6">Yükleniyor...</div>
@@ -166,29 +148,7 @@ export default function NewStockInvestmentPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-green-600">Hisse Senedi Seç</CardTitle>
-                  <CardDescription>BIST100 ve popüler yabancı hisseler</CardDescription>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setSelectedExchange('BIST')}
-                    className={`px-4 py-2 rounded-md transition-colors ${
-                      selectedExchange === 'BIST'
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    BIST100
-                  </button>
-                  <button
-                    onClick={() => setSelectedExchange('FOREIGN')}
-                    className={`px-4 py-2 rounded-md transition-colors ${
-                      selectedExchange === 'FOREIGN'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    Yabancı
-                  </button>
+                  <CardDescription>Global ve TR hisseleri ara</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -198,19 +158,27 @@ export default function NewStockInvestmentPage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Hisse ara..."
+                  placeholder="Hisse ara (örn: AAPL, THYAO)..."
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
                   className="w-full pl-10 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                 />
               </div>
 
-              {/* Hisse Listesi */}
+              {/* Hisse Listesi (API arama sonuçları) */}
               <div className="max-h-96 overflow-y-auto space-y-2">
-                {filteredStocks.map(stock => (
+                {searchResults.map(stock => (
                   <button
                     key={stock.symbol}
-                    onClick={() => setSelectedStock(stock)}
+                    type="button"
+                    onClick={() =>
+                      setSelectedStock({
+                        symbol: stock.symbol,
+                        name: stock.name,
+                        category: stock.type,
+                        exchange: stock.exchange,
+                      })
+                    }
                     className={`w-full p-4 border rounded-lg text-left transition-all ${
                       selectedStock?.symbol === stock.symbol
                         ? 'border-green-500 bg-green-50'
@@ -222,9 +190,7 @@ export default function NewStockInvestmentPage() {
                         <Building2 className="h-6 w-6 text-green-600" />
                         <div>
                           <div className="font-semibold">{stock.name}</div>
-                          <div className="text-sm text-gray-500">
-                            {stock.symbol} • {stock.category}
-                          </div>
+                          <div className="text-sm text-gray-500">{stock.symbol}</div>
                         </div>
                       </div>
                       <div className="text-sm text-gray-500">{stock.exchange}</div>
@@ -245,12 +211,14 @@ export default function NewStockInvestmentPage() {
                   <Building2 className="h-10 w-10 text-green-600" />
                   <div>
                     <CardTitle className="text-green-600">{selectedStock.name}</CardTitle>
-                    <CardDescription>{selectedStock.symbol} - {selectedStock.exchange}</CardDescription>
+                    <CardDescription>
+                      {selectedStock.symbol} - {selectedStock.exchange}
+                    </CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="pt-6">
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={e => void handleSubmit(e)} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Adet/Lot *</label>
                     <input
@@ -268,7 +236,9 @@ export default function NewStockInvestmentPage() {
                     <input
                       type="text"
                       value={formData.purchasePrice}
-                      onChange={e => setFormData(prev => ({ ...prev, purchasePrice: e.target.value }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, purchasePrice: e.target.value }))
+                      }
                       placeholder="0,00"
                       className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                       required
@@ -280,11 +250,15 @@ export default function NewStockInvestmentPage() {
                     <input
                       type="text"
                       value={formData.currentPrice}
-                      onChange={e => setFormData(prev => ({ ...prev, currentPrice: e.target.value }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, currentPrice: e.target.value }))
+                      }
                       placeholder="Alış fiyatı ile aynı"
                       className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Boş bırakırsanız alış fiyatı kullanılır</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Boş bırakırsanız alış fiyatı kullanılır
+                    </p>
                   </div>
 
                   <div>
@@ -292,7 +266,9 @@ export default function NewStockInvestmentPage() {
                     <input
                       type="date"
                       value={formData.purchaseDate}
-                      onChange={e => setFormData(prev => ({ ...prev, purchaseDate: e.target.value }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, purchaseDate: e.target.value }))
+                      }
                       className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                       required
                     />
@@ -359,4 +335,3 @@ export default function NewStockInvestmentPage() {
     </div>
   )
 }
-

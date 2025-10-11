@@ -10,6 +10,27 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Oturum bulunamadı' }, { status: 401 })
     }
 
+    // Aktif dönemi al (opsiyonel)
+    const { getActivePeriod } = await import('@/lib/auth-refactored')
+    const activePeriod = await getActivePeriod(request)
+
+    // Where clause hazırla
+    const accountWhere: { userId: number; active: boolean; periodId?: number } = {
+      userId: user.id,
+      active: true,
+    }
+    const cardWhere: { userId: number; active: boolean; periodId?: number } = {
+      userId: user.id,
+      active: true,
+    }
+    const goldWhere: { userId: number; periodId?: number } = { userId: user.id }
+
+    if (activePeriod) {
+      accountWhere.periodId = activePeriod.id
+      cardWhere.periodId = activePeriod.id
+      goldWhere.periodId = activePeriod.id
+    }
+
     // Tüm hesap türlerini paralel olarak çek
     const [accounts, creditCards, goldItems] = await Promise.all([
       prisma.account.findMany({
@@ -18,10 +39,7 @@ export async function GET(request: NextRequest) {
           bank: true,
           currency: true,
         },
-        where: {
-          userId: user.id,
-          active: true,
-        },
+        where: accountWhere,
         orderBy: {
           name: 'asc',
         },
@@ -31,10 +49,7 @@ export async function GET(request: NextRequest) {
           bank: true,
           currency: true,
         },
-        where: {
-          userId: user.id,
-          active: true,
-        },
+        where: cardWhere,
         orderBy: {
           name: 'asc',
         },
@@ -44,9 +59,7 @@ export async function GET(request: NextRequest) {
           goldType: true,
           goldPurity: true,
         },
-        where: {
-          userId: user.id,
-        },
+        where: goldWhere,
         orderBy: {
           name: 'asc',
         },
@@ -75,6 +88,24 @@ export async function GET(request: NextRequest) {
   }
 }
 
+interface CreateAccountBody {
+  accountType: string
+  name: string
+  bankId: number
+  accountTypeId: number
+  currencyId: number
+  balance?: number
+  accountNumber?: string
+  iban?: string
+  limitAmount?: number
+  availableLimit?: number
+  dueDay?: number
+  goldTypeId?: number
+  goldPurityId?: number
+  weight?: number
+  purchasePrice?: number
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Kullanıcı doğrulama
@@ -83,22 +114,43 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Oturum bulunamadı' }, { status: 401 })
     }
 
-    const body = await request.json()
+    const body = (await request.json()) as CreateAccountBody
+
+    // Aktif dönemi al (opsiyonel)
+    const { getActivePeriod } = await import('@/lib/auth-refactored')
+    const activePeriod = await getActivePeriod(request)
 
     // Hesap türüne göre farklı işlemler
     if (body.accountType === 'bank') {
+      const accountData: {
+        userId: number
+        name: string
+        bankId: number
+        accountTypeId: number
+        currencyId: number
+        balance: number
+        accountNumber: string | null
+        iban: string | null
+        active: boolean
+        periodId?: number
+      } = {
+        userId: user.id,
+        name: body.name,
+        bankId: body.bankId,
+        accountTypeId: body.accountTypeId,
+        currencyId: body.currencyId,
+        balance: body.balance || 0,
+        accountNumber: body.accountNumber || null,
+        iban: body.iban || null,
+        active: true,
+      }
+
+      if (activePeriod) {
+        accountData.periodId = activePeriod.id
+      }
+
       const account = await prisma.account.create({
-        data: {
-          userId: user.id,
-          name: body.name,
-          bankId: body.bankId,
-          accountTypeId: body.accountTypeId,
-          currencyId: body.currencyId,
-          balance: body.balance || 0,
-          accountNumber: body.accountNumber || null,
-          iban: body.iban || null,
-          active: true,
-        },
+        data: accountData,
         include: {
           accountType: true,
           bank: true,
@@ -109,18 +161,35 @@ export async function POST(request: NextRequest) {
     }
 
     if (body.accountType === 'credit_card') {
+      const cardData: {
+        userId: number
+        name: string
+        bankId: number
+        currencyId: number
+        limitAmount: number
+        availableLimit: number
+        statementDay: number
+        dueDay: number
+        active: boolean
+        periodId?: number
+      } = {
+        userId: user.id,
+        name: body.name,
+        bankId: body.bankId,
+        currencyId: body.currencyId,
+        limitAmount: body.limitAmount || 0,
+        availableLimit: body.limitAmount || 0,
+        statementDay: 1, // Varsayılan hesap kesim günü
+        dueDay: body.dueDay || 1,
+        active: true,
+      }
+
+      if (activePeriod) {
+        cardData.periodId = activePeriod.id
+      }
+
       const creditCard = await prisma.creditCard.create({
-        data: {
-          userId: user.id,
-          name: body.name,
-          bankId: body.bankId,
-          currencyId: body.currencyId,
-          limitAmount: body.limitAmount || 0,
-          availableLimit: body.limitAmount || 0,
-          statementDay: 1, // Varsayılan hesap kesim günü
-          dueDay: body.dueDay || 1,
-          active: true,
-        },
+        data: cardData,
         include: {
           bank: true,
           currency: true,
@@ -130,18 +199,35 @@ export async function POST(request: NextRequest) {
     }
 
     if (body.accountType === 'gold') {
+      const goldData: {
+        userId: number
+        name: string
+        goldTypeId: number
+        goldPurityId: number
+        weightGrams: number
+        purchasePrice: number
+        purchaseDate: Date
+        currentValueTry: number
+        description: null
+        periodId?: number
+      } = {
+        userId: user.id,
+        name: body.name,
+        goldTypeId: body.goldTypeId,
+        goldPurityId: body.goldPurityId,
+        weightGrams: body.weight || 0,
+        purchasePrice: body.purchasePrice || 0,
+        purchaseDate: new Date(),
+        currentValueTry: body.purchasePrice || 0, // Başlangıçta alış fiyatı ile aynı
+        description: null,
+      }
+
+      if (activePeriod) {
+        goldData.periodId = activePeriod.id
+      }
+
       const goldItem = await prisma.goldItem.create({
-        data: {
-          userId: user.id,
-          name: body.name,
-          goldTypeId: body.goldTypeId,
-          goldPurityId: body.goldPurityId,
-          weightGrams: body.weight || 0,
-          purchasePrice: body.purchasePrice || 0,
-          purchaseDate: new Date(),
-          currentValueTry: body.purchasePrice || 0, // Başlangıçta alış fiyatı ile aynı
-          description: null,
-        },
+        data: goldData,
       })
       return NextResponse.json(goldItem, { status: 201 })
     }

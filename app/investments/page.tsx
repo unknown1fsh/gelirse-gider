@@ -2,12 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
@@ -15,124 +14,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
 import PremiumUpgradeModal from '@/components/premium-upgrade-modal'
 import {
   Building2,
   TrendingUp,
   TrendingDown,
   Plus,
-  Eye,
-  Edit,
-  Trash2,
   Search,
-  Filter,
-  Download,
-  Upload,
   BarChart3,
   PieChart,
   Activity,
-  Target,
   Zap,
   Shield,
   Star,
   Crown,
-  Rocket,
-  Brain,
-  Lightbulb,
-  CheckCircle,
-  AlertCircle,
-  Info,
-  Calendar,
-  Clock,
+  Sparkles,
   Globe,
   Layers,
   Coins,
-  Banknote,
-  CreditCard,
-  Wallet,
-  ArrowUpRight,
-  ArrowDownRight,
-  Maximize2,
-  Minimize2,
-  RefreshCw,
-  Settings,
   Bell,
-  Share2,
-  Bookmark,
-  Archive,
-  FileText,
-  Database,
-  Cloud,
-  Lock,
-  Unlock,
-  Sparkles,
-  Award,
-  Trophy,
-  Medal,
-  Gem,
-  Diamond,
-  Crown as CrownIcon,
-  Flame,
-  Thunderbolt,
-  Sun,
-  Moon,
-  Mountain,
-  Waves,
-  TreePine,
-  Leaf,
-  Flower,
-  Heart,
-  Smile,
-  ThumbsUp,
-  MessageCircle,
-  Phone,
-  Mail,
-  MapPin,
-  Navigation,
-  Compass,
-  Map,
-  Camera,
-  Image,
-  Video,
-  Music,
-  Headphones,
-  Mic,
-  Volume2,
-  Play,
-  Pause,
-  Stop,
-  SkipBack,
-  SkipForward,
-  Repeat,
-  Shuffle,
-  Radio,
-  Tv,
-  Monitor,
-  Smartphone,
-  Laptop,
-  Tablet,
-  Watch,
-  Gamepad2,
-  Joystick,
-  Mouse,
-  Keyboard,
-  Printer,
-  Scanner,
-  HardDrive,
-  Server,
-  Router,
-  Wifi,
-  Bluetooth,
-  Battery,
-  BatteryCharging,
-  Plug,
-  Power,
-  PowerOff,
-  BatteryLow,
-  BatteryMedium,
-  BatteryHigh,
-  BatteryFull,
 } from 'lucide-react'
 
 interface Investment {
@@ -235,9 +135,7 @@ export default function InvestmentsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedType, setSelectedType] = useState<string>('all')
-  const [showAddModal, setShowAddModal] = useState(false)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
-  const [selectedInvestment, setSelectedInvestment] = useState<Investment | null>(null)
   const [activeTab, setActiveTab] = useState('portfolio')
   const [userPlan, setUserPlan] = useState<string>('free')
   const [userLoading, setUserLoading] = useState(true)
@@ -248,7 +146,7 @@ export default function InvestmentsPage() {
       try {
         const response = await fetch('/api/auth/me', { credentials: 'include' })
         if (response.ok) {
-          const data = await response.json()
+          const data = (await response.json()) as { plan?: string }
           setUserPlan(data.plan || 'free')
         }
       } catch (error) {
@@ -257,69 +155,71 @@ export default function InvestmentsPage() {
         setUserLoading(false)
       }
     }
-    fetchUser()
+    void fetchUser()
   }, [])
 
   // Gerçek yatırım verilerini getir
   useEffect(() => {
-    if (userLoading) {return}
+    if (userLoading) {
+      return
+    }
 
     async function fetchInvestments() {
       if (userPlan === 'free') {
         // Free kullanıcı - demo veriler göster
         const demoInvestments: Investment[] = [
-      {
-        id: '1',
-        type: 'stock',
-        name: 'Apple Inc.',
-        symbol: 'AAPL',
-        quantity: 10,
-        purchasePrice: 150.0,
-        currentPrice: 175.5,
-        totalValue: 1755.0,
-        profitLoss: 255.0,
-        profitLossPercentage: 17.0,
-        purchaseDate: '2024-01-15',
-        lastUpdate: '2024-06-30',
-        category: 'Teknoloji',
-        riskLevel: 'medium',
-        status: 'active',
-      },
-      {
-        id: '2',
-        type: 'crypto',
-        name: 'Bitcoin',
-        symbol: 'BTC',
-        quantity: 0.5,
-        purchasePrice: 45000.0,
-        currentPrice: 67500.0,
-        totalValue: 33750.0,
-        profitLoss: 11250.0,
-        profitLossPercentage: 50.0,
-        purchaseDate: '2024-02-10',
-        lastUpdate: '2024-06-30',
-        category: 'Kripto',
-        riskLevel: 'high',
-        status: 'active',
-      },
-      {
-        id: '3',
-        type: 'fund',
-        name: 'Borsa İstanbul 100 Fonu',
-        symbol: 'BIST100',
-        quantity: 1000,
-        purchasePrice: 12.5,
-        currentPrice: 14.75,
-        totalValue: 14750.0,
-        profitLoss: 2250.0,
-        profitLossPercentage: 18.0,
-        purchaseDate: '2024-03-05',
-        lastUpdate: '2024-06-30',
-        category: 'Hisse Senedi Fonu',
-        riskLevel: 'medium',
-        status: 'active',
-      },
-    ]
+          {
+            id: '1',
+            type: 'stock',
+            name: 'Apple Inc.',
+            symbol: 'AAPL',
+            quantity: 10,
+            purchasePrice: 150.0,
+            currentPrice: 175.5,
+            totalValue: 1755.0,
+            profitLoss: 255.0,
+            profitLossPercentage: 17.0,
+            purchaseDate: '2024-01-15',
+            lastUpdate: '2024-06-30',
+            category: 'Teknoloji',
+            riskLevel: 'medium',
+            status: 'active',
+          },
+          {
+            id: '2',
+            type: 'crypto',
+            name: 'Bitcoin',
+            symbol: 'BTC',
+            quantity: 0.5,
+            purchasePrice: 45000.0,
+            currentPrice: 67500.0,
+            totalValue: 33750.0,
+            profitLoss: 11250.0,
+            profitLossPercentage: 50.0,
+            purchaseDate: '2024-02-10',
+            lastUpdate: '2024-06-30',
+            category: 'Kripto',
+            riskLevel: 'high',
+            status: 'active',
+          },
+          {
+            id: '3',
+            type: 'fund',
+            name: 'Borsa İstanbul 100 Fonu',
+            symbol: 'BIST100',
+            quantity: 1000,
+            purchasePrice: 12.5,
+            currentPrice: 14.75,
+            totalValue: 14750.0,
+            profitLoss: 2250.0,
+            profitLossPercentage: 18.0,
+            purchaseDate: '2024-03-05',
+            lastUpdate: '2024-06-30',
+            category: 'Hisse Senedi Fonu',
+            riskLevel: 'medium',
+            status: 'active',
+          },
+        ]
 
         setInvestments(demoInvestments)
         setIsLoading(false)
@@ -328,7 +228,7 @@ export default function InvestmentsPage() {
         try {
           const response = await fetch('/api/investments', { credentials: 'include' })
           if (response.ok) {
-            const data = await response.json()
+            const data = (await response.json()) as Investment[]
             setInvestments(data)
           }
         } catch (error) {
@@ -339,7 +239,7 @@ export default function InvestmentsPage() {
       }
     }
 
-    fetchInvestments()
+    void fetchInvestments()
   }, [userPlan, userLoading])
 
   const filteredInvestments = investments.filter(investment => {
@@ -498,7 +398,7 @@ export default function InvestmentsPage() {
 
                     <Button
                       className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation()
                         handleAddInvestment(type.id)
                       }}

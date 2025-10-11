@@ -13,6 +13,22 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Oturum bulunamadı' }, { status: 401 })
     }
 
+    // Aktif dönemi al (opsiyonel - migration sonrası aktif olacak)
+    const { getActivePeriod } = await import('@/lib/auth-refactored')
+    const activePeriod = await getActivePeriod(request)
+
+    // Period sistemi henüz aktif değilse, tüm işlemleri getir
+    const whereClause: {
+      userId: number
+      periodId?: number
+    } = {
+      userId: user.id,
+    }
+
+    if (activePeriod) {
+      whereClause.periodId = activePeriod.id
+    }
+
     const transactions = await prisma.transaction.findMany({
       include: {
         txType: true,
@@ -42,9 +58,7 @@ export async function GET(request: NextRequest) {
         },
         currency: true,
       },
-      where: {
-        userId: user.id,
-      },
+      where: whereClause,
       orderBy: {
         transactionDate: 'desc',
       },
@@ -86,7 +100,18 @@ export const POST = ExceptionMapper.asyncHandler(async (request: NextRequest) =>
     )
   }
 
-  const body = await request.json()
+  const body = (await request.json()) as {
+    txTypeId: number
+    categoryId: number
+    paymentMethodId: number
+    accountId?: number
+    creditCardId?: number
+    amount: number
+    currencyId: number
+    transactionDate: string
+    description?: string
+    tags?: string[]
+  }
 
   // Zod validasyon
   const validatedData = transactionSchema.parse({
@@ -94,11 +119,19 @@ export const POST = ExceptionMapper.asyncHandler(async (request: NextRequest) =>
     transactionDate: new Date(body.transactionDate),
   })
 
-  // ✅ Service katmanı üzerinden oluştur (kategori-tip validation dahil)
-  const transaction = await transactionService.create({
+  // Aktif dönemi al (opsiyonel)
+  const { getActivePeriod } = await import('@/lib/auth-refactored')
+  const activePeriod = await getActivePeriod(request)
+
+  // Transaction data hazırla
+  const transactionData = {
     ...validatedData,
     userId: user.id,
-  })
+    periodId: activePeriod?.id,
+  }
+
+  // ✅ Service katmanı üzerinden oluştur (kategori-tip validation dahil)
+  const transaction = await transactionService.create(transactionData)
 
   return NextResponse.json(transaction, { status: 201 })
 })
