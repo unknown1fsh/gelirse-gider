@@ -15,6 +15,8 @@ import {
   Globe,
   Headphones,
   Check,
+  UserCheck,
+  Bot,
   ArrowRight,
   Star,
   Award,

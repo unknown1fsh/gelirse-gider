@@ -17,7 +17,6 @@ import {
   Settings,
   Lightbulb,
   Sparkles,
-  Zap,
   Award,
   Star,
   ArrowRight,

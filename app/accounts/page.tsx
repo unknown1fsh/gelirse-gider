@@ -90,36 +90,31 @@ export default function AccountsPage() {
     try {
       const [accountsRes, ewalletsRes, cardsRes, goldRes] = await Promise.all([
         fetch('/api/accounts', { credentials: 'include' }),
-        fetch('/api/ewallets', { credentials: 'include' }).catch(() => ({ ok: false })),
-        fetch('/api/cards', { credentials: 'include' }).catch(() => ({ ok: false })),
-        fetch('/api/gold', { credentials: 'include' }).catch(() => ({ ok: false })),
+        fetch('/api/ewallets', { credentials: 'include' }).catch(() => null),
+        fetch('/api/cards', { credentials: 'include' }).catch(() => null),
+        fetch('/api/gold', { credentials: 'include' }).catch(() => null),
       ])
 
       if (accountsRes.ok) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const accountsData = await accountsRes.json()
-        const allAccounts = accountsData as BankAccount[]
+        const accountsData = (await accountsRes.json()) as BankAccount[]
         // Nakit ve banka hesaplarını ayır
-        setCashAccounts(allAccounts.filter(acc => acc.accountNumber === 'CASH'))
-        setBankAccounts(allAccounts.filter(acc => acc.accountNumber !== 'CASH'))
+        setCashAccounts(accountsData.filter(acc => acc.accountNumber === 'CASH'))
+        setBankAccounts(accountsData.filter(acc => acc.accountNumber !== 'CASH'))
       }
 
-      if (ewalletsRes.ok && isPremium) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-        const walletsData = await ewalletsRes.json()
-        setEWallets(walletsData as EWallet[])
+      if (ewalletsRes?.ok && isPremium) {
+        const walletsData = (await ewalletsRes.json()) as EWallet[]
+        setEWallets(walletsData)
       }
 
-      if (cardsRes.ok) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-        const cardsData = await cardsRes.json()
-        setCreditCards(cardsData as CreditCard[])
+      if (cardsRes?.ok) {
+        const cardsData = (await cardsRes.json()) as CreditCard[]
+        setCreditCards(cardsData)
       }
 
-      if (goldRes.ok && isPremium) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-        const goldData = await goldRes.json()
-        setGoldItems(goldData as GoldItem[])
+      if (goldRes?.ok && isPremium) {
+        const goldData = (await goldRes.json()) as GoldItem[]
+        setGoldItems(goldData)
       }
     } catch (error) {
       console.error('Veriler yüklenirken hata:', error)
@@ -531,11 +526,7 @@ export default function AccountsPage() {
         </AccordionItem>
 
         {/* E-Cüzdanlar Accordion */}
-        <AccordionItem
-          value="ewallet"
-          className="border rounded-lg bg-white shadow-sm"
-          disabled={!isPremium}
-        >
+        <AccordionItem value="ewallet" className="border rounded-lg bg-white shadow-sm">
           <AccordionTrigger className="px-6 py-4 hover:bg-gray-50 disabled:opacity-50">
             <div className="flex items-center space-x-3">
               <div className={`p-2 rounded-lg ${isPremium ? 'bg-green-100' : 'bg-purple-100'}`}>
