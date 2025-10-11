@@ -95,7 +95,7 @@ export default function AccountDetailPage() {
       })
 
       if (response.ok) {
-        const updatedAccount = await response.json()
+        await response.json()
         setAccount(prev => prev ? { ...prev, name: newName } : null)
         alert('Hesap adı başarıyla güncellendi')
       } else {
