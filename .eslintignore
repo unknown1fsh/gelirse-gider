@@ -1,0 +1,27 @@
+# ESLint Ignore File
+
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Next.js
+.next
+out
+
+# Production
+build
+dist
+
+# Prisma
+node_modules/.prisma
+
+# Testing
+coverage
+
+# Scripts
+scripts/generate-secret.js
+
+# Misc
+*.tsbuildinfo
+

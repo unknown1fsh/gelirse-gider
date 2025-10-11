@@ -6,9 +6,13 @@ import { ExceptionMapper } from '@/server/errors'
 // Bu endpoint belirli bir parametreyi getirir
 // GET /api/parameters/BANK/ZIRAAT -> Ziraat Bankası parametresini getirir
 export const GET = ExceptionMapper.asyncHandler(
-  async (request: NextRequest, { params }: { params: { group: string; code: string } }) => {
+  async (
+    request: NextRequest,
+    { params }: { params: Promise<{ group: string; code: string }> }
+  ) => {
+    const { group, code } = await params
     const parameterService = new SystemParameterService(prisma)
-    const parameter = await parameterService.getByCode(params.group, params.code)
+    const parameter = await parameterService.getByCode(group, code)
 
     return NextResponse.json({
       success: true,

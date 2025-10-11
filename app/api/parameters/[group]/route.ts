@@ -6,16 +6,17 @@ import { ExceptionMapper } from '@/server/errors'
 // Bu endpoint belirli bir parametre grubunu getirir
 // GET /api/parameters/BANK -> Banka parametrelerini getirir
 export const GET = ExceptionMapper.asyncHandler(
-  async (request: NextRequest, { params }: { params: { group: string } }) => {
+  async (request: NextRequest, { params }: { params: Promise<{ group: string }> }) => {
+    const { group } = await params
     const { searchParams } = new URL(request.url)
     const onlyActive = searchParams.get('onlyActive') !== 'false'
 
     const parameterService = new SystemParameterService(prisma)
-    const parameters = await parameterService.getByGroup(params.group, onlyActive)
+    const parameters = await parameterService.getByGroup(group, onlyActive)
 
     return NextResponse.json({
       success: true,
-      group: params.group,
+      group,
       data: parameters,
       count: parameters.length,
     })

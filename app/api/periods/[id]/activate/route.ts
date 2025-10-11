@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth-refactored'
 
 // Dönemi aktif dönem olarak ayarla
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Kullanıcı doğrulama
     const user = await getCurrentUser(request)
@@ -11,7 +11,8 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ error: 'Oturum bulunamadı' }, { status: 401 })
     }
 
-    const periodId = parseInt(params.id)
+    const { id } = await params
+    const periodId = parseInt(id)
     if (isNaN(periodId)) {
       return NextResponse.json({ error: 'Geçersiz dönem ID' }, { status: 400 })
     }

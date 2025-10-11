@@ -4,7 +4,7 @@ import { getCurrentUser } from '@/lib/auth-refactored'
 import { validatePeriodOverlap, getPeriodSummary } from '@/lib/period-helpers'
 
 // Dönem detayını getir
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Kullanıcı doğrulama
     const user = await getCurrentUser(request)
@@ -12,7 +12,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: 'Oturum bulunamadı' }, { status: 401 })
     }
 
-    const periodId = parseInt(params.id)
+    const { id } = await params
+    const periodId = parseInt(id)
     if (isNaN(periodId)) {
       return NextResponse.json({ error: 'Geçersiz dönem ID' }, { status: 400 })
     }
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // Dönemi güncelle
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Kullanıcı doğrulama
     const user = await getCurrentUser(request)
@@ -61,7 +62,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: 'Oturum bulunamadı' }, { status: 401 })
     }
 
-    const periodId = parseInt(params.id)
+    const { id } = await params
+    const periodId = parseInt(id)
     if (isNaN(periodId)) {
       return NextResponse.json({ error: 'Geçersiz dönem ID' }, { status: 400 })
     }
@@ -170,7 +172,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // Dönemi sil
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     // Kullanıcı doğrulama
     const user = await getCurrentUser(request)
@@ -178,7 +183,8 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: 'Oturum bulunamadı' }, { status: 401 })
     }
 
-    const periodId = parseInt(params.id)
+    const { id } = await params
+    const periodId = parseInt(id)
     if (isNaN(periodId)) {
       return NextResponse.json({ error: 'Geçersiz dönem ID' }, { status: 400 })
     }
