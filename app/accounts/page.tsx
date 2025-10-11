@@ -10,8 +10,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import EditNameModal from '@/components/ui/edit-name-modal'
-import ConfirmationDialog from '@/components/ui/confirmation-dialog'
+import { EditNameModal } from '@/components/ui/edit-name-modal'
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog'
 import { usePremium } from '@/lib/use-premium'
 import { Wallet, CreditCard, Coins, ArrowLeft, Home, Plus, Edit, Trash2, Crown } from 'lucide-react'
 import { formatCurrency } from '@/lib/validators'
