@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { useUser } from '@/lib/user-context'
 import { formatCurrency } from '@/lib/validators'
 import {
@@ -14,57 +12,9 @@ import {
   AlertCircle,
   BarChart3,
   Crown,
-  Sparkles,
   Award,
-  Star,
-  Building2,
-  Users,
-  Shield,
-  Zap,
-  Globe,
-  Headphones,
-  Database,
-  Cloud,
-  Brain,
-  Cpu,
-  HardDrive,
-  Network,
-  Server,
-  Activity,
-  PieChart,
-  LineChart,
-  BarChart,
-  Target,
-  Rocket,
   Diamond,
-  Lock,
-  Unlock,
-  Settings,
-  Bell,
-  Mail,
-  Phone,
-  MessageSquare,
-  FileText,
-  Download,
-  Upload,
-  RefreshCw,
-  Eye,
-  Edit3,
-  Trash2,
-  Plus,
-  Minus,
-  Search,
-  Filter,
-  SortAsc,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  Info,
-  ArrowLeft,
-  Home,
-  Loader2,
 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 
 interface EnterpriseDashboardData {
   kpi: {
@@ -94,7 +44,6 @@ interface EnterpriseDashboardData {
 }
 
 export default function EnterpriseDashboardPage() {
-  const router = useRouter()
   const { user, loading } = useUser()
   const [data, setData] = useState<EnterpriseDashboardData | null>(null)
   const [dataLoading, setDataLoading] = useState(true)
@@ -102,7 +51,9 @@ export default function EnterpriseDashboardPage() {
 
   useEffect(() => {
     async function fetchDashboardData() {
-      if (loading || !user) {return}
+      if (loading || !user) {
+        return
+      }
 
       try {
         setDataLoading(true)
@@ -116,7 +67,7 @@ export default function EnterpriseDashboardPage() {
           throw new Error('Dashboard verileri alınamadı')
         }
 
-        const dashboardData = await response.json()
+        const dashboardData = (await response.json()) as EnterpriseDashboardData
         setData(dashboardData)
       } catch (err) {
         console.error('Dashboard data fetch error:', err)
@@ -126,7 +77,7 @@ export default function EnterpriseDashboardPage() {
       }
     }
 
-    fetchDashboardData()
+    void fetchDashboardData()
   }, [user, loading])
 
   if (loading || dataLoading) {
@@ -164,7 +115,7 @@ export default function EnterpriseDashboardPage() {
 
       {/* Floating Tech Elements */}
       <div className="absolute inset-0">
-        {[...Array(50)].map((_, i) => (
+        {Array.from({ length: 50 }, (_, i) => (
           <div
             key={i}
             className="absolute w-1 h-1 bg-amber-400/30 rounded-full animate-pulse"
