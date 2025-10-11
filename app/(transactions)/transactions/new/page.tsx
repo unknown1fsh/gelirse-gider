@@ -454,7 +454,7 @@ export default function NewTransactionPage() {
         isOpen={showPremiumModal}
         onClose={() => setShowPremiumModal(false)}
         featureName="Sınırsız İşlem"
-        limitInfo={limitInfo}
+        limitInfo={limitInfo ?? undefined}
       />
     </div>
   )
