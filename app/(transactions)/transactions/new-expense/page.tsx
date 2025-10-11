@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { EditNameModal } from '@/components/ui/edit-name-modal'
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog'
 import { usePremium } from '@/lib/use-premium'
-import { formatCurrency, parseCurrencyInput } from '@/lib/validators'
+import { parseCurrencyInput } from '@/lib/validators'
 import { ArrowLeft, Save, TrendingDown, Plus, Crown, ChevronDown, ChevronUp, Edit, Trash2, Users } from 'lucide-react'
 
 interface ReferenceData {
