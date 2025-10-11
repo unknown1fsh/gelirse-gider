@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { formatCurrency, parseCurrencyInput } from '@/lib/validators'
+import { parseCurrencyInput } from '@/lib/validators'
 import PremiumUpgradeModal from '@/components/premium-upgrade-modal'
 import { ArrowLeft, Save } from 'lucide-react'
 
