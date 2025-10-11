@@ -59,6 +59,7 @@ export default function AccountsPage() {
   const router = useRouter()
   const { isPremium, handlePremiumFeature } = usePremium()
 
+  const [cashAccounts, setCashAccounts] = useState<BankAccount[]>([])
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([])
   const [eWallets, setEWallets] = useState<EWallet[]>([])
   const [creditCards, setCreditCards] = useState<CreditCard[]>([])
@@ -83,7 +84,7 @@ export default function AccountsPage() {
   async function fetchData() {
     try {
       const [accountsRes, ewalletsRes, cardsRes, goldRes] = await Promise.all([
-        fetch('/api/accounts?type=bank', { credentials: 'include' }),
+        fetch('/api/accounts', { credentials: 'include' }),
         fetch('/api/ewallets', { credentials: 'include' }).catch(() => ({ ok: false })),
         fetch('/api/cards', { credentials: 'include' }).catch(() => ({ ok: false })),
         fetch('/api/gold', { credentials: 'include' }).catch(() => ({ ok: false })),
@@ -92,7 +93,10 @@ export default function AccountsPage() {
       if (accountsRes.ok) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const accountsData = await accountsRes.json()
-        setBankAccounts(accountsData as BankAccount[])
+        const allAccounts = accountsData as BankAccount[]
+        // Nakit ve banka hesaplarını ayır
+        setCashAccounts(allAccounts.filter(acc => acc.accountNumber === 'CASH'))
+        setBankAccounts(allAccounts.filter(acc => acc.accountNumber !== 'CASH'))
       }
 
       if (ewalletsRes.ok && isPremium) {
@@ -193,6 +197,11 @@ export default function AccountsPage() {
     }
   }
 
+  const totalCashBalance = cashAccounts.reduce((sum, acc) => {
+    const rate = acc.currency.code === 'USD' ? 30 : acc.currency.code === 'EUR' ? 32 : 1
+    return sum + parseFloat(acc.balance) * rate
+  }, 0)
+
   const totalBankBalance = bankAccounts.reduce((sum, acc) => {
     const rate = acc.currency.code === 'USD' ? 30 : acc.currency.code === 'EUR' ? 32 : 1
     return sum + parseFloat(acc.balance) * rate
@@ -231,7 +240,20 @@ export default function AccountsPage() {
       </div>
 
       {/* Özet Kartlar */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Nakit</CardTitle>
+            <span className="text-2xl font-bold text-green-600">₺</span>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">
+              {formatCurrency(totalCashBalance, 'TRY')}
+            </div>
+            <p className="text-xs text-muted-foreground">{cashAccounts.length} hesap</p>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Banka Hesapları</CardTitle>
@@ -306,8 +328,9 @@ export default function AccountsPage() {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="bank" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
+      <Tabs defaultValue="cash" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <TabsTrigger value="cash">Nakit</TabsTrigger>
           <TabsTrigger value="bank">Banka Hesapları</TabsTrigger>
           <TabsTrigger value="ewallet" disabled={!isPremium}>
             E-Cüzdanlar {!isPremium && <Crown className="ml-2 h-3 w-3" />}
@@ -318,16 +341,98 @@ export default function AccountsPage() {
           </TabsTrigger>
         </TabsList>
 
+        {/* Nakit Tab */}
+        <TabsContent value="cash" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Nakit Hesapları</h2>
+            <Link
+              href="/accounts/new"
+              className="inline-flex items-center justify-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Yeni Nakit Hesabı
+            </Link>
+          </div>
+
+          {loading ? (
+            <div className="text-center py-8">Yükleniyor...</div>
+          ) : cashAccounts.length === 0 ? (
+            <Card>
+              <CardContent className="py-12 text-center">
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center">
+                  <span className="text-5xl font-bold text-gray-400">₺</span>
+                </div>
+                <p className="text-gray-500 mb-4">Henüz nakit hesabı eklenmemiş</p>
+                <Link
+                  href="/accounts/new"
+                  className="inline-flex items-center justify-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  İlk Nakit Hesabını Ekle
+                </Link>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {cashAccounts.map(account => (
+                <Card
+                  key={account.id}
+                  className="hover:shadow-md transition-shadow border-green-200"
+                >
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <CardTitle className="text-lg">{account.name}</CardTitle>
+                        <CardDescription>Nakit Para</CardDescription>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleEdit(account.id, account.name, 'account')}
+                          className="p-1 hover:bg-gray-100 rounded"
+                        >
+                          <Edit className="h-4 w-4 text-blue-600" />
+                        </button>
+                        <button
+                          onClick={() => void handleDelete(account.id, 'account')}
+                          className="p-1 hover:bg-gray-100 rounded"
+                        >
+                          <Trash2 className="h-4 w-4 text-red-600" />
+                        </button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <div>
+                        <div className="text-2xl font-bold text-green-600">
+                          {formatCurrency(parseFloat(account.balance), account.currency.code)}
+                        </div>
+                        <p className="text-xs text-gray-500">Güncel Bakiye</p>
+                      </div>
+                      <Link
+                        href={`/accounts/${account.id}`}
+                        className="inline-block w-full text-center px-3 py-2 bg-green-50 text-green-600 rounded-md hover:bg-green-100 text-sm font-medium"
+                      >
+                        Detayları Görüntüle
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
         {/* Banka Hesapları Tab */}
         <TabsContent value="bank" className="space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold">Banka Hesapları</h2>
             <Link
-              href="/accounts/new"
+              href="/accounts/bank"
               className="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
             >
               <Plus className="mr-2 h-4 w-4" />
-              Yeni Hesap
+              Yeni Banka Hesabı
             </Link>
           </div>
 
@@ -339,11 +444,11 @@ export default function AccountsPage() {
                 <Wallet className="mx-auto h-12 w-12 text-gray-400 mb-4" />
                 <p className="text-gray-500 mb-4">Henüz banka hesabı eklenmemiş</p>
                 <Link
-                  href="/accounts/new"
+                  href="/accounts/bank"
                   className="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                 >
                   <Plus className="mr-2 h-4 w-4" />
-                  İlk Hesabını Ekle
+                  İlk Banka Hesabını Ekle
                 </Link>
               </CardContent>
             </Card>
