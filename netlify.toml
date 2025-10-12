@@ -1,7 +1,7 @@
 # Netlify Configuration for Next.js
 [build]
   # Build command (Netlify otomatik npm install yapar)
-  command = "prisma generate && prisma migrate deploy && npm run build"
+  command = "prisma generate && prisma migrate resolve --applied 20241012_initial && npm run build"
   
   # Publish directory (Next.js output)
   publish = ".next"
