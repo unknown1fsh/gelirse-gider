@@ -7,14 +7,30 @@ import { EditNameModal } from '@/components/ui/edit-name-modal'
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog'
 import { usePremium } from '@/lib/use-premium'
 import { parseCurrencyInput } from '@/lib/validators'
-import { ArrowLeft, Save, TrendingUp, Plus, Crown, ChevronDown, ChevronUp, Edit, Trash2, Users } from 'lucide-react'
+import {
+  ArrowLeft,
+  Save,
+  TrendingUp,
+  Plus,
+  Crown,
+  ChevronDown,
+  ChevronUp,
+  Edit,
+  Trash2,
+  Users,
+} from 'lucide-react'
 
 interface ReferenceData {
   txTypes: Array<{ id: number; code: string; name: string }>
   categories: Array<{ id: number; name: string; txTypeId: number }>
   paymentMethods: Array<{ id: number; code: string; name: string }>
   accounts: Array<{ id: number; name: string; bank: { name: string }; currency: { code: string } }>
-  creditCards: Array<{ id: number; name: string; bank: { name: string }; currency: { code: string } }>
+  creditCards: Array<{
+    id: number
+    name: string
+    bank: { name: string }
+    currency: { code: string }
+  }>
   eWallets: Array<{ id: number; name: string; provider: string; currency: { code: string } }>
   beneficiaries: Array<{ id: number; name: string; iban?: string; bank?: { name: string } }>
   banks: Array<{ id: number; name: string }>
@@ -30,7 +46,7 @@ export default function NewIncomePage() {
   const [gelirTxTypeId, setGelirTxTypeId] = useState<number>(0)
   const [showBeneficiaryModal, setShowBeneficiaryModal] = useState(false)
   const [showEWalletModal, setShowEWalletModal] = useState(false)
-  
+
   // Düzenli gelir için state'ler
   const [isRecurring, setIsRecurring] = useState(false)
   const [recurringData, setRecurringData] = useState({
@@ -38,11 +54,16 @@ export default function NewIncomePage() {
     endDate: '',
     name: '',
   })
-  
+
   // Alıcılar yönetimi için state'ler
   const [showBeneficiariesSection, setShowBeneficiariesSection] = useState(false)
-  const [editingBeneficiary, setEditingBeneficiary] = useState<{ id: number; name: string } | null>(null)
-  const [deletingBeneficiary, setDeletingBeneficiary] = useState<{ id: number; name: string } | null>(null)
+  const [editingBeneficiary, setEditingBeneficiary] = useState<{ id: number; name: string } | null>(
+    null
+  )
+  const [deletingBeneficiary, setDeletingBeneficiary] = useState<{
+    id: number
+    name: string
+  } | null>(null)
 
   const [formData, setFormData] = useState({
     txTypeId: 0,
@@ -81,18 +102,18 @@ export default function NewIncomePage() {
   useEffect(() => {
     async function fetchReferenceData() {
       try {
-        const response = await fetch('/api/simple-reference')
+        const response = await fetch('/api/reference-data')
         if (response.ok) {
-          const data = await response.json()
+          const data = (await response.json()) as ReferenceData
           setReferenceData(data)
 
-          const gelirType = data.txTypes.find((t: any) => t.code === 'GELIR')
+          const gelirType = data.txTypes.find(t => t.code === 'GELIR')
           if (gelirType) {
             setGelirTxTypeId(gelirType.id)
             setFormData(prev => ({ ...prev, txTypeId: gelirType.id }))
           }
 
-          const tryCurrency = data.currencies.find((c: any) => c.code === 'TRY')
+          const tryCurrency = data.currencies.find(c => c.code === 'TRY')
           if (tryCurrency) {
             setFormData(prev => ({ ...prev, currencyId: tryCurrency.id }))
             setEWalletForm(prev => ({ ...prev, currencyId: tryCurrency.id }))
@@ -105,25 +126,40 @@ export default function NewIncomePage() {
       }
     }
 
-    fetchReferenceData()
+    void fetchReferenceData()
   }, [])
 
-  const gelirCategories = referenceData?.categories.filter(cat => cat.txTypeId === gelirTxTypeId) || []
+  const gelirCategories =
+    referenceData?.categories.filter(cat => cat.txTypeId === gelirTxTypeId) || []
 
   const selectedPaymentMethod = referenceData?.paymentMethods.find(
     p => p.id === formData.paymentMethodId
   )
 
   const getPaymentFieldType = () => {
-    if (!selectedPaymentMethod) {return null}
-    
+    if (!selectedPaymentMethod) {
+      return null
+    }
+
     const code = selectedPaymentMethod.code
-    if (code === 'BANK_TRANSFER') {return 'account'}
-    if (code === 'CREDIT_CARD') {return 'creditCard'}
-    if (code === 'NAKIT') {return 'none'}
-    if (code === 'HAVALE_EFT') {return 'transferWithBeneficiary'} // Hem hesap hem alıcı
-    if (code === 'DEBIT_KARTI') {return 'account'}
-    if (code === 'E_CUZDAN') {return 'eWallet'}
+    if (code === 'BANK_TRANSFER') {
+      return 'account'
+    }
+    if (code === 'CREDIT_CARD') {
+      return 'creditCard'
+    }
+    if (code === 'NAKIT') {
+      return 'none'
+    }
+    if (code === 'HAVALE_EFT') {
+      return 'transferWithBeneficiary'
+    } // Hem hesap hem alıcı
+    if (code === 'DEBIT_KARTI') {
+      return 'account'
+    }
+    if (code === 'E_CUZDAN') {
+      return 'eWallet'
+    }
     return null
   }
 
@@ -144,8 +180,10 @@ export default function NewIncomePage() {
       })
 
       if (response.ok) {
-        const newBeneficiary = await response.json()
-        const updatedData = await fetch('/api/reference-data').then(r => r.json())
+        const newBeneficiary = (await response.json()) as { id: number }
+        const updatedData = await fetch('/api/reference-data').then(
+          r => r.json() as Promise<ReferenceData>
+        )
         setReferenceData(updatedData)
         setFormData(prev => ({ ...prev, beneficiaryId: newBeneficiary.id }))
         setShowBeneficiaryModal(false)
@@ -185,8 +223,10 @@ export default function NewIncomePage() {
       })
 
       if (response.ok) {
-        const newEWallet = await response.json()
-        const updatedData = await fetch('/api/reference-data').then(r => r.json())
+        const newEWallet = (await response.json()) as { id: number }
+        const updatedData = await fetch('/api/reference-data').then(
+          r => r.json() as Promise<ReferenceData>
+        )
         setReferenceData(updatedData)
         setFormData(prev => ({ ...prev, eWalletId: newEWallet.id }))
         setShowEWalletModal(false)
@@ -209,7 +249,9 @@ export default function NewIncomePage() {
 
   // Alıcı silme fonksiyonu
   const handleDeleteBeneficiary = async () => {
-    if (!deletingBeneficiary) {return}
+    if (!deletingBeneficiary) {
+      return
+    }
 
     try {
       const response = await fetch(`/api/beneficiaries/${deletingBeneficiary.id}`, {
@@ -220,7 +262,7 @@ export default function NewIncomePage() {
       if (response.ok) {
         const refRes = await fetch('/api/reference-data')
         if (refRes.ok) {
-          const data = await refRes.json()
+          const data = (await refRes.json()) as ReferenceData
           setReferenceData(data)
         }
         alert('Alıcı başarıyla silindi')
@@ -237,7 +279,9 @@ export default function NewIncomePage() {
 
   // Alıcı düzenleme fonksiyonu
   const handleEditBeneficiary = async (newName: string) => {
-    if (!editingBeneficiary) {return}
+    if (!editingBeneficiary) {
+      return
+    }
 
     try {
       const response = await fetch(`/api/beneficiaries/${editingBeneficiary.id}`, {
@@ -250,7 +294,7 @@ export default function NewIncomePage() {
       if (response.ok) {
         const refRes = await fetch('/api/reference-data')
         if (refRes.ok) {
-          const data = await refRes.json()
+          const data = (await refRes.json()) as ReferenceData
           setReferenceData(data)
         }
       }
@@ -281,7 +325,10 @@ export default function NewIncomePage() {
       alert('Lütfen kredi kartı seçiniz')
       return
     }
-    if (paymentFieldType === 'transferWithBeneficiary' && (!formData.accountId || !formData.beneficiaryId)) {
+    if (
+      paymentFieldType === 'transferWithBeneficiary' &&
+      (!formData.accountId || !formData.beneficiaryId)
+    ) {
       alert('Lütfen hem hesap hem de gönderici seçiniz')
       return
     }
@@ -300,10 +347,13 @@ export default function NewIncomePage() {
 
     try {
       const tagsArray = formData.tags
-        ? formData.tags.split(',').map(t => t.trim()).filter(t => t)
+        ? formData.tags
+            .split(',')
+            .map(t => t.trim())
+            .filter(t => t)
         : []
 
-      const submitData: any = {
+      const submitData: Record<string, unknown> = {
         txTypeId: formData.txTypeId,
         categoryId: formData.categoryId,
         paymentMethodId: formData.paymentMethodId,
@@ -313,11 +363,21 @@ export default function NewIncomePage() {
         tags: tagsArray,
       }
 
-      if (formData.accountId > 0) {submitData.accountId = formData.accountId}
-      if (formData.creditCardId > 0) {submitData.creditCardId = formData.creditCardId}
-      if (formData.eWalletId > 0) {submitData.eWalletId = formData.eWalletId}
-      if (formData.beneficiaryId > 0) {submitData.beneficiaryId = formData.beneficiaryId}
-      if (formData.description) {submitData.description = formData.description}
+      if (formData.accountId > 0) {
+        submitData.accountId = formData.accountId
+      }
+      if (formData.creditCardId > 0) {
+        submitData.creditCardId = formData.creditCardId
+      }
+      if (formData.eWalletId > 0) {
+        submitData.eWalletId = formData.eWalletId
+      }
+      if (formData.beneficiaryId > 0) {
+        submitData.beneficiaryId = formData.beneficiaryId
+      }
+      if (formData.description) {
+        submitData.description = formData.description
+      }
 
       const response = await fetch('/api/transactions', {
         method: 'POST',
@@ -327,15 +387,15 @@ export default function NewIncomePage() {
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
-        alert('Hata: ' + (errorData.error || 'Gelir eklenemedi'))
+        const errorData = (await response.json()) as { error?: string }
+        alert('Hata: ' + (errorData.error ?? 'Gelir eklenemedi'))
         setSaving(false)
         return
       }
 
       // Eğer düzenli gelir ise, otomatik ödeme de oluştur
       if (isRecurring) {
-        const autoPaymentData: any = {
+        const autoPaymentData: Record<string, unknown> = {
           txTypeId: formData.txTypeId,
           name: recurringData.name,
           description: formData.description,
@@ -347,11 +407,21 @@ export default function NewIncomePage() {
           currencyId: formData.currencyId,
         }
 
-        if (recurringData.endDate) {autoPaymentData.endDate = recurringData.endDate}
-        if (formData.accountId > 0) {autoPaymentData.accountId = formData.accountId}
-        if (formData.creditCardId > 0) {autoPaymentData.creditCardId = formData.creditCardId}
-        if (formData.eWalletId > 0) {autoPaymentData.eWalletId = formData.eWalletId}
-        if (formData.beneficiaryId > 0) {autoPaymentData.beneficiaryId = formData.beneficiaryId}
+        if (recurringData.endDate) {
+          autoPaymentData.endDate = recurringData.endDate
+        }
+        if (formData.accountId > 0) {
+          autoPaymentData.accountId = formData.accountId
+        }
+        if (formData.creditCardId > 0) {
+          autoPaymentData.creditCardId = formData.creditCardId
+        }
+        if (formData.eWalletId > 0) {
+          autoPaymentData.eWalletId = formData.eWalletId
+        }
+        if (formData.beneficiaryId > 0) {
+          autoPaymentData.beneficiaryId = formData.beneficiaryId
+        }
 
         const autoResponse = await fetch('/api/auto-payments', {
           method: 'POST',
@@ -400,14 +470,19 @@ export default function NewIncomePage() {
           <CardDescription>Gelir işleminizin detaylarını doldurun</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form
+            onSubmit={e => {
+              void handleSubmit(e)
+            }}
+            className="space-y-6"
+          >
             {/* Düzenli Gelir Checkbox */}
             <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
               <input
                 type="checkbox"
                 id="recurring"
                 checked={isRecurring}
-                onChange={(e) => {
+                onChange={e => {
                   if (e.target.checked && !isPremium) {
                     handlePremiumFeature('Düzenli Gelir')
                     return
@@ -442,7 +517,9 @@ export default function NewIncomePage() {
                     <label className="block text-sm font-medium mb-2">Tekrar Sıklığı *</label>
                     <select
                       value={recurringData.frequency}
-                      onChange={e => setRecurringData(prev => ({ ...prev, frequency: e.target.value }))}
+                      onChange={e =>
+                        setRecurringData(prev => ({ ...prev, frequency: e.target.value }))
+                      }
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                     >
                       <option value="daily">Günlük</option>
@@ -452,14 +529,20 @@ export default function NewIncomePage() {
                     </select>
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium mb-2">Bitiş Tarihi (Opsiyonel)</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Bitiş Tarihi (Opsiyonel)
+                    </label>
                     <input
                       type="date"
                       value={recurringData.endDate}
-                      onChange={e => setRecurringData(prev => ({ ...prev, endDate: e.target.value }))}
+                      onChange={e =>
+                        setRecurringData(prev => ({ ...prev, endDate: e.target.value }))
+                      }
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Boş bırakırsanız süresiz devam eder</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Boş bırakırsanız süresiz devam eder
+                    </p>
                   </div>
                 </div>
               </div>
@@ -531,7 +614,9 @@ export default function NewIncomePage() {
                 <input
                   type="date"
                   value={formData.transactionDate}
-                  onChange={e => setFormData(prev => ({ ...prev, transactionDate: e.target.value }))}
+                  onChange={e =>
+                    setFormData(prev => ({ ...prev, transactionDate: e.target.value }))
+                  }
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   required
                 />
@@ -543,7 +628,9 @@ export default function NewIncomePage() {
                 <label className="block text-sm font-medium mb-2">Banka Hesabı *</label>
                 <select
                   value={formData.accountId}
-                  onChange={e => setFormData(prev => ({ ...prev, accountId: parseInt(e.target.value) }))}
+                  onChange={e =>
+                    setFormData(prev => ({ ...prev, accountId: parseInt(e.target.value) }))
+                  }
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   required
                 >
@@ -563,7 +650,9 @@ export default function NewIncomePage() {
                 <label className="block text-sm font-medium mb-2">Kredi Kartı *</label>
                 <select
                   value={formData.creditCardId}
-                  onChange={e => setFormData(prev => ({ ...prev, creditCardId: parseInt(e.target.value) }))}
+                  onChange={e =>
+                    setFormData(prev => ({ ...prev, creditCardId: parseInt(e.target.value) }))
+                  }
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   required
                 >
@@ -584,7 +673,9 @@ export default function NewIncomePage() {
                   <label className="block text-sm font-medium mb-2">Hangi Hesaba *</label>
                   <select
                     value={formData.accountId}
-                    onChange={e => setFormData(prev => ({ ...prev, accountId: parseInt(e.target.value) }))}
+                    onChange={e =>
+                      setFormData(prev => ({ ...prev, accountId: parseInt(e.target.value) }))
+                    }
                     className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     required
                   >
@@ -603,14 +694,17 @@ export default function NewIncomePage() {
                   <div className="flex gap-2">
                     <select
                       value={formData.beneficiaryId}
-                      onChange={e => setFormData(prev => ({ ...prev, beneficiaryId: parseInt(e.target.value) }))}
+                      onChange={e =>
+                        setFormData(prev => ({ ...prev, beneficiaryId: parseInt(e.target.value) }))
+                      }
                       className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
                       required
                     >
                       <option value={0}>Gönderici seçiniz</option>
                       {referenceData?.beneficiaries.map(beneficiary => (
                         <option key={beneficiary.id} value={beneficiary.id}>
-                          {beneficiary.name} {beneficiary.iban ? `(${beneficiary.iban.slice(-4)})` : ''}
+                          {beneficiary.name}{' '}
+                          {beneficiary.iban ? `(${beneficiary.iban.slice(-4)})` : ''}
                         </option>
                       ))}
                     </select>
@@ -634,7 +728,9 @@ export default function NewIncomePage() {
                 <div className="flex gap-2">
                   <select
                     value={formData.eWalletId}
-                    onChange={e => setFormData(prev => ({ ...prev, eWalletId: parseInt(e.target.value) }))}
+                    onChange={e =>
+                      setFormData(prev => ({ ...prev, eWalletId: parseInt(e.target.value) }))
+                    }
                     className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     required
                   >
@@ -700,7 +796,9 @@ export default function NewIncomePage() {
                 <div className="flex items-center gap-2">
                   <Users className="h-5 w-5 text-gray-600" />
                   <span className="font-semibold text-gray-900">Alıcılar / Kişiler Yönetimi</span>
-                  <span className="text-xs text-gray-500">({referenceData?.beneficiaries.length || 0} kayıt)</span>
+                  <span className="text-xs text-gray-500">
+                    ({referenceData?.beneficiaries.length || 0} kayıt)
+                  </span>
                 </div>
                 {showBeneficiariesSection ? (
                   <ChevronUp className="h-5 w-5 text-gray-600" />
@@ -754,14 +852,24 @@ export default function NewIncomePage() {
                           <div className="flex gap-2">
                             <button
                               type="button"
-                              onClick={() => setEditingBeneficiary({ id: beneficiary.id, name: beneficiary.name })}
+                              onClick={() =>
+                                setEditingBeneficiary({
+                                  id: beneficiary.id,
+                                  name: beneficiary.name,
+                                })
+                              }
                               className="p-2 text-blue-600 hover:bg-blue-50 rounded"
                             >
                               <Edit className="h-4 w-4" />
                             </button>
                             <button
                               type="button"
-                              onClick={() => setDeletingBeneficiary({ id: beneficiary.id, name: beneficiary.name })}
+                              onClick={() =>
+                                setDeletingBeneficiary({
+                                  id: beneficiary.id,
+                                  name: beneficiary.name,
+                                })
+                              }
                               className="p-2 text-red-600 hover:bg-red-50 rounded"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -839,7 +947,9 @@ export default function NewIncomePage() {
                 <input
                   type="text"
                   value={beneficiaryForm.accountNo}
-                  onChange={e => setBeneficiaryForm(prev => ({ ...prev, accountNo: e.target.value }))}
+                  onChange={e =>
+                    setBeneficiaryForm(prev => ({ ...prev, accountNo: e.target.value }))
+                  }
                   className="w-full p-2 border border-gray-300 rounded-md"
                   placeholder="12345678"
                 />
@@ -849,7 +959,9 @@ export default function NewIncomePage() {
                 <label className="block text-sm font-medium mb-2">Banka</label>
                 <select
                   value={beneficiaryForm.bankId}
-                  onChange={e => setBeneficiaryForm(prev => ({ ...prev, bankId: parseInt(e.target.value) }))}
+                  onChange={e =>
+                    setBeneficiaryForm(prev => ({ ...prev, bankId: parseInt(e.target.value) }))
+                  }
                   className="w-full p-2 border border-gray-300 rounded-md"
                 >
                   <option value={0}>Banka seçiniz</option>
@@ -866,7 +978,9 @@ export default function NewIncomePage() {
                 <input
                   type="text"
                   value={beneficiaryForm.phoneNumber}
-                  onChange={e => setBeneficiaryForm(prev => ({ ...prev, phoneNumber: e.target.value }))}
+                  onChange={e =>
+                    setBeneficiaryForm(prev => ({ ...prev, phoneNumber: e.target.value }))
+                  }
                   className="w-full p-2 border border-gray-300 rounded-md"
                   placeholder="05XX XXX XX XX"
                 />
@@ -882,7 +996,9 @@ export default function NewIncomePage() {
                 </button>
                 <button
                   type="button"
-                  onClick={handleAddBeneficiary}
+                  onClick={() => {
+                    void handleAddBeneficiary()
+                  }}
                   className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                 >
                   Ekle
@@ -934,7 +1050,9 @@ export default function NewIncomePage() {
                 <input
                   type="email"
                   value={eWalletForm.accountEmail}
-                  onChange={e => setEWalletForm(prev => ({ ...prev, accountEmail: e.target.value }))}
+                  onChange={e =>
+                    setEWalletForm(prev => ({ ...prev, accountEmail: e.target.value }))
+                  }
                   className="w-full p-2 border border-gray-300 rounded-md"
                   placeholder="ornek@email.com"
                 />
@@ -945,7 +1063,9 @@ export default function NewIncomePage() {
                 <input
                   type="text"
                   value={eWalletForm.accountPhone}
-                  onChange={e => setEWalletForm(prev => ({ ...prev, accountPhone: e.target.value }))}
+                  onChange={e =>
+                    setEWalletForm(prev => ({ ...prev, accountPhone: e.target.value }))
+                  }
                   className="w-full p-2 border border-gray-300 rounded-md"
                   placeholder="05XX XXX XX XX"
                 />
@@ -972,7 +1092,9 @@ export default function NewIncomePage() {
                 </button>
                 <button
                   type="button"
-                  onClick={handleAddEWallet}
+                  onClick={() => {
+                    void handleAddEWallet()
+                  }}
                   className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                 >
                   Ekle
