@@ -9,7 +9,13 @@ import { SystemParameterService } from '@/server/services/impl/SystemParameterSe
 // BANK, ACCOUNT_TYPE, CURRENCY, GOLD: Eski Ref tablolarından (Foreign Key uyumu için)
 export const GET = ExceptionMapper.asyncHandler(async (request: NextRequest) => {
   // Kullanıcı kontrolü (opsiyonel - bazı referans veriler public olabilir)
-  const user = await getCurrentUser(request)
+  let user = null
+  try {
+    user = await getCurrentUser(request)
+  } catch (error) {
+    console.log('Kullanıcı kontrolü atlandı:', error)
+    // Authentication hatası varsa user = null olarak devam et
+  }
 
   const parameterService = new SystemParameterService(prisma)
 
