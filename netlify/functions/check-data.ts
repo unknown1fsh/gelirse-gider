@@ -1,13 +1,20 @@
 import { PrismaClient } from '@prisma/client'
 
-// Production'da Prisma client'ı doğru şekilde initialize et
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL || process.env.NETLIFY_DATABASE_URL,
-    },
-  },
-})
+// Prisma client'ı lazy initialize et
+let prisma: PrismaClient
+
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: process.env.DATABASE_URL || process.env.NETLIFY_DATABASE_URL,
+        },
+      },
+    })
+  }
+  return prisma
+}
 
 export const handler = async (event: any) => {
   // CORS headers
@@ -36,17 +43,20 @@ export const handler = async (event: any) => {
   try {
     console.log('🔍 Database verilerini kontrol ediyor...')
 
+    // Prisma client'ı al
+    const prismaClient = getPrisma()
+
     // Referans verilerini kontrol et
-    const currencies = await prisma.refCurrency.findMany()
-    const accountTypes = await prisma.refAccountType.findMany()
-    const transactionTypes = await prisma.refTransactionType.findMany()
-    const categories = await prisma.refTransactionCategory.findMany()
-    const paymentMethods = await prisma.refPaymentMethod.findMany()
-    const goldTypes = await prisma.refGoldType.findMany()
-    const goldPurities = await prisma.refGoldPurity.findMany()
-    const banks = await prisma.refBank.findMany()
-    const systemParams = await prisma.systemParameter.findMany()
-    const users = await prisma.user.findMany()
+    const currencies = await prismaClient.refCurrency.findMany()
+    const accountTypes = await prismaClient.refAccountType.findMany()
+    const transactionTypes = await prismaClient.refTransactionType.findMany()
+    const categories = await prismaClient.refTransactionCategory.findMany()
+    const paymentMethods = await prismaClient.refPaymentMethod.findMany()
+    const goldTypes = await prismaClient.refGoldType.findMany()
+    const goldPurities = await prismaClient.refGoldPurity.findMany()
+    const banks = await prismaClient.refBank.findMany()
+    const systemParams = await prismaClient.systemParameter.findMany()
+    const users = await prismaClient.user.findMany()
 
     const results = {
       currencies: { count: currencies.length, data: currencies },
@@ -97,6 +107,8 @@ export const handler = async (event: any) => {
       }),
     }
   } finally {
-    await prisma.$disconnect()
+    if (prisma) {
+      await prisma.$disconnect()
+    }
   }
 }

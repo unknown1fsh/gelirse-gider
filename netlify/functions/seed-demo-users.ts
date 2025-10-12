@@ -1,14 +1,21 @@
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 
-// Production'da Prisma client'ı doğru şekilde initialize et
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL || process.env.NETLIFY_DATABASE_URL,
-    },
-  },
-})
+// Prisma client'ı lazy initialize et
+let prisma: PrismaClient
+
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: process.env.DATABASE_URL || process.env.NETLIFY_DATABASE_URL,
+        },
+      },
+    })
+  }
+  return prisma
+}
 
 export const handler = async (event: any) => {
   // CORS headers
@@ -63,10 +70,12 @@ export const handler = async (event: any) => {
 
     const results = []
 
+    const prismaClient = getPrisma()
+
     for (const user of demoUsers) {
       const hashedPassword = await bcrypt.hash(user.password, 12)
       
-      const upsertResult = await prisma.user.upsert({
+      const upsertResult = await prismaClient.user.upsert({
         where: { email: user.email },
         update: {
           passwordHash: hashedPassword,
@@ -115,6 +124,8 @@ export const handler = async (event: any) => {
       }),
     }
   } finally {
-    await prisma.$disconnect()
+    if (prisma) {
+      await prisma.$disconnect()
+    }
   }
 }
