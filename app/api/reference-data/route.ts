@@ -9,13 +9,10 @@ import { SystemParameterService } from '@/server/services/impl/SystemParameterSe
 // BANK, ACCOUNT_TYPE, CURRENCY, GOLD: Eski Ref tablolarından (Foreign Key uyumu için)
 export const GET = ExceptionMapper.asyncHandler(async (request: NextRequest) => {
   // Kullanıcı kontrolü (opsiyonel - bazı referans veriler public olabilir)
-  let user = null
-  try {
-    user = await getCurrentUser(request)
-  } catch (error) {
-    console.log('Kullanıcı kontrolü atlandı:', error)
-    // Authentication hatası varsa user = null olarak devam et
-  }
+  const user = await getCurrentUser(request)
+
+  // eslint-disable-next-line no-console
+  console.log('🔍 Reference data çekiliyor...')
 
   const parameterService = new SystemParameterService(prisma)
 
@@ -42,6 +39,14 @@ export const GET = ExceptionMapper.asyncHandler(async (request: NextRequest) => 
     prisma.refGoldType.findMany({ where: { active: true }, orderBy: { name: 'asc' } }),
     prisma.refGoldPurity.findMany({ where: { active: true }, orderBy: { code: 'asc' } }),
   ])
+
+  // eslint-disable-next-line no-console
+  console.log('📊 SystemParameter veriler:', {
+    txTypes: txTypeParams.length,
+    categories: txCategoryParams.length,
+    paymentMethods: paymentMethodParams.length,
+    currencies: currencyParams.length,
+  })
 
   // Kullanıcıya özel veriler (sadece login olmuşsa)
   const [accounts, creditCards, eWallets, beneficiaries] = await Promise.all([
@@ -81,29 +86,29 @@ export const GET = ExceptionMapper.asyncHandler(async (request: NextRequest) => 
     txTypeMapping[t.paramCode] = t.id // GELIR -> 44, GIDER -> 45
   })
 
-  return NextResponse.json({
+  const response = {
     // İşlem parametreleri (PARAMETRE TABLOSUNDAN - Sadece TX_TYPE ve TX_CATEGORY)
     txTypes: txTypeParams.map(t => ({
       id: t.id,
       code: t.paramCode,
       name: t.displayName,
-      icon: t.metadata?.icon || null,
-      color: t.metadata?.color || null,
+      icon: (t.metadata?.icon as string | null | undefined) || null,
+      color: (t.metadata?.color as string | null | undefined) || null,
     })),
     categories: txCategoryParams.map(c => {
       // txTypeCode ile SystemParameter TX_TYPE ID'sine map et
-      const txTypeCode = c.metadata?.txTypeCode || ''
-      const mappedTxTypeId = txTypeMapping[txTypeCode] || 0
+      const txTypeCode = (c.metadata?.txTypeCode as string | undefined) || ''
+      const mappedTxTypeId = (txTypeMapping[txTypeCode] as number | undefined) || 0
 
       return {
         id: c.id,
         name: c.displayName,
-        code: c.metadata?.code || c.paramCode,
+        code: (c.metadata?.code as string | undefined) || c.paramCode,
         txTypeId: mappedTxTypeId, // SystemParameter TX_TYPE ID'si
-        txTypeName: c.metadata?.txTypeName || '',
-        icon: c.metadata?.icon || null,
-        color: c.metadata?.color || null,
-        isDefault: c.metadata?.isDefault || false,
+        txTypeName: (c.metadata?.txTypeName as string | undefined) || '',
+        icon: (c.metadata?.icon as string | null | undefined) || null,
+        color: (c.metadata?.color as string | null | undefined) || null,
+        isDefault: (c.metadata?.isDefault as boolean | undefined) || false,
       }
     }),
     paymentMethods: paymentMethodParams.map(p => ({
@@ -133,7 +138,7 @@ export const GET = ExceptionMapper.asyncHandler(async (request: NextRequest) => 
       id: c.id,
       code: c.paramCode,
       name: c.displayName.split('(')[0].trim(),
-      symbol: c.metadata?.symbol || c.paramCode,
+      symbol: (c.metadata?.symbol as string | undefined) || c.paramCode,
     })),
     goldTypes: refGoldTypes.map(g => ({
       id: g.id,
@@ -190,5 +195,16 @@ export const GET = ExceptionMapper.asyncHandler(async (request: NextRequest) => 
       totalCurrencies: currencyParams.length,
       timestamp: new Date().toISOString(),
     },
+  }
+
+  // eslint-disable-next-line no-console
+  console.log('✅ Reference data hazırlandı:', {
+    txTypes: response.txTypes.length,
+    categories: response.categories.length,
+    paymentMethods: response.paymentMethods.length,
+    currencies: response.currencies.length,
+    accounts: response.accounts.length,
   })
+
+  return NextResponse.json(response)
 })

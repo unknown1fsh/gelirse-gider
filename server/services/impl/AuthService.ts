@@ -242,7 +242,18 @@ export class AuthService {
       return null
     }
 
-    return UserMapper.prismaToDTO(session.user)
+    const userDTO = UserMapper.prismaToDTO(session.user)
+
+    // eslint-disable-next-line no-console
+    console.log('🔐 User authenticated:', {
+      id: userDTO.id,
+      email: userDTO.email,
+      plan: userDTO.plan,
+      hasActiveSubscription: session.user.subscriptions.length > 0,
+      subscriptionPlan: session.user.subscriptions[0]?.planId || 'none',
+    })
+
+    return userDTO
   }
 
   // Bu metot çıkış yapar.
