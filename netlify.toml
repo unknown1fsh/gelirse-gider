@@ -9,14 +9,6 @@
 [build.environment]
   # Node version
   NODE_VERSION = "18"
-  
-  # NPM install options - include devDependencies for build
-  NPM_FLAGS = "--legacy-peer-deps"
-  
-  # Map Netlify's auto-generated database URLs to our expected names
-  # If NETLIFY_DATABASE_URL exists, use it. Otherwise use DATABASE_URL from env vars
-  DATABASE_URL = "${NETLIFY_DATABASE_URL:-${DATABASE_URL}}"
-  DIRECT_URL = "${NETLIFY_DATABASE_URL_UNPOOLED:-${DIRECT_URL}}"
 
 # Next.js kendi routing'ini yapar, redirects'e gerek yok
 
