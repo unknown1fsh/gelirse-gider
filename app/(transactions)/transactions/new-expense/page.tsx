@@ -83,7 +83,7 @@ export default function NewExpensePage() {
   useEffect(() => {
     async function fetchReferenceData() {
       try {
-        const response = await fetch('/api/reference-data')
+        const response = await fetch('/api/simple-reference')
         if (response.ok) {
           const data = await response.json()
           setReferenceData(data)
