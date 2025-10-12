@@ -308,7 +308,7 @@ async function main() {
       update: {},
       create: {
         code: 'CUMHURIYET_ALTINI',
-        name: 'Cumhuriyet Altını (Tam)',
+        name: 'Cumhuriyet Altını',
         description: 'Tam Cumhuriyet altını (7.2 gr)',
       },
     }),
@@ -369,7 +369,7 @@ async function main() {
       update: {},
       create: {
         code: '24K',
-        name: '24 Ayar (Saf Altın)',
+        name: '24 Ayar Altın',
         purity: 24.0,
       },
     }),
@@ -378,7 +378,7 @@ async function main() {
       update: {},
       create: {
         code: '22K',
-        name: '22 Ayar (Cumhuriyet Altını)',
+        name: '22 Ayar Altın',
         purity: 22.0,
       },
     }),
@@ -387,7 +387,7 @@ async function main() {
       update: {},
       create: {
         code: '18K',
-        name: '18 Ayar (750 milyem)',
+        name: '18 Ayar Altın',
         purity: 18.0,
       },
     }),
@@ -396,7 +396,7 @@ async function main() {
       update: {},
       create: {
         code: '14K',
-        name: '14 Ayar (585 milyem)',
+        name: '14 Ayar Altın',
         purity: 14.0,
       },
     }),
@@ -405,7 +405,7 @@ async function main() {
       update: {},
       create: {
         code: '8K',
-        name: '8 Ayar (333 milyem)',
+        name: '8 Ayar Altın',
         purity: 8.0,
       },
     }),
@@ -792,6 +792,7 @@ async function main() {
   console.log(`✅ TX_TYPE parametreleri eklendi (${txTypes.length} tür)`)
 
   // TX_CATEGORY parametreleri
+  const categories = await prisma.transactionCategory.findMany()
   for (const category of categories) {
     await prisma.systemParameter.upsert({
       where: {
