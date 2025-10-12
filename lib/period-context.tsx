@@ -196,13 +196,31 @@ export function PeriodProvider({ children }: { children: React.ReactNode }) {
     await fetchPeriods(true)
   }
 
-  // İlk yüklemede dönemleri getir
+  // Public sayfa kontrolü
+  const isPublicPage = (): boolean => {
+    if (typeof window === 'undefined') {
+      return false
+    }
+    const currentPath = window.location.pathname
+    const publicPaths = ['/landing', '/auth/login', '/auth/register', '/auth/forgot-password']
+    return publicPaths.some(path => currentPath.startsWith(path))
+  }
+
+  // İlk yüklemede dönemleri getir (public sayfalarda değil)
   useEffect(() => {
+    // Public sayfalarda fetch yapma
+    if (isPublicPage()) {
+      setLoading(false)
+      setHasFetched(true)
+      return
+    }
+
     // Sadece bir kere fetch et
     if (!hasFetched) {
       void fetchPeriods(false)
     }
-  }, [hasFetched, fetchPeriods])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasFetched])
 
   // Login/Register olaylarını dinle
   useEffect(() => {

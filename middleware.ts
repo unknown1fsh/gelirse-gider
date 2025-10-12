@@ -19,7 +19,7 @@ const protectedRoutes = [
 ]
 
 // Auth rotaları (giriş yapmış kullanıcılar erişemez)
-const authRoutes = ['/auth/login', '/auth/register', '/landing']
+const authRoutes = ['/auth/login', '/auth/register', '/auth/forgot-password', '/landing']
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl

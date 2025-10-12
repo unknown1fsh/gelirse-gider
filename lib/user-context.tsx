@@ -41,8 +41,15 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   // Geçerli sayfa korumalı bir sayfa mı kontrol et
   const isProtectedPage = (): boolean => {
     const currentPath = window.location.pathname
-    const publicPaths = ['/landing', '/auth/login', '/auth/register']
+    const publicPaths = ['/landing', '/auth/login', '/auth/register', '/auth/forgot-password']
     return !publicPaths.some(path => currentPath.startsWith(path))
+  }
+
+  // Geçerli sayfa public bir sayfa mı kontrol et
+  const isPublicPage = (): boolean => {
+    const currentPath = window.location.pathname
+    const publicPaths = ['/landing', '/auth/login', '/auth/register', '/auth/forgot-password']
+    return publicPaths.some(path => currentPath.startsWith(path))
   }
 
   // Token geçersizse landing'e yönlendir
@@ -80,7 +87,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       // Sadece gerçek network hataları için log (401/403 hariç)
-      if (error instanceof Error && !error.message.includes('401') && !error.message.includes('403')) {
+      if (
+        error instanceof Error &&
+        !error.message.includes('401') &&
+        !error.message.includes('403')
+      ) {
         console.error('Fetch user error:', error)
       }
       setUser(null)
@@ -203,9 +214,16 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     await fetchUser()
   }
 
-  // Component mount olduğunda kullanıcı bilgilerini al
+  // Component mount olduğunda kullanıcı bilgilerini al (sadece korumalı sayfalarda)
   useEffect(() => {
+    // Public sayfalarda API çağrısı yapma
+    if (isPublicPage()) {
+      setLoading(false)
+      return
+    }
+
     void fetchUser()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const value: UserContextType = {
