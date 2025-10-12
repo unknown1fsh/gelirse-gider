@@ -64,6 +64,11 @@ export default function EnterpriseDashboardPage() {
         })
 
         if (!response.ok) {
+          // 401 hatası normaldir (kullanıcı giriş yapmamış)
+          if (response.status === 401) {
+            setDataLoading(false)
+            return
+          }
           throw new Error('Dashboard verileri alınamadı')
         }
 
@@ -132,21 +137,21 @@ export default function EnterpriseDashboardPage() {
       <div className="relative z-10">
         {/* Ultra Header */}
         <div className="bg-black/20 backdrop-blur-sm border-b border-amber-500/30 sticky top-0 z-20">
-          <div className="px-8 py-8">
-            <div className="flex items-center justify-between">
+          <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
               <div>
-                <div className="flex items-center space-x-4 mb-2">
-                  <Diamond className="h-8 w-8 text-amber-400 animate-pulse" />
-                  <h1 className="text-4xl font-black bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
+                <div className="flex items-center space-x-2 sm:space-x-4 mb-2">
+                  <Diamond className="h-6 sm:h-8 w-6 sm:w-8 text-amber-400 animate-pulse" />
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
                     ULTRA PREMIUM DASHBOARD
                   </h1>
-                  <Crown className="h-8 w-8 text-amber-400 animate-pulse" />
+                  <Crown className="h-6 sm:h-8 w-6 sm:w-8 text-amber-400 animate-pulse" />
                 </div>
-                <p className="text-amber-200 text-lg">
+                <p className="text-amber-200 text-sm sm:text-base lg:text-lg">
                   Enterprise-grade financial intelligence platform
                 </p>
               </div>
-              <div className="flex items-center space-x-6">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-6">
                 {/* Ultra Premium Badge */}
                 <div className="flex items-center space-x-3 bg-gradient-to-r from-amber-500/30 to-orange-500/30 backdrop-blur-sm rounded-full px-6 py-3 border-2 border-amber-500/50">
                   <Award className="h-6 w-6 text-amber-400" />
@@ -163,9 +168,9 @@ export default function EnterpriseDashboardPage() {
         </div>
 
         {/* User Welcome Section */}
-        <div className="px-8 py-8">
+        <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
           <div className="max-w-7xl mx-auto">
-            <div className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 backdrop-blur-sm rounded-3xl p-8 border-2 border-amber-500/30">
+            <div className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 backdrop-blur-sm rounded-3xl p-4 sm:p-6 lg:p-8 border-2 border-amber-500/30">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-3xl font-black text-white mb-2">
@@ -185,10 +190,10 @@ export default function EnterpriseDashboardPage() {
           </div>
         </div>
 
-        <div className="px-8 pb-8 space-y-8">
+        <div className="px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 lg:pb-8 space-y-6 sm:space-y-8">
           {/* Ultra KPI Cards */}
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
               <Card className="group hover:shadow-2xl transition-all duration-300 border-0 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 backdrop-blur-sm border-2 border-emerald-500/30 hover:scale-105">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-lg font-bold text-emerald-200">Toplam Gelir</CardTitle>
@@ -262,7 +267,7 @@ export default function EnterpriseDashboardPage() {
           </div>
 
           {/* Ultra Content Grid */}
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
             {/* Ultra Upcoming Payments */}
             <Card className="border-0 shadow-2xl bg-black/20 backdrop-blur-sm border-2 border-amber-500/30">
               <CardHeader className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-t-3xl">

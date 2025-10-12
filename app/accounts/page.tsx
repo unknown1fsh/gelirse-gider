@@ -222,8 +222,8 @@ export default function AccountsPage() {
   }, 0)
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center gap-4 mb-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
         <button
           onClick={() => router.back()}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -234,13 +234,13 @@ export default function AccountsPage() {
           <Home className="h-5 w-5" />
         </Link>
         <div className="flex-1">
-          <h1 className="text-3xl font-bold">Hesaplar</h1>
-          <p className="text-muted-foreground">Tüm finansal hesaplarınızı tek yerden yönetin</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">Hesaplar</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">Tüm finansal hesaplarınızı tek yerden yönetin</p>
         </div>
       </div>
 
       {/* Özet Kartlar */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Nakit</CardTitle>

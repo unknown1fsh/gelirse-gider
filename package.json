@@ -9,6 +9,7 @@
     "dev:full": "npm-run-all -p dev:db dev",
     "build": "next build",
     "build:vercel": "prisma generate && next build",
+    "build:netlify": "prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "vercel-build": "prisma generate && next build",
     "generate:secret": "node scripts/generate-secret.js",

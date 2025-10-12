@@ -38,6 +38,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
+  // Geçerli sayfa korumalı bir sayfa mı kontrol et
+  const isProtectedPage = (): boolean => {
+    const currentPath = window.location.pathname
+    const publicPaths = ['/landing', '/auth/login', '/auth/register']
+    return !publicPaths.some(path => currentPath.startsWith(path))
+  }
+
+  // Token geçersizse landing'e yönlendir
+  const redirectToLandingIfNeeded = () => {
+    if (isProtectedPage()) {
+      router.push('/landing')
+    }
+  }
+
   // Kullanıcı bilgilerini al
   const fetchUser = async () => {
     try {
@@ -46,6 +60,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       })
 
       if (!response.ok) {
+        // 401 hatası - kullanıcı giriş yapmamış
+        if (response.status === 401) {
+          setUser(null)
+          redirectToLandingIfNeeded()
+          return
+        }
         throw new Error(`HTTP error! status: ${response.status}`)
       }
 
@@ -54,13 +74,17 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       if (data.success && data.user) {
         setUser(data.user)
       } else {
-        // Kullanıcı giriş yapmamış, bu normal
+        // Kullanıcı giriş yapmamış
         setUser(null)
+        redirectToLandingIfNeeded()
       }
     } catch (error) {
-      // Network hataları veya diğer hatalar
-      console.error('Fetch user error:', error)
+      // Sadece gerçek network hataları için log (401/403 hariç)
+      if (error instanceof Error && !error.message.includes('401') && !error.message.includes('403')) {
+        console.error('Fetch user error:', error)
+      }
       setUser(null)
+      redirectToLandingIfNeeded()
     } finally {
       setLoading(false)
     }

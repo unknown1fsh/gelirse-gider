@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { UserProvider } from '@/lib/user-context'
 import { PeriodProvider } from '@/lib/period-context'
+import { GlobalErrorHandler } from '@/lib/error-handler'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="tr" className="scroll-smooth">
       <body className={`${inter.className} antialiased`}>
+        <GlobalErrorHandler />
         <UserProvider>
           <PeriodProvider>{children}</PeriodProvider>
         </UserProvider>

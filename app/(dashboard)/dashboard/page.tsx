@@ -71,6 +71,11 @@ export default function DashboardPage() {
         })
 
         if (!response.ok) {
+          // 401 hatası normaldir (kullanıcı giriş yapmamış)
+          if (response.status === 401) {
+            setDataLoading(false)
+            return
+          }
           throw new Error('Dashboard verileri alınamadı')
         }
 
@@ -84,7 +89,7 @@ export default function DashboardPage() {
       }
     }
 
-    fetchDashboardData()
+    void fetchDashboardData()
   }, [user, loading])
 
   if (loading || dataLoading) {
@@ -109,18 +114,18 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
       {/* User Welcome Card */}
-      <div className="p-8">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-slate-200/60">
-          <div className="flex items-center justify-between">
+      <div className="p-4 sm:p-6 lg:p-8">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg border border-slate-200/60">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center space-x-4">
               <div className="p-3 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 shadow-lg">
                 <User className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-slate-800">
+                <h2 className="text-xl sm:text-2xl font-bold text-slate-800">
                   Hoş geldin, {user?.name || 'Kullanıcı'}! 👋
                 </h2>
-                <p className="text-slate-600">
+                <p className="text-sm sm:text-base text-slate-600">
                   {user?.plan === 'free' 
                     ? 'Ücretsiz üyelik ile temel özellikler aktif'
                     : user?.plan === 'enterprise' || user?.plan === 'enterprise_premium'
@@ -170,9 +175,9 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="p-8 space-y-8">
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
         {/* KPI Kartları */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <Card className="group hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-slate-700">Toplam Gelir</CardTitle>
@@ -181,10 +186,10 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                 {formatCurrency(parseFloat(data.kpi.total_income), 'TRY')}
               </div>
-              <p className="text-xs text-slate-600 mt-2">
+              <p className="text-xs sm:text-sm text-slate-600 mt-2">
                 Son 30 günde {data.kpi.income_count} işlem
               </p>
             </CardContent>
@@ -198,10 +203,10 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
                 {formatCurrency(parseFloat(data.kpi.total_expense), 'TRY')}
               </div>
-              <p className="text-xs text-slate-600 mt-2">
+              <p className="text-xs sm:text-sm text-slate-600 mt-2">
                 Son 30 günde {data.kpi.expense_count} işlem
               </p>
             </CardContent>
@@ -216,7 +221,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div
-                className={`text-3xl font-bold bg-clip-text text-transparent ${
+                className={`text-2xl sm:text-3xl font-bold bg-clip-text text-transparent ${
                   parseFloat(data.kpi.net_amount) >= 0
                     ? 'bg-gradient-to-r from-green-600 to-emerald-600'
                     : 'bg-gradient-to-r from-red-600 to-rose-600'
@@ -224,7 +229,7 @@ export default function DashboardPage() {
               >
                 {formatCurrency(parseFloat(data.kpi.net_amount), 'TRY')}
               </div>
-              <p className="text-xs text-slate-600 mt-2">Son 30 gün net sonuç</p>
+              <p className="text-xs sm:text-sm text-slate-600 mt-2">Son 30 gün net sonuç</p>
             </CardContent>
           </Card>
 
@@ -236,16 +241,16 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
                 {parseInt(data.kpi.income_count) + parseInt(data.kpi.expense_count)}
               </div>
-              <p className="text-xs text-slate-600 mt-2">Son 30 günde toplam işlem</p>
+              <p className="text-xs sm:text-sm text-slate-600 mt-2">Son 30 günde toplam işlem</p>
             </CardContent>
           </Card>
         </div>
 
         {/* ✅ TOPLAM VARLIK KARTLARI */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <Card className="group hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-cyan-50 to-blue-50 hover:from-cyan-100 hover:to-blue-100">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-slate-700">Hesap Bakiyeleri</CardTitle>
@@ -254,10 +259,10 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
                 {formatCurrency(parseFloat(data.assets.totalAccountBalance), 'TRY')}
               </div>
-              <p className="text-xs text-slate-600 mt-2">Tüm banka hesapları</p>
+              <p className="text-xs sm:text-sm text-slate-600 mt-2">Tüm banka hesapları</p>
             </CardContent>
           </Card>
 
@@ -269,10 +274,10 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold bg-gradient-to-r from-yellow-600 to-amber-600 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-yellow-600 to-amber-600 bg-clip-text text-transparent">
                 {formatCurrency(parseFloat(data.assets.totalGoldValue), 'TRY')}
               </div>
-              <p className="text-xs text-slate-600 mt-2">Altın ve ziynet eşyaları</p>
+              <p className="text-xs sm:text-sm text-slate-600 mt-2">Altın ve ziynet eşyaları</p>
             </CardContent>
           </Card>
 
@@ -284,10 +289,10 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
                 {formatCurrency(parseFloat(data.assets.totalCardDebt), 'TRY')}
               </div>
-              <p className="text-xs text-slate-600 mt-2">Toplam kart borcu</p>
+              <p className="text-xs sm:text-sm text-slate-600 mt-2">Toplam kart borcu</p>
             </CardContent>
           </Card>
 
@@ -299,15 +304,15 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                 {formatCurrency(parseFloat(data.assets.netWorth), 'TRY')}
               </div>
-              <p className="text-xs text-slate-600 mt-2">Varlık - Borçlar</p>
+              <p className="text-xs sm:text-sm text-slate-600 mt-2">Varlık - Borçlar</p>
             </CardContent>
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
           {/* Yaklaşan Ödemeler */}
           <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
             <CardHeader className="bg-gradient-to-r from-orange-50 to-red-50 rounded-t-lg">

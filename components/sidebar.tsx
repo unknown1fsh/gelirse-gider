@@ -15,6 +15,7 @@ import {
   Crown,
   LogOut,
   Building2,
+  X,
 } from 'lucide-react'
 
 const navigation = [
@@ -25,7 +26,12 @@ const navigation = [
   { name: 'Analiz ve Raporlar', href: '/analysis', icon: BarChart3, color: 'text-indigo-500' },
 ]
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen?: boolean
+  onClose?: () => void
+}
+
+export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
   const pathname = usePathname()
   const { user, logout } = useUser()
 
@@ -33,28 +39,68 @@ export default function Sidebar() {
     await logout()
   }
 
+  const handleLinkClick = () => {
+    // Mobilde link'e tıklayınca sidebar'ı kapat
+    if (onClose) {
+      onClose()
+    }
+  }
+
   return (
-    <div className="flex h-screen w-72 flex-col bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl">
+    <>
+      {/* Backdrop Overlay - Sadece mobilde ve sidebar açıkken */}
+      {isOpen && onClose && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Sidebar */}
+      <div
+        className={`
+          fixed lg:static inset-y-0 left-0 z-50
+          flex h-screen w-72 flex-col 
+          bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl
+          transform transition-transform duration-300 ease-in-out
+          ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        `}
+      >
       {/* Logo ve Başlık - Dashboard'a Yönlendirme */}
       <div className="shrink-0 border-b border-slate-700/50">
-        <Link
-          href="/dashboard"
-          className="flex h-20 items-center justify-center bg-gradient-to-r from-blue-600/20 to-purple-600/20 hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-200 group cursor-pointer"
-        >
-          <div className="flex items-center space-x-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg group-hover:scale-110 transition-transform">
-              <span className="text-3xl font-bold text-white">₺</span>
+        <div className="relative">
+          {/* Close Button - Sadece mobilde */}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="absolute right-4 top-6 lg:hidden z-10 p-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 transition-colors"
+              aria-label="Close menu"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          )}
+
+          <Link
+            href="/dashboard"
+            onClick={handleLinkClick}
+            className="flex h-20 items-center justify-center bg-gradient-to-r from-blue-600/20 to-purple-600/20 hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-200 group cursor-pointer"
+          >
+            <div className="flex items-center space-x-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg group-hover:scale-110 transition-transform">
+                <span className="text-3xl font-bold text-white">₺</span>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent group-hover:from-blue-300 group-hover:to-purple-300 transition-all">
+                  GiderSE-Gelir
+                </h1>
+                <p className="text-xs text-slate-400 group-hover:text-slate-300 transition-colors">
+                  Finans Yönetimi
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent group-hover:from-blue-300 group-hover:to-purple-300 transition-all">
-                GiderSE-Gelir
-              </h1>
-              <p className="text-xs text-slate-400 group-hover:text-slate-300 transition-colors">
-                Finans Yönetimi
-              </p>
-            </div>
-          </div>
-        </Link>
+          </Link>
+        </div>
 
         {/* Kullanıcı Plan Bilgisi */}
         {user && (
@@ -62,6 +108,7 @@ export default function Sidebar() {
             {user.plan === 'premium' || user.plan === 'enterprise' ? (
               <Link
                 href="/premium-features"
+                onClick={handleLinkClick}
                 className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 shadow-lg hover:from-yellow-500/30 hover:to-amber-500/30 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-pointer group"
               >
                 <Crown className="h-4 w-4 text-yellow-400 animate-pulse group-hover:animate-bounce" />
@@ -85,6 +132,7 @@ export default function Sidebar() {
         <div className="mx-6 my-4 shrink-0">
           <Link
             href="/premium"
+            onClick={handleLinkClick}
             className="block p-4 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-xl border border-purple-500/30 hover:from-purple-600/30 hover:to-pink-600/30 transition-all duration-200 group"
           >
             <div className="flex items-center space-x-3">
@@ -125,6 +173,7 @@ export default function Sidebar() {
             <Link
               key={item.name}
               href={item.href}
+              onClick={handleLinkClick}
               className={`group flex items-center space-x-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
                 isActive
                   ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white shadow-lg border border-blue-500/30'
@@ -154,6 +203,7 @@ export default function Sidebar() {
         <div className="space-y-2">
           <Link
             href="/settings"
+            onClick={handleLinkClick}
             className="flex items-center space-x-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition-all duration-200 hover:bg-slate-700/50 hover:text-white"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-700/50">
@@ -173,6 +223,7 @@ export default function Sidebar() {
           </button>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }

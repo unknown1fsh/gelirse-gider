@@ -89,22 +89,22 @@ export default function TransactionsPage() {
     fetchTransactions()
   }, [])
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">İşlemler</h1>
-          <p className="text-muted-foreground">Gelir ve gider işlemlerinizi yönetin</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">İşlemler</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">Gelir ve gider işlemlerinizi yönetin</p>
         </div>
         <Link
           href="/transactions/new"
-          className="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          className="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 whitespace-nowrap"
         >
           <Plus className="mr-2 h-4 w-4" />
           Yeni İşlem
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <Link href="/transactions/new-income">
           <Card className="hover:shadow-md transition-shadow cursor-pointer border-green-200 hover:border-green-400">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-green-50">
@@ -197,25 +197,25 @@ export default function TransactionsPage() {
                         <p className="text-sm text-slate-600 mb-2">{transaction.description}</p>
                       )}
 
-                      <div className="flex items-center gap-4 text-xs text-slate-500">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-slate-500">
                         <div className="flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
-                          {new Date(transaction.transactionDate).toLocaleDateString('tr-TR')}
+                          <span className="whitespace-nowrap">{new Date(transaction.transactionDate).toLocaleDateString('tr-TR')}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Tag className="h-3 w-3" />
-                          {transaction.paymentMethod.name}
+                          <span>{transaction.paymentMethod.name}</span>
                         </div>
                         {transaction.account && (
                           <div className="flex items-center gap-1">
                             <Wallet className="h-3 w-3" />
-                            {transaction.account.name}
+                            <span className="truncate max-w-[120px]">{transaction.account.name}</span>
                           </div>
                         )}
                         {transaction.creditCard && (
                           <div className="flex items-center gap-1">
                             <CreditCard className="h-3 w-3" />
-                            {transaction.creditCard.name}
+                            <span className="truncate max-w-[120px]">{transaction.creditCard.name}</span>
                           </div>
                         )}
                       </div>
