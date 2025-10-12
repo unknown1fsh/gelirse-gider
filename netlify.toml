@@ -1,7 +1,7 @@
 # Netlify Configuration for Next.js
 [build]
-  # Build command
-  command = "npm run build:netlify"
+  # Build command (Netlify otomatik npm install yapar)
+  command = "prisma generate && prisma migrate deploy && npm run build"
   
   # Publish directory (Next.js output)
   publish = ".next"
@@ -10,20 +10,8 @@
   # Node version
   NODE_VERSION = "18"
   
-  # Enable Next.js 13+ features
-  NEXT_TELEMETRY_DISABLED = "1"
-
-# Production context
-[context.production]
-  command = "prisma generate && prisma migrate deploy && npm run build"
-
-# Deploy Preview context (for Pull Requests)
-[context.deploy-preview]
-  command = "prisma generate && prisma migrate deploy && npm run build"
-
-# Branch deploy context
-[context.branch-deploy]
-  command = "prisma generate && prisma migrate deploy && npm run build"
+  # NPM install options - include devDependencies for build
+  NPM_FLAGS = "--legacy-peer-deps"
 
 # Next.js kendi routing'ini yapar, redirects'e gerek yok
 

@@ -27,7 +27,6 @@
     "test:api:enterprise-premium": "npx tsx tests/run-all-tests-enterprise-premium.ts",
     "test:coverage": "vitest run --coverage",
     "e2e": "playwright test",
-    "prepare": "husky install",
     "validate": "npm run typecheck && npm run lint:check && npm run format:check",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
