@@ -39,13 +39,13 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 
-USER nextjs
-
 EXPOSE 3000
 
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-# Run migrations on startup then start Next.js
-CMD npx prisma migrate deploy && npm start
+USER nextjs
+
+# Just start the app - migrations run separately if needed
+CMD ["npm", "start"]
 
