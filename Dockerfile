@@ -22,4 +22,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Start - Railway PORT env variable'ını kullan
-CMD sh -c "next start -H 0.0.0.0 -p ${PORT:-3000}"
+CMD npx next start -H 0.0.0.0 -p 3000
