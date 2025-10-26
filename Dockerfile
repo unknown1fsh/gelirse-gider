@@ -43,5 +43,5 @@ ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
 # Run migrations on startup
-CMD npx prisma migrate deploy && node server.js
+CMD npx prisma migrate deploy && node .next/standalone/server.js
 
