@@ -4,17 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Eye,
-  EyeOff,
-  ArrowLeft,
-  Mail,
-  Lock,
-  AlertCircle,
-  CheckCircle,
-  Loader2,
-  Crown,
-} from 'lucide-react'
+import { Eye, EyeOff, ArrowLeft, Mail, Lock, AlertCircle, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 
 export default function LoginPage() {
@@ -192,53 +182,6 @@ export default function LoginPage() {
             </div>
           </CardContent>
         </Card>
-
-        {/* Demo Accounts Info */}
-        <div className="mt-6 space-y-3">
-          <div className="p-4 bg-blue-500/20 border border-blue-500/30 rounded-lg">
-            <div className="flex items-start space-x-3">
-              <CheckCircle className="h-5 w-5 text-blue-400 mt-0.5" />
-              <div>
-                <p className="text-blue-400 font-medium text-sm">Premium Demo</p>
-                <p className="text-blue-300 text-xs mt-1">demo@giderse.com / demo123</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-4 bg-green-500/20 border border-green-500/30 rounded-lg">
-            <div className="flex items-start space-x-3">
-              <CheckCircle className="h-5 w-5 text-green-400 mt-0.5" />
-              <div>
-                <p className="text-green-400 font-medium text-sm">Ücretsiz Demo</p>
-                <p className="text-green-300 text-xs mt-1">free@giderse.com / free123</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-4 bg-emerald-500/20 border border-emerald-500/30 rounded-lg">
-            <div className="flex items-start space-x-3">
-              <CheckCircle className="h-5 w-5 text-emerald-400 mt-0.5" />
-              <div>
-                <p className="text-emerald-400 font-medium text-sm">Kurumsal Demo</p>
-                <p className="text-emerald-300 text-xs mt-1">
-                  enterprise@giderse.com / enterprise123
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-4 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 rounded-lg">
-            <div className="flex items-start space-x-3">
-              <Crown className="h-5 w-5 text-amber-400 mt-0.5" />
-              <div>
-                <p className="text-amber-400 font-medium text-sm">Ultra Premium Demo</p>
-                <p className="text-amber-300 text-xs mt-1">
-                  enterprise-premium@giderse.com / ultra123
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   )
