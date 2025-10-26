@@ -12,9 +12,13 @@ RUN npm ci --ignore-scripts && npx prisma generate
 
 # Rebuild the source code only when needed
 FROM base AS builder
+RUN apk add --no-cache openssl openssl-dev libc6-compat
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Generate Prisma Client again for standalone build
+RUN npx prisma generate
 
 # Build Next.js
 RUN npm run build
