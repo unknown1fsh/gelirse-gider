@@ -28,6 +28,15 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# Install OpenSSL for Prisma
+RUN apk add --no-cache openssl openssl-dev libc6-compat
+
+# Copy Prisma schema and install Prisma CLI
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+RUN npm install -g prisma@latest
+
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
