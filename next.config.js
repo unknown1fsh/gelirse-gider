@@ -4,6 +4,11 @@ const nextConfig = {
   // output: 'standalone',
 
   serverExternalPackages: ['@prisma/client'],
+  
+  // Railway için
+  env: {
+    PORT: process.env.PORT || '3000',
+  },
 
   typescript: {
     // Production build için TypeScript hatalarını ignore et (geliştirme devam ediyor)
@@ -30,6 +35,13 @@ const nextConfig = {
   // Production optimizations
   compress: true,
   poweredByHeader: false,
+  
+  // Railway için SSL bypass
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
 
   // Headers for security
   async headers() {

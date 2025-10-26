@@ -18,8 +18,8 @@ COPY . .
 # Build
 RUN npm run build
 
-# Expose port
+# Expose port  
 EXPOSE 3000
 
-# Start
-CMD ["npm", "start"]
+# Start - Railway PORT env variable'ını kullan
+CMD sh -c "next start -H 0.0.0.0 -p ${PORT:-3000}"
