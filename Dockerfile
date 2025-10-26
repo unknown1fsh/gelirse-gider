@@ -17,9 +17,6 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Generate Prisma Client again for standalone build
-RUN npx prisma generate
-
 # Build Next.js
 RUN npm run build
 
@@ -35,15 +32,12 @@ RUN adduser --system --uid 1001 nextjs
 # Install OpenSSL for Prisma
 RUN apk add --no-cache openssl openssl-dev libc6-compat
 
-# Copy Prisma schema and install Prisma CLI
+# Copy necessary files
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-RUN npm install -g prisma@latest
-
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 
 USER nextjs
 
@@ -52,6 +46,6 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-# Run migrations on startup
-CMD npx prisma migrate deploy && node .next/standalone/server.js
+# Run migrations on startup then start Next.js
+CMD npx prisma migrate deploy && npm start
 

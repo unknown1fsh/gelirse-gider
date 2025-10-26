@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Railway/Production için standalone output
-  output: 'standalone',
+  // Standalone mode devre dışı - normal build kullanıyoruz
+  // output: 'standalone',
 
   serverExternalPackages: ['@prisma/client'],
 
