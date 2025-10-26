@@ -41,11 +41,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 
 EXPOSE 3000
 
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
-
 USER nextjs
 
-# Just start the app - migrations run separately if needed
+# Just start the app - migrations run separately if needed  
 CMD ["npm", "start"]
 
