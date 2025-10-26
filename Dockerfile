@@ -3,15 +3,12 @@ FROM node:18-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat openssl1.1-compat
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
-RUN npm ci
-
-# Generate Prisma Client
 COPY prisma ./prisma
-RUN npx prisma generate
+RUN npm ci --ignore-scripts && npx prisma generate
 
 # Rebuild the source code only when needed
 FROM base AS builder
