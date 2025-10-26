@@ -37,12 +37,10 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder /app/.next ./.next
 
 EXPOSE 3000
 
-USER nextjs
-
-# Just start the app - migrations run separately if needed  
-CMD ["npm", "start"]
+# Start the app as root (simpler for Railway)
+CMD npm start
 
