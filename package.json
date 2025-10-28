@@ -32,7 +32,9 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
     "migrate:periods": "tsx scripts/migrate-to-periods.ts",
-    "check-db": "npx tsx scripts/verify-free-user.ts"
+    "check-db": "npx tsx scripts/verify-free-user.ts",
+    "db:migrate:deploy": "prisma generate && prisma migrate deploy",
+    "db:backfill": "tsx scripts/backfill-ref-from-parameters.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",

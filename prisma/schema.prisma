@@ -260,7 +260,7 @@ model Period {
   id          Int      @id @default(autoincrement())
   userId      Int      @map("user_id")
   name        String   @db.VarChar(100) // "2024 Yılı", "Ocak 2024", "Q1 2024" vb.
-  periodType  String   @db.VarChar(20) // YEARLY, FISCAL_YEAR, MONTHLY, CUSTOM
+  periodType  String   @map("period_type") @db.VarChar(20) // YEARLY, FISCAL_YEAR, MONTHLY, CUSTOM
   startDate   DateTime @map("start_date") @db.Date
   endDate     DateTime @map("end_date") @db.Date
   isClosed    Boolean  @default(false) @map("is_closed")
