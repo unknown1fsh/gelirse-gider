@@ -86,4 +86,49 @@ CREATE TABLE IF NOT EXISTS ref_payment_method (
 
 -- 5) period.period_type kolonu zaten mevcut; Prisma eşlemesi düzeltildi
 
+-- 6) transaction.tx_date -> transaction_date kolonu uyumu
+DO $$
+BEGIN
+  -- transaction_date kolonu yoksa oluştur
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'transaction' AND column_name = 'transaction_date'
+  ) THEN
+    -- Mevcut tx_date varsa transaction_date'e kopyala
+    IF EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'transaction' AND column_name = 'tx_date'
+    ) THEN
+      ALTER TABLE transaction 
+        ADD COLUMN transaction_date DATE DEFAULT CURRENT_DATE;
+      UPDATE transaction 
+        SET transaction_date = tx_date 
+        WHERE transaction_date IS NULL;
+    ELSE
+      ALTER TABLE transaction 
+        ADD COLUMN transaction_date DATE NOT NULL DEFAULT CURRENT_DATE;
+    END IF;
+  END IF;
+  
+  -- Eski tx_date kolonunu kaldır (varsa)
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'transaction' AND column_name = 'tx_date'
+  ) THEN
+    ALTER TABLE transaction DROP COLUMN tx_date;
+  END IF;
+END $$;
+
+-- 7) period.is_closed kolonu (varsa atla, yoksa ekle)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'period' AND column_name = 'is_closed'
+  ) THEN
+    ALTER TABLE period 
+      ADD COLUMN is_closed BOOLEAN NOT NULL DEFAULT false;
+  END IF;
+END $$;
+
 
