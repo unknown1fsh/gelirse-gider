@@ -184,7 +184,7 @@ Tümü 401 dönüyor (login başarısız olduğu için - beklenen davranış)
 ### Database
 
 ```env
-DATABASE_URL="postgresql://postgres:PASSWORD@localhost:5432/gelirse_gider_test"
+DATABASE_URL="postgresql://postgres:PASSWORD@localhost:5432/giderse_gelir_test"
 ```
 
 ### JWT
@@ -280,7 +280,7 @@ Her endpoint için test et:
 postman/collection.json
 
 # Environment seç
-GelirseGider - Local
+GiderseGelir - Local
 
 # Test akışı:
 1. Auth → Register → Yeni user

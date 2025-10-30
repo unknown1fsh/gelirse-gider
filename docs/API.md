@@ -1,4 +1,4 @@
-# 📡 GelirseGider - API Dokümantasyonu
+# 📡 GiderseGelir - API Dokümantasyonu
 
 ## Base URL
 

@@ -1,4 +1,4 @@
-# 🏛️ GelirseGider - Mimari Dokümantasyon
+# 🏛️ GiderseGelir - Mimari Dokümantasyon
 
 ## 📋 İçindekiler
 
@@ -14,7 +14,7 @@
 
 ## 🎯 Genel Bakış
 
-GelirseGider, Spring Framework tarzında **katmanlı mimari** prensiplerine göre tasarlanmış modern bir Next.js uygulamasıdır. Clean Code ve SOLID prensiplerini takip eder.
+GiderseGelir, Spring Framework tarzında **katmanlı mimari** prensiplerine göre tasarlanmış modern bir Next.js uygulamasıdır. Clean Code ve SOLID prensiplerini takip eder.
 
 ### Mimari Prensipleri
 
