@@ -24,7 +24,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         userId: user.id,
       },
       include: {
-        periodClosing: true,
         _count: {
           select: {
             transactions: true,

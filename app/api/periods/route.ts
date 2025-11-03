@@ -22,7 +22,6 @@ export async function GET(request: NextRequest) {
         { startDate: 'desc' }, // Tarih sırasına göre
       ],
       include: {
-        periodClosing: true,
         _count: {
           select: {
             transactions: true,
