@@ -1,6 +1,6 @@
-# Postman Collection - GelirseGider API
+# Postman Collection - GiderseGelir API
 
-Bu klasör GelirseGider API'si için Postman koleksiyonunu içerir.
+Bu klasör GiderseGelir API'si için Postman koleksiyonunu içerir.
 
 ## 📦 İçerik
 
@@ -18,7 +18,7 @@ Bu klasör GelirseGider API'si için Postman koleksiyonunu içerir.
 
 ### 2. Environment Ayarlama
 
-1. Postman'de sağ üst köşedeki environment dropdown'dan "GelirseGider - Local" seçin
+1. Postman'de sağ üst köşedeki environment dropdown'dan "GiderseGelir - Local" seçin
 2. `baseUrl` varsayılan olarak `http://localhost:3000/api` ayarlıdır
 3. `authToken` otomatik olarak login sonrası set edilir
 
@@ -116,7 +116,7 @@ baseUrl: http://localhost:3000/api
 ### Production (Manuel eklenebilir)
 
 ```
-baseUrl: https://api.gelirse-gider.com
+baseUrl: https://api.giderse-gelir.com
 ```
 
 ## 🐛 Hata Durumları

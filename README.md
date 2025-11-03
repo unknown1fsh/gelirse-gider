@@ -54,7 +54,7 @@ cp scripts/railway.env.example .env
 Dosyayı düzenleyin:
 
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/gelirse_gider"
+DATABASE_URL="postgresql://user:password@localhost:5432/giderse_gelir"
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your-secret-key-here"
 ```

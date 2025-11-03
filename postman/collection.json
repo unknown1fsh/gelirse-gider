@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "GelirseGider API",
+    "name": "GiderseGelir API",
     "description": "Kişisel finans yönetim sistemi API koleksiyonu",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "1"
