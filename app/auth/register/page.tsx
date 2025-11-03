@@ -102,7 +102,7 @@ export default function RegisterPage() {
     {
       id: 'premium',
       name: 'Premium',
-      price: '29',
+      price: '250',
       description: 'Tüm özellikler',
       features: ['Sınırsız işlem', 'Gelişmiş analizler', 'Öncelikli destek', 'Veri dışa aktarma'],
       popular: true,
