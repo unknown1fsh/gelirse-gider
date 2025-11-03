@@ -191,5 +191,5 @@ MIT License - Detaylar için [LICENSE](LICENSE) dosyasına bakın.
 
 ---
 
-**Versiyon:** 2.1.1  
-**Son Güncelleme:** 2025-01-XX
+**Versiyon:** 2.1.2  
+**Son Güncelleme:** 2025-01-26
