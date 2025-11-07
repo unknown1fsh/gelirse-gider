@@ -1,4 +1,4 @@
-# GiderSE-Gelir
+# Giderse-Gelir
 
 Modern ve kapsamlı finansal gelir-gider yönetim platformu.
 
