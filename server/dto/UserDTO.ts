@@ -11,6 +11,7 @@ export class UserDTO extends BaseDTO {
   phone?: string
   avatar?: string
   plan: string
+  role: string
   isActive: boolean
   createdAt: Date
   lastLoginAt?: Date
@@ -22,6 +23,7 @@ export class UserDTO extends BaseDTO {
     phone?: string
     avatar?: string
     plan: string
+    role: string
     isActive: boolean
     createdAt: Date
     lastLoginAt?: Date
@@ -33,6 +35,7 @@ export class UserDTO extends BaseDTO {
     this.phone = data.phone
     this.avatar = data.avatar
     this.plan = data.plan
+    this.role = data.role
     this.isActive = data.isActive
     this.createdAt = data.createdAt
     this.lastLoginAt = data.lastLoginAt

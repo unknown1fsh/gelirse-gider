@@ -5,7 +5,9 @@
   "scripts": {
     "postinstall": "prisma generate",
     "dev": "next dev",
-    "dev:db": "prisma migrate dev --name init || true && tsx prisma/seed.ts",
+    "dev:migrate": "prisma migrate dev --name init",
+    "dev:seed": "tsx prisma/seed.ts",
+    "dev:db": "node scripts/dev-db.js",
     "dev:full": "npm-run-all -p dev:db dev",
     "build": "next build",
     "build:railway": "npx prisma generate && next build",
@@ -64,15 +66,16 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.303.0",
     "next": "15.0.3",
+    "prisma": "^5.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.48.2",
     "recharts": "^2.8.0",
+    "resend": "^3.5.0",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "xlsx": "^0.18.5",
-    "zod": "^3.22.4",
-    "prisma": "^5.7.1"
+    "zod": "^3.22.4"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

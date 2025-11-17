@@ -1,39 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentUser } from '@/lib/auth-refactored'
 import { PrismaClient } from '@prisma/client'
+import { createPaymentLink } from '@/lib/paytr'
+import { ExceptionMapper } from '@/server/errors'
+import { BadRequestError } from '@/server/errors'
 
 const prisma = new PrismaClient()
 
-export async function POST(request: NextRequest) {
-  try {
-    const user = await getCurrentUser(request)
+// Bu metot subscription upgrade işlemini başlatır.
+// Premium/Enterprise planlar için PayTR ödeme linki oluşturur
+// Free plan için direkt aktif eder
+export const POST = ExceptionMapper.asyncHandler(async (request: NextRequest) => {
+  const user = await getCurrentUser(request)
 
-    if (!user) {
-      return NextResponse.json({ success: false, message: 'Oturum bulunamadı' }, { status: 401 })
-    }
+  if (!user) {
+    throw new BadRequestError('Oturum bulunamadı')
+  }
 
-    const { planId, paymentMethod } = await request.json()
+  const { planId } = await request.json()
 
-    // Validation
-    if (!planId) {
-      return NextResponse.json({ success: false, message: 'Plan ID gerekli' }, { status: 400 })
-    }
+  // Validation
+  if (!planId) {
+    throw new BadRequestError('Plan ID gerekli')
+  }
 
-    // Plan kontrolü
-    const validPlans = ['free', 'premium', 'enterprise']
-    if (!validPlans.includes(planId)) {
-      return NextResponse.json({ success: false, message: 'Geçersiz plan' }, { status: 400 })
-    }
+  // Plan kontrolü
+  const validPlans = ['free', 'premium', 'enterprise']
+  if (!validPlans.includes(planId)) {
+    throw new BadRequestError('Geçersiz plan')
+  }
 
-    // Plan fiyatları
-    const planPrices: { [key: string]: number } = {
-      free: 0,
-      premium: 250,
-      enterprise: 450,
-    }
+  // Plan fiyatları
+  const planPrices: { [key: string]: number } = {
+    free: 0,
+    premium: 250,
+    enterprise: 450,
+  }
 
-    const amount = planPrices[planId]
+  const amount = planPrices[planId]
 
+  // Free plan için direkt aktif et
+  if (planId === 'free') {
     // Mevcut aktif aboneliği kontrol et
     const existingSubscription = await prisma.userSubscription.findFirst({
       where: {
@@ -45,7 +52,7 @@ export async function POST(request: NextRequest) {
 
     // Yeni abonelik oluştur
     const startDate = new Date()
-    const endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 gün
+    const endDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 yıl
 
     const subscription = await prisma.userSubscription.create({
       data: {
@@ -56,9 +63,9 @@ export async function POST(request: NextRequest) {
         endDate,
         amount,
         currency: 'TRY',
-        paymentMethod: paymentMethod || 'credit_card',
+        paymentMethod: 'free',
         transactionId: `txn_${Date.now()}_${user.id}`,
-        autoRenew: planId !== 'free',
+        autoRenew: false,
       },
     })
 
@@ -73,15 +80,9 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Kullanıcının plan bilgisini güncelle
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { plan: planId },
-    })
-
     return NextResponse.json({
       success: true,
-      message: 'Plan başarıyla yükseltildi',
+      message: 'Free plan aktif edildi',
       subscription: {
         id: subscription.id,
         planId: subscription.planId,
@@ -92,8 +93,32 @@ export async function POST(request: NextRequest) {
         currency: subscription.currency,
       },
     })
-  } catch (error) {
-    console.error('Upgrade subscription error:', error)
-    return NextResponse.json({ success: false, message: 'Sunucu hatası' }, { status: 500 })
   }
-}
+
+  // Premium/Enterprise planlar için PayTR ödeme linki oluştur
+  // Email doğrulama kontrolü
+  if (!user.emailVerified) {
+    throw new BadRequestError('Ödeme yapmak için e-posta adresinizi doğrulamanız gerekiyor')
+  }
+
+  const paymentResult = await createPaymentLink({
+    email: user.email,
+    name: user.name,
+    amount,
+    planId,
+    userId: user.id,
+    description: `${planId} plan abonelik ücreti`,
+  })
+
+  if (!paymentResult.success || !paymentResult.paymentUrl) {
+    console.error('PayTR payment link creation failed:', paymentResult.error)
+    throw new BadRequestError(paymentResult.error || 'Ödeme linki oluşturulamadı')
+  }
+
+  return NextResponse.json({
+    success: true,
+    message: 'Ödeme linki oluşturuldu',
+    paymentUrl: paymentResult.paymentUrl,
+    paymentLinkId: paymentResult.paymentLinkId,
+  })
+})

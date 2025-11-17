@@ -53,6 +53,13 @@ export default function RegisterPage() {
       return
     }
 
+    // Frontend şifre validasyonu
+    if (formData.password.length < 8) {
+      setError('Şifre en az 8 karakter olmalıdır')
+      setIsLoading(false)
+      return
+    }
+
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
@@ -68,15 +75,30 @@ export default function RegisterPage() {
         }),
       })
 
-      const data = (await response.json()) as { success?: boolean; message?: string }
+      const data = (await response.json()) as {
+        success?: boolean
+        message?: string
+        error?: string
+        errorCode?: string
+      }
+
+      if (!response.ok) {
+        // API'den gelen hata mesajını al
+        // BaseError.toJSON() formatı: { error: message, errorCode, statusCode }
+        const errorMessage = data.error || data.message || 'Kayıt olurken bir hata oluştu'
+        setError(errorMessage)
+        setIsLoading(false)
+        return
+      }
 
       if (data.success) {
         // Başarılı kayıt sonrası dashboard'a yönlendir (full page reload ile context'leri yenile)
         window.location.href = '/dashboard'
       } else {
-        setError(data.message || 'Kayıt olurken bir hata oluştu')
+        setError(data.message || data.error || 'Kayıt olurken bir hata oluştu')
       }
     } catch (err) {
+      console.error('Register error:', err)
       setError('Kayıt olurken bir hata oluştu. Lütfen tekrar deneyin.')
     } finally {
       setIsLoading(false)
@@ -255,7 +277,9 @@ export default function RegisterPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300">Şifre</label>
+                  <label className="text-sm font-medium text-slate-300">
+                    Şifre <span className="text-slate-500 text-xs">(en az 8 karakter)</span>
+                  </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                     <Input
@@ -263,7 +287,8 @@ export default function RegisterPage() {
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      placeholder="Şifrenizi girin"
+                      placeholder="En az 8 karakter"
+                      minLength={8}
                       className="pl-10 pr-10 bg-white/5 border-white/20 text-white placeholder:text-slate-400 focus:border-purple-500"
                       required
                     />

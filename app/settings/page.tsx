@@ -386,13 +386,54 @@ export default function SettingsPage() {
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-slate-700">E-posta</label>
-                      <Input
-                        type="email"
-                        value={settings.email}
-                        onChange={e => setSettings({ ...settings, email: e.target.value })}
-                        placeholder="E-posta adresinizi girin"
-                        className="border-slate-200 focus:border-blue-500"
-                      />
+                      <div className="space-y-2">
+                        <Input
+                          type="email"
+                          value={settings.email}
+                          onChange={e => setSettings({ ...settings, email: e.target.value })}
+                          placeholder="E-posta adresinizi girin"
+                          className="border-slate-200 focus:border-blue-500"
+                        />
+                        {user && (
+                          <div className="flex items-center gap-2">
+                            {user.emailVerified ? (
+                              <div className="flex items-center gap-1 text-sm text-green-600">
+                                <CheckCircle className="h-4 w-4" />
+                                <span>E-posta doğrulanmış</span>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-1 text-sm text-yellow-600">
+                                  <AlertTriangle className="h-4 w-4" />
+                                  <span>E-posta doğrulanmamış</span>
+                                </div>
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={async () => {
+                                    if (!user.email) return
+                                    const response = await fetch('/api/auth/resend-verification', {
+                                      method: 'POST',
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({ email: user.email }),
+                                    })
+                                    const data = await response.json()
+                                    if (response.ok && data.success) {
+                                      alert('Doğrulama e-postası gönderildi. Lütfen e-posta kutunuzu kontrol edin.')
+                                    } else {
+                                      alert(data.message || 'E-posta gönderilemedi')
+                                    }
+                                  }}
+                                  className="text-xs"
+                                >
+                                  Doğrulama E-postası Gönder
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-slate-700">Telefon</label>

@@ -4,13 +4,24 @@ import { prisma } from '@/lib/prisma'
 import { AuthService } from '@/server/services/impl/AuthService'
 import { LoginUserDTO } from '@/server/dto/UserDTO'
 import { ExceptionMapper } from '@/server/errors'
-import { BadRequestError } from '@/server/errors'
+import { BadRequestError, TooManyRequestsError } from '@/server/errors'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
 // Bu metot kullanıcı girişi yapar (POST).
 // Girdi: NextRequest (JSON body: email, password)
 // Çıktı: NextResponse (user + session + token)
-// Hata: 400, 401, 500
+// Hata: 400, 401, 429, 500
 export const POST = ExceptionMapper.asyncHandler(async (request: NextRequest) => {
+  // Rate limiting kontrolü
+  const clientIp = getClientIp(request)
+  const rateLimit = checkRateLimit(`login:${clientIp}`, 5, 60000) // 5 istek/dakika
+
+  if (!rateLimit.allowed) {
+    throw new TooManyRequestsError(
+      `Çok fazla giriş denemesi. Lütfen ${Math.ceil((rateLimit.resetTime - Date.now()) / 1000)} saniye sonra tekrar deneyin.`
+    )
+  }
+
   const { email, password } = await request.json()
 
   if (!email || !password) {

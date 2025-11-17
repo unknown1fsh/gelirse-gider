@@ -6,37 +6,97 @@ Railway dashboard → Your Project → Variables → Add Environment Variable
 
 ## 📋 Ekleyeceğiniz Değişkenler
 
-### 1. NEXTAUTH_URL
+### Zorunlu Variables
+
+#### 1. DATABASE_URL (Otomatik)
+
+Railway PostgreSQL service eklendiğinde otomatik eklenir.
+
+#### 2. NEXTAUTH_URL
 
 ```
 Key: NEXTAUTH_URL
-Value: https://giderse-gelir.up.railway.app
+Value: https://your-app.railway.app
 ```
 
-### 2. NEXTAUTH_SECRET
+#### 3. NEXTAUTH_SECRET
 
 ```
 Key: NEXTAUTH_SECRET
-Value: ikOmXJxNqS1YZXX7qyYYLVmicURJXSZDDoa58j8Mw0w=
+Value: your-32-character-secret-key-here
 ```
 
-### 3. NODE_ENV
+**Oluşturma:**
+```bash
+npm run generate:secret
+```
+
+#### 4. NODE_ENV
 
 ```
 Key: NODE_ENV
 Value: production
 ```
 
-### 4. NEXT_PUBLIC_APP_URL
+#### 5. NEXT_PUBLIC_APP_URL
 
 ```
 Key: NEXT_PUBLIC_APP_URL
-Value: https://giderse-gelir.up.railway.app
+Value: https://your-app.railway.app
 ```
 
-### 5. DATABASE_URL (Otomatik)
+#### 6. JWT_SECRET
 
-Railway PostgreSQL service eklendiğinde otomatik eklenir.
+```
+Key: JWT_SECRET
+Value: your-super-secret-jwt-key-change-in-production-minimum-32-characters
+```
+
+**Oluşturma:**
+```bash
+npm run generate:secret
+```
+
+### Email Service (Resend)
+
+#### 7. RESEND_API_KEY
+
+```
+Key: RESEND_API_KEY
+Value: re_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+**Kayıt:** https://resend.com
+
+### PayTR Payment Gateway
+
+#### 8. PAYTR_MERCHANT_ID
+
+```
+Key: PAYTR_MERCHANT_ID
+Value: your-merchant-id
+```
+
+#### 9. PAYTR_MERCHANT_KEY
+
+```
+Key: PAYTR_MERCHANT_KEY
+Value: your-merchant-key
+```
+
+#### 10. PAYTR_MERCHANT_SALT
+
+```
+Key: PAYTR_MERCHANT_SALT
+Value: your-merchant-salt
+```
+
+#### 11. PAYTR_API_URL (Opsiyonel)
+
+```
+Key: PAYTR_API_URL
+Value: https://www.paytr.com/odeme
+```
 
 ## 📝 Adım Adım Kurulum
 

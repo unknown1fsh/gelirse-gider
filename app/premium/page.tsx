@@ -621,7 +621,7 @@ export default function PremiumPage() {
     {
       id: 'ai-analysis',
       title: '🧠 AI & Akıllı Analizler',
-      description: 'Yapay zeka destekli gelişmiş finansal analiz ve öngörüler',
+      description: 'Yapay zeka teknolojisiyle finansal geleceğinizi şekillendirin. Kişiselleştirilmiş öngörüler ve akıllı analizlerle paranızı daha iyi yönetin, tasarruf fırsatlarını kaçırmayın.',
       color: 'from-purple-500 to-pink-600',
       bgColor: 'from-purple-50 to-pink-50',
       borderColor: 'border-purple-200',
@@ -629,25 +629,25 @@ export default function PremiumPage() {
         {
           icon: Brain,
           title: 'AI Finansal Asistan',
-          description: 'Kişiselleştirilmiş finansal öneriler ve akıllı analizler',
+          description: '7/24 yanınızda olan kişisel finansal danışmanınız. Harcama alışkanlıklarınızı analiz eder ve size özel stratejiler sunar.',
           color: 'text-purple-600',
         },
         {
           icon: Bot,
           title: 'Otomatik Kategorileme',
-          description: 'AI ile harcamalarınızı otomatik olarak kategorilere ayırır',
+          description: 'Her harcamanızı anında doğru kategoriye yerleştirir. Manuel işlem yapmadan finansal durumunuzu takip edin.',
           color: 'text-purple-600',
         },
         {
           icon: TrendingUp,
           title: 'Tahmin Modelleri',
-          description: 'Gelecek gelir ve harcama trendlerini öngörür',
+          description: 'Gelecek 3-6 ay için gelir ve harcama tahminleriyle finansal planlamanızı güçlendirin. Beklenmedik durumlara hazırlıklı olun.',
           color: 'text-purple-600',
         },
         {
           icon: Lightbulb,
           title: 'Akıllı Öneriler',
-          description: 'Tasarruf fırsatları ve yatırım önerileri',
+          description: 'Gizli tasarruf fırsatlarını keşfedin ve yatırım önerileriyle paranızın değer kazanmasını sağlayın.',
           color: 'text-purple-600',
         },
       ],
@@ -655,7 +655,7 @@ export default function PremiumPage() {
     {
       id: 'advanced-reporting',
       title: '📊 Gelişmiş Raporlama',
-      description: 'Detaylı finansal raporlar ve görselleştirmeler',
+      description: 'Finansal verilerinizi görselleştirin ve derinlemesine analiz edin. Profesyonel raporlarla finansal durumunuzu her açıdan görün, kararlarınızı veriye dayandırın.',
       color: 'from-blue-500 to-cyan-600',
       bgColor: 'from-blue-50 to-cyan-50',
       borderColor: 'border-blue-200',
@@ -663,25 +663,25 @@ export default function PremiumPage() {
         {
           icon: BarChart3,
           title: 'İnteraktif Grafikler',
-          description: 'Detaylı finansal verilerin görsel analizi',
+          description: 'Tıklayarak detaylarına inebileceğiniz dinamik grafikler. Finansal verilerinizi görsel olarak keşfedin ve anlamlandırın.',
           color: 'text-blue-600',
         },
         {
           icon: PieChart,
           title: 'Harcama Dağılımı',
-          description: 'Kategorilere göre harcama analizi ve dağılımı',
+          description: 'Paranızın nereye gittiğini net bir şekilde görün. Kategori bazlı detaylı analizlerle harcama alışkanlıklarınızı optimize edin.',
           color: 'text-blue-600',
         },
         {
           icon: LineChart,
           title: 'Trend Analizleri',
-          description: 'Zaman bazlı gelir ve harcama trendleri',
+          description: 'Gelir ve harcama trendlerinizi zaman içinde izleyin. Büyüme fırsatlarını yakalayın ve riskleri önceden görün.',
           color: 'text-blue-600',
         },
         {
           icon: FileText,
           title: 'PDF/Excel Raporları',
-          description: 'Profesyonel raporları indirme ve paylaşma',
+          description: 'Muhasebeci, danışman veya banka için hazır profesyonel raporlar. Tek tıkla indirin ve paylaşın.',
           color: 'text-blue-600',
         },
       ],
@@ -689,7 +689,7 @@ export default function PremiumPage() {
     {
       id: 'smart-goals',
       title: '🎯 Akıllı Hedefleme',
-      description: 'Kişiselleştirilmiş finansal hedefler ve takip sistemi',
+      description: 'Hayallerinizi gerçeğe dönüştürün. Akıllı hedef takip sistemiyle tasarruf, yatırım ve finansal bağımsızlık hedeflerinize adım adım ulaşın.',
       color: 'from-orange-500 to-red-600',
       bgColor: 'from-orange-50 to-red-50',
       borderColor: 'border-orange-200',
@@ -697,25 +697,25 @@ export default function PremiumPage() {
         {
           icon: Target,
           title: 'Kişisel Hedefler',
-          description: 'Tasarruf, yatırım ve harcama hedefleri belirleme',
+          description: 'Ev, araba, tatil veya emeklilik için hedefler belirleyin. Sistem sizin için en uygun planı oluşturur ve ilerlemenizi takip eder.',
           color: 'text-orange-600',
         },
         {
           icon: Calendar,
           title: 'Mevsimsel Analiz',
-          description: 'Mevsimsel harcama kalıpları ve öngörüler',
+          description: 'Yaz tatili, bayram alışverişi gibi mevsimsel harcamalarınızı önceden tahmin edin ve bütçenizi buna göre ayarlayın.',
           color: 'text-orange-600',
         },
         {
           icon: Bell,
           title: 'Akıllı Bildirimler',
-          description: 'Hedef ilerlemesi ve bütçe uyarıları',
+          description: 'Hedefinize yaklaştığınızda kutlayın, sapma olduğunda uyarı alın. Her zaman rotada kalın.',
           color: 'text-orange-600',
         },
         {
           icon: Award,
           title: 'Başarı Takibi',
-          description: 'Hedeflere ulaşma oranı ve ödül sistemi',
+          description: 'Her hedefe ulaştığınızda başarı rozetleri kazanın. Motivasyonunuzu yüksek tutun ve finansal başarılarınızı kutlayın.',
           color: 'text-orange-600',
         },
       ],
@@ -723,7 +723,7 @@ export default function PremiumPage() {
     {
       id: 'automation',
       title: '⚡ Otomasyon & Verimlilik',
-      description: 'Otomatik işlemler ve zaman tasarrufu özellikleri',
+      description: 'Finansal işlemlerinizi otomatikleştirin ve zamandan tasarruf edin. Tekrarlayan görevleri sisteme bırakın, siz sadece kararlarınıza odaklanın.',
       color: 'from-green-500 to-emerald-600',
       bgColor: 'from-green-50 to-emerald-50',
       borderColor: 'border-green-200',
@@ -731,25 +731,25 @@ export default function PremiumPage() {
         {
           icon: Activity,
           title: 'Otomatik Takip',
-          description: 'Nakit akışı ve harcamaları otomatik izleme',
+          description: 'Tüm nakit akışınızı ve harcamalarınızı arka planda izler. Hiçbir işlemi kaçırmadan finansal durumunuzu anlık takip edin.',
           color: 'text-green-600',
         },
         {
           icon: Zap,
           title: 'Akıllı Tekrarlar',
-          description: 'Düzenli ödemeleri otomatik tanıma ve kaydetme',
+          description: 'Kira, faturalar, abonelikler gibi düzenli ödemeleri otomatik tanır ve kaydeder. Unutma derdi olmadan rahat edin.',
           color: 'text-green-600',
         },
         {
           icon: Clock,
           title: 'Zaman Tasarrufu',
-          description: 'Günlük finansal işlemleri hızlandırma',
+          description: 'Manuel işlemler yerine otomasyon kullanarak haftada saatlerce zaman kazanın. Finansal yönetimi kolaylaştırın.',
           color: 'text-green-600',
         },
         {
           icon: Settings,
           title: 'Özelleştirilebilir',
-          description: 'İhtiyaçlarınıza göre otomasyon kuralları',
+          description: 'Kendi otomasyon kurallarınızı oluşturun. İhtiyaçlarınıza göre sisteminizi şekillendirin ve maksimum verimlilik sağlayın.',
           color: 'text-green-600',
         },
       ],
@@ -757,7 +757,7 @@ export default function PremiumPage() {
     {
       id: 'premium-support',
       title: '🛡️ Premium Destek',
-      description: 'Öncelikli destek ve premium özellikler',
+      description: 'Premium üyelikle birlikte öncelikli destek, gelişmiş güvenlik ve özel özellikler. Finansal verileriniz güvende, her zaman yanınızdayız.',
       color: 'from-slate-500 to-gray-600',
       bgColor: 'from-slate-50 to-gray-50',
       borderColor: 'border-slate-200',
@@ -765,25 +765,25 @@ export default function PremiumPage() {
         {
           icon: Headphones,
           title: '7/24 Premium Destek',
-          description: 'Öncelikli müşteri hizmetleri ve teknik destek',
+          description: 'Herhangi bir sorunuzda anında yanınızdayız. Öncelikli müşteri hizmetleri ve uzman teknik destek ekibimizle tanışın.',
           color: 'text-slate-600',
         },
         {
           icon: Shield,
           title: 'Gelişmiş Güvenlik',
-          description: 'Premium güvenlik özellikleri ve veri koruma',
+          description: 'Bankacılık seviyesinde şifreleme ve güvenlik protokolleri. Finansal verileriniz en üst düzey koruma altında.',
           color: 'text-slate-600',
         },
         {
           icon: Palette,
           title: 'Premium Tema',
-          description: 'Özel tasarım ve koyu/açık tema seçenekleri',
+          description: 'Göz yormayan koyu mod ve ferah açık tema seçenekleri. Arayüzü kendi zevkinize göre özelleştirin.',
           color: 'text-slate-600',
         },
         {
           icon: Cloud,
           title: 'Bulut Yedekleme',
-          description: 'Otomatik veri yedekleme ve senkronizasyon',
+          description: 'Tüm finansal verileriniz otomatik olarak bulutta yedeklenir. Cihaz değiştirseniz bile verileriniz her zaman erişilebilir.',
           color: 'text-slate-600',
         },
       ],
@@ -855,18 +855,42 @@ export default function PremiumPage() {
     },
   ]
 
-  const handleUpgrade = async () => {
-    if (isAlreadyPremium) {return}
+  const handleUpgrade = async (planId: string = 'premium') => {
+    if (isAlreadyPremium) {
+      return
+    }
 
     setIsProcessing(true)
     try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      const response = await fetch('/api/subscription/upgrade', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ planId }),
+      })
 
-      // Redirect to success page or update user
-      router.push('/dashboard?upgraded=true')
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        // Free plan için direkt dashboard'a git
+        if (planId === 'free') {
+          router.push('/dashboard?upgraded=true')
+          return
+        }
+
+        // Premium/Enterprise için PayTR ödeme linkine yönlendir
+        if (data.paymentUrl) {
+          window.location.href = data.paymentUrl
+        } else {
+          throw new Error('Ödeme linki oluşturulamadı')
+        }
+      } else {
+        alert(data.message || 'Bir hata oluştu. Lütfen tekrar deneyin.')
+      }
     } catch (error) {
       console.error('Upgrade error:', error)
+      alert('Bir hata oluştu. Lütfen tekrar deneyin.')
     } finally {
       setIsProcessing(false)
     }
@@ -966,8 +990,6 @@ export default function PremiumPage() {
                       {category.title.split(' ').slice(1).join(' ')}
                     </span>
                   </div>
-
-                  <h3 className="text-2xl font-bold text-slate-900 mb-4">{category.title}</h3>
 
                   <p className="text-lg text-slate-600 max-w-2xl mx-auto">{category.description}</p>
                 </div>
@@ -1115,14 +1137,22 @@ export default function PremiumPage() {
 
                     {plan.id === 'enterprise' && (
                       <Button
-                        onClick={() => router.push('/enterprise-premium')}
+                        onClick={() => handleUpgrade('enterprise')}
+                        disabled={isProcessing}
                         size="lg"
                         className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300"
                       >
-                        <div className="flex items-center space-x-3">
-                          <Building2 className="h-5 w-5" />
-                          <span>Kurumsal Premium</span>
-                        </div>
+                        {isProcessing ? (
+                          <div className="flex items-center space-x-3">
+                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            <span>İşleniyor...</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center space-x-3">
+                            <Building2 className="h-5 w-5" />
+                            <span>Enterprise'a Yükselt</span>
+                          </div>
+                        )}
                       </Button>
                     )}
 

@@ -74,6 +74,7 @@ export class UserService extends BaseService<UserDTO> {
       theme: 'light',
       notifications: {},
       settings: {},
+      role: 'USER',
       isActive: true,
     })
 

@@ -20,6 +20,7 @@ export class UserEntity extends BaseEntity {
   theme: string
   notifications: Record<string, unknown>
   settings: Record<string, unknown>
+  role: string
   lastLoginAt?: Date
   isActive: boolean
 
@@ -40,6 +41,7 @@ export class UserEntity extends BaseEntity {
     theme: string
     notifications: Record<string, unknown>
     settings: Record<string, unknown>
+    role: string
     lastLoginAt?: Date
     isActive: boolean
     createdAt: Date
@@ -61,6 +63,7 @@ export class UserEntity extends BaseEntity {
     this.theme = data.theme
     this.notifications = data.notifications
     this.settings = data.settings
+    this.role = data.role
     this.lastLoginAt = data.lastLoginAt
     this.isActive = data.isActive
   }

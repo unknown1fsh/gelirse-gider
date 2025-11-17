@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Menu } from 'lucide-react'
 import Sidebar from '@/components/sidebar'
 import PeriodOnboarding from '@/components/period-onboarding'
+import EmailVerificationBanner from '@/components/email-verification-banner'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -36,7 +37,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <Sidebar isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto pt-14 lg:pt-0">{children}</main>
+      <main className="flex-1 overflow-auto pt-14 lg:pt-0">
+        <div className="p-4 lg:p-6">
+          <EmailVerificationBanner />
+          {children}
+        </div>
+      </main>
       
       <PeriodOnboarding />
     </div>

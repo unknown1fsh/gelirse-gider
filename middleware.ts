@@ -16,6 +16,7 @@ const protectedRoutes = [
   '/investments',
   '/beneficiaries',
   '/ewallets',
+  '/admin',
 ]
 
 // Auth rotaları (giriş yapmış kullanıcılar erişemez)
@@ -23,6 +24,17 @@ const authRoutes = ['/auth/login', '/auth/register', '/auth/forgot-password', '/
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+
+  // Production'da HTTPS kontrolü
+  if (process.env.NODE_ENV === 'production') {
+    const protocol = request.headers.get('x-forwarded-proto') || request.nextUrl.protocol
+    if (protocol !== 'https' && !request.nextUrl.hostname.includes('localhost')) {
+      return NextResponse.redirect(
+        new URL(request.url.replace('http://', 'https://'), request.url),
+        { status: 301 }
+      )
+    }
+  }
 
   // Cookie'den token kontrolü (basit)
   const hasToken = hasValidToken(request)

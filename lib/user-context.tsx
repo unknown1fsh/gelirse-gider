@@ -10,6 +10,7 @@ interface User {
   phone?: string
   avatar?: string
   plan: string
+  role: string
   isActive: boolean
   createdAt: Date
   lastLoginAt?: Date

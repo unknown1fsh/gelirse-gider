@@ -16,7 +16,9 @@ import {
   LogOut,
   Building2,
   X,
+  Shield,
 } from 'lucide-react'
+import { UserRole } from '@/server/enums/UserRole'
 
 const navigation = [
   { name: 'Toplam Varlık', href: '/portfolio', icon: PieChart, color: 'text-emerald-500' },
@@ -201,6 +203,32 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
       {/* Alt Kısım - Sabit */}
       <div className="border-t border-slate-700/50 p-6 shrink-0">
         <div className="space-y-2">
+          {user && user.role === UserRole.ADMIN && (
+            <Link
+              href="/admin"
+              onClick={handleLinkClick}
+              className={`flex items-center space-x-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
+                pathname === '/admin'
+                  ? 'bg-gradient-to-r from-red-600/20 to-pink-600/20 text-white shadow-lg border border-red-500/30'
+                  : 'text-slate-300 hover:bg-red-600/20 hover:text-red-400'
+              }`}
+            >
+              <div
+                className={`flex h-8 w-8 items-center justify-center rounded-lg ${
+                  pathname === '/admin'
+                    ? 'bg-gradient-to-br from-red-500 to-pink-600 text-white shadow-md'
+                    : 'bg-slate-700/50'
+                }`}
+              >
+                <Shield className="h-4 w-4" />
+              </div>
+              <span>Admin Paneli</span>
+              {pathname === '/admin' && (
+                <div className="h-2 w-2 rounded-full bg-gradient-to-r from-red-400 to-pink-400"></div>
+              )}
+            </Link>
+          )}
+
           <Link
             href="/settings"
             onClick={handleLinkClick}
