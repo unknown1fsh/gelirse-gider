@@ -16,7 +16,7 @@ RUN npm ci && npx prisma generate
 COPY . .
 
 # Build
-RUN npm run build
+RUN npm run build:railway
 
 # Expose port  
 EXPOSE 3000
