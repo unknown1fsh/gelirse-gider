@@ -39,12 +39,17 @@ export function hasValidToken(request: NextRequest): boolean {
 // Hata: -
 export async function setAuthCookie(token: string, expiresAt: Date): Promise<void> {
   const cookieStore = await cookies()
+  // Railway'da HTTPS kullanıldığı için secure flag'i kontrol et
+  const isProduction = process.env.NODE_ENV === 'production'
+  const isSecure = isProduction || process.env.NEXTAUTH_URL?.startsWith('https://')
+
   cookieStore.set('auth-token', token, {
     expires: expiresAt,
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: isSecure ?? false,
+    sameSite: isSecure ? 'lax' : 'lax',
     path: '/',
+    // Railway için domain ayarı gerekmez (otomatik)
   })
 }
 
