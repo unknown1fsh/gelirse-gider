@@ -17,6 +17,7 @@ import {
   FileText,
   Menu,
   X,
+  ArrowLeft,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -83,6 +84,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               >
                 {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
+              <Link
+                href="/dashboard"
+                className="hidden sm:flex items-center space-x-2 px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors text-slate-700"
+                title="Dashboard'a Dön"
+              >
+                <ArrowLeft className="h-5 w-5" />
+                <span className="font-medium">Dashboard</span>
+              </Link>
               <div className="p-3 rounded-full bg-gradient-to-br from-red-500 to-pink-600 shadow-lg">
                 <Shield className="h-6 w-6 text-white" />
               </div>
@@ -93,15 +102,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => {
-                window.location.reload()
-              }}
-              className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors"
-              title="Yenile"
-            >
-              <RefreshCw className="h-5 w-5 text-slate-700" />
-            </button>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => {
+                  window.location.reload()
+                }}
+                className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors"
+                title="Yenile"
+              >
+                <RefreshCw className="h-5 w-5 text-slate-700" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
