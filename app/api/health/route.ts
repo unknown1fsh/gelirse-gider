@@ -17,9 +17,13 @@ export async function GET() {
     timestamp: new Date().toISOString(),
   }
 
-  // Database bağlantı kontrolü
+  // Database bağlantı kontrolü (timeout ile)
   try {
-    await prisma.$queryRaw`SELECT 1`
+    const dbCheck = Promise.race([
+      prisma.$queryRaw`SELECT 1`,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2000)),
+    ])
+    await dbCheck
     healthStatus.database = 'connected'
   } catch (error) {
     healthStatus.database = 'disconnected'
