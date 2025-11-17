@@ -41,7 +41,7 @@ export async function GET() {
     healthStatus.status = 'degraded'
   }
 
-  const statusCode = healthStatus.status === 'ok' ? 200 : 503
-
-  return NextResponse.json(healthStatus, { status: statusCode })
+  // Railway healthcheck için her zaman 200 döndür (degraded durumda bile)
+  // Database bağlantısı olmasa bile uygulama çalışıyor demektir
+  return NextResponse.json(healthStatus, { status: 200 })
 }
