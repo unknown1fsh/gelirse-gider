@@ -5,6 +5,16 @@ import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { useUser } from '@/lib/user-context'
 import {
   Crown,
@@ -22,606 +32,43 @@ import {
   Lightbulb,
   Bell,
   ArrowLeft,
-  CreditCard,
   Lock,
   Sparkles,
   Building2,
   Bot,
   PieChart,
   LineChart,
-  Download,
-  Upload,
   Settings,
   Palette,
   Headphones,
   Clock,
   Award,
-  Rocket,
-  Eye,
-  Database,
   Cloud,
-  Wifi,
-  Smartphone,
-  Monitor,
-  Laptop,
-  Globe,
-  Users,
-  UserCheck,
-  Mail,
   MessageSquare,
-  Phone,
-  Video,
-  Camera,
-  Mic,
-  Volume2,
-  Play,
-  Pause,
-  Stop,
-  SkipBack,
-  SkipForward,
-  Repeat,
-  Shuffle,
-  Heart,
-  ThumbsUp,
-  ThumbsDown,
-  Smile,
-  Frown,
-  Meh,
-  Angry,
-  Laugh,
-  Cry,
-  Surprised,
-  Wink,
-  Tongue,
-  Kiss,
-  Hug,
-  Hand,
-  Clap,
-  Wave,
-  Point,
-  Fist,
-  Peace,
-  Ok,
-  No,
-  Yes,
-  Maybe,
-  Question,
-  Exclamation,
-  Info,
-  AlertTriangle,
-  AlertCircle,
-  CheckCircle,
-  XCircle,
-  MinusCircle,
-  PlusCircle,
-  Circle,
-  Square,
-  Triangle,
-  Hexagon,
-  Octagon,
-  Pentagon,
-  Moon,
-  Sun,
-  CloudRain,
-  CloudSnow,
-  CloudLightning,
-  Wind,
-  Thermometer,
-  Droplets,
-  Flame,
-  Snowflake,
-  Umbrella,
-  TreePine,
-  TreeDeciduous,
-  Flower,
-  Leaf,
-  Sprout,
-  Bug,
-  Bird,
-  Fish,
-  Turtle,
-  Rabbit,
-  Cat,
-  Dog,
-  Horse,
-  Cow,
-  Pig,
-  Sheep,
-  Goat,
-  Chicken,
-  Duck,
-  Bee,
-  Butterfly,
-  Spider,
-  Ant,
-  Ladybug,
-  Snail,
-  Worm,
-  Frog,
-  Lizard,
-  Snake,
-  Dragon,
-  Unicorn,
-  Phoenix,
-  Pegasus,
-  Mermaid,
-  Fairy,
-  Elf,
-  Dwarf,
-  Giant,
-  Troll,
-  Goblin,
-  Orc,
-  Wizard,
-  Witch,
-  Vampire,
-  Werewolf,
-  Ghost,
-  Zombie,
-  Skeleton,
-  Mummy,
-  Demon,
-  Angel,
-  Devil,
-  God,
-  Goddess,
-  King,
-  Queen,
-  Prince,
-  Princess,
-  Knight,
-  Warrior,
-  Archer,
-  Mage,
-  Priest,
-  Monk,
-  Paladin,
-  Rogue,
-  Assassin,
-  Thief,
-  Bard,
-  Druid,
-  Ranger,
-  Barbarian,
-  Cleric,
-  Sorcerer,
-  Warlock,
-  Necromancer,
-  Alchemist,
-  Engineer,
-  Inventor,
-  Scientist,
-  Doctor,
-  Nurse,
-  Teacher,
-  Student,
-  Artist,
-  Musician,
-  Writer,
-  Poet,
-  Actor,
-  Director,
-  Producer,
-  Editor,
-  Journalist,
-  Reporter,
-  Photographer,
-  Designer,
-  Architect,
-  Mechanic,
-  Electrician,
-  Plumber,
-  Carpenter,
-  Painter,
-  Gardener,
-  Chef,
-  Baker,
-  Waiter,
-  Bartender,
-  Driver,
-  Pilot,
-  Captain,
-  Sailor,
-  Soldier,
-  Police,
-  Firefighter,
-  Paramedic,
-  Lawyer,
-  Judge,
-  Politician,
-  President,
-  Minister,
-  Ambassador,
-  Diplomat,
-  Spy,
-  Detective,
-  Investigator,
-  Researcher,
-  Analyst,
-  Consultant,
-  Advisor,
-  Manager,
-  CEO,
-  CFO,
-  CTO,
-  COO,
-  VP,
-  Chairman,
-  Board,
-  Committee,
-  Team,
-  Group,
-  Organization,
-  Company,
-  Corporation,
-  Business,
-  Enterprise,
-  Industry,
-  Market,
-  Economy,
-  Finance,
-  Banking,
-  Investment,
-  Trading,
-  Stock,
-  Bond,
-  Fund,
-  Portfolio,
-  Asset,
-  Liability,
-  Equity,
-  Revenue,
-  Profit,
-  Loss,
-  Income,
-  Expense,
-  Budget,
-  Cost,
-  Price,
-  Value,
-  Worth,
-  Money,
-  Cash,
-  Credit,
-  Debit,
-  Account,
-  Balance,
-  Transaction,
-  Payment,
-  Invoice,
-  Bill,
-  Tax,
-  Fee,
-  Commission,
-  Interest,
-  Dividend,
-  Salary,
-  Wage,
-  Bonus,
-  Tip,
-  Gift,
-  Donation,
-  Charity,
-  Fundraising,
-  Sponsorship,
-  Partnership,
-  Collaboration,
-  Agreement,
-  Contract,
-  Deal,
-  Offer,
-  Proposal,
-  Bid,
-  Tender,
-  Quote,
-  Estimate,
-  Forecast,
-  Prediction,
-  Plan,
-  Strategy,
-  Goal,
-  Objective,
-  Mission,
-  Vision,
-  Purpose,
-  Reason,
-  Cause,
-  Effect,
-  Result,
-  Outcome,
-  Success,
-  Failure,
-  Win,
-  Lose,
-  Victory,
-  Defeat,
-  Triumph,
-  Achievement,
-  Accomplishment,
-  Milestone,
-  Progress,
-  Development,
-  Growth,
-  Improvement,
-  Enhancement,
-  Upgrade,
-  Update,
-  Innovation,
-  Invention,
-  Discovery,
-  Breakthrough,
-  Revolution,
-  Evolution,
-  Transformation,
-  Change,
-  Transition,
-  Shift,
-  Move,
-  Action,
-  Task,
-  Job,
-  Work,
-  Labor,
-  Effort,
-  Energy,
-  Power,
-  Force,
-  Strength,
-  Weakness,
-  Advantage,
-  Disadvantage,
-  Benefit,
-  Risk,
-  Opportunity,
-  Threat,
-  Challenge,
-  Problem,
-  Solution,
-  Answer,
-  Issue,
-  Matter,
-  Subject,
-  Topic,
-  Theme,
-  Concept,
-  Idea,
-  Thought,
-  Opinion,
-  View,
-  Perspective,
-  Angle,
-  Approach,
-  Method,
-  Technique,
-  Process,
-  Procedure,
-  System,
-  Structure,
-  Framework,
-  Model,
-  Pattern,
-  Template,
-  Format,
-  Style,
-  Design,
-  Layout,
-  Arrangement,
-  Organization,
-  Management,
-  Control,
-  Command,
-  Order,
-  Rule,
-  Law,
-  Regulation,
-  Policy,
-  Guideline,
-  Standard,
-  Criterion,
-  Requirement,
-  Specification,
-  Condition,
-  Term,
-  Clause,
-  Section,
-  Chapter,
-  Part,
-  Component,
-  Element,
-  Factor,
-  Variable,
-  Parameter,
-  Attribute,
-  Property,
-  Characteristic,
-  Feature,
-  Function,
-  Capability,
-  Ability,
-  Skill,
-  Talent,
-  Quality,
-  Trait,
-  Behavior,
-  Attitude,
-  Personality,
-  Character,
-  Nature,
-  Essence,
-  Core,
-  Heart,
-  Soul,
-  Spirit,
-  Mind,
-  Body,
-  Physical,
-  Mental,
-  Emotional,
-  Spiritual,
-  Psychological,
-  Social,
-  Cultural,
-  Historical,
-  Traditional,
-  Modern,
-  Contemporary,
-  Current,
-  Present,
-  Past,
-  Future,
-  Time,
-  Date,
-  Day,
-  Week,
-  Month,
-  Year,
-  Century,
-  Millennium,
-  Era,
-  Age,
-  Period,
-  Duration,
-  Length,
-  Width,
-  Height,
-  Depth,
-  Size,
-  Scale,
-  Dimension,
-  Measurement,
-  Quantity,
-  Amount,
-  Number,
-  Count,
-  Total,
-  Sum,
-  Average,
-  Maximum,
-  Minimum,
-  Range,
-  Limit,
-  Boundary,
-  Edge,
-  Border,
-  Margin,
-  Space,
-  Area,
-  Region,
-  Zone,
-  Territory,
-  Land,
-  Ground,
-  Earth,
-  World,
-  Planet,
-  Universe,
-  Galaxy,
-  Sun,
-  Moon,
-  Sky,
-  Rain,
-  Snow,
-  Wind,
-  Storm,
-  Thunder,
-  Lightning,
-  Fire,
-  Water,
-  Air,
-  Ice,
-  Steam,
-  Smoke,
-  Dust,
-  Sand,
-  Rock,
-  Stone,
-  Metal,
-  Wood,
-  Glass,
-  Plastic,
-  Rubber,
-  Fabric,
-  Cloth,
-  Leather,
-  Paper,
-  Cardboard,
-  Ceramic,
-  Porcelain,
-  Crystal,
-  Diamond,
-  Gold,
-  Silver,
-  Bronze,
-  Copper,
-  Iron,
-  Steel,
-  Aluminum,
-  Titanium,
-  Platinum,
-  Mercury,
-  Lead,
-  Zinc,
-  Nickel,
-  Chromium,
-  Manganese,
-  Silicon,
-  Carbon,
-  Oxygen,
-  Hydrogen,
-  Nitrogen,
-  Helium,
-  Neon,
-  Argon,
-  Krypton,
-  Xenon,
-  Radon,
-  Uranium,
-  Plutonium,
-  Radium,
-  Polonium,
-  Actinium,
-  Thorium,
-  Protactinium,
-  Neptunium,
-  Americium,
-  Curium,
-  Berkelium,
-  Californium,
-  Einsteinium,
-  Fermium,
-  Mendelevium,
-  Nobelium,
-  Lawrencium,
-  Rutherfordium,
-  Dubnium,
-  Seaborgium,
-  Bohrium,
-  Hassium,
-  Meitnerium,
-  Darmstadtium,
-  Roentgenium,
-  Copernicium,
-  Nihonium,
-  Flerovium,
-  Moscovium,
-  Livermorium,
-  Tennessine,
-  Oganesson,
+  Copy,
 } from 'lucide-react'
 
 export default function PremiumPage() {
   const router = useRouter()
   const { user } = useUser()
-  const [selectedPlan, setSelectedPlan] = useState('premium')
+  const [_selectedPlan, setSelectedPlan] = useState('premium')
   const [isProcessing, setIsProcessing] = useState(false)
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [paymentAmount, setPaymentAmount] = useState('')
+  const [paymentDescription, setPaymentDescription] = useState('')
+  const [currentPlanId, setCurrentPlanId] = useState<string | null>(null)
 
   const isAlreadyPremium = user?.plan === 'premium'
+
+  const BANK_IBAN = 'TR22 0015 7000 0000 0062 3324 07'
+  const BANK_ACCOUNT_HOLDER = 'SELİM SERCAN ÇINAR'
 
   const premiumCategories = [
     {
       id: 'ai-analysis',
       title: '🧠 AI & Akıllı Analizler',
-      description: 'Yapay zeka teknolojisiyle finansal geleceğinizi şekillendirin. Kişiselleştirilmiş öngörüler ve akıllı analizlerle paranızı daha iyi yönetin, tasarruf fırsatlarını kaçırmayın.',
+      description:
+        'Yapay zeka teknolojisiyle finansal geleceğinizi şekillendirin. Kişiselleştirilmiş öngörüler ve akıllı analizlerle paranızı daha iyi yönetin, tasarruf fırsatlarını kaçırmayın.',
       color: 'from-purple-500 to-pink-600',
       bgColor: 'from-purple-50 to-pink-50',
       borderColor: 'border-purple-200',
@@ -629,25 +76,29 @@ export default function PremiumPage() {
         {
           icon: Brain,
           title: 'AI Finansal Asistan',
-          description: '7/24 yanınızda olan kişisel finansal danışmanınız. Harcama alışkanlıklarınızı analiz eder ve size özel stratejiler sunar.',
+          description:
+            '7/24 yanınızda olan kişisel finansal danışmanınız. Harcama alışkanlıklarınızı analiz eder ve size özel stratejiler sunar.',
           color: 'text-purple-600',
         },
         {
           icon: Bot,
           title: 'Otomatik Kategorileme',
-          description: 'Her harcamanızı anında doğru kategoriye yerleştirir. Manuel işlem yapmadan finansal durumunuzu takip edin.',
+          description:
+            'Her harcamanızı anında doğru kategoriye yerleştirir. Manuel işlem yapmadan finansal durumunuzu takip edin.',
           color: 'text-purple-600',
         },
         {
           icon: TrendingUp,
           title: 'Tahmin Modelleri',
-          description: 'Gelecek 3-6 ay için gelir ve harcama tahminleriyle finansal planlamanızı güçlendirin. Beklenmedik durumlara hazırlıklı olun.',
+          description:
+            'Gelecek 3-6 ay için gelir ve harcama tahminleriyle finansal planlamanızı güçlendirin. Beklenmedik durumlara hazırlıklı olun.',
           color: 'text-purple-600',
         },
         {
           icon: Lightbulb,
           title: 'Akıllı Öneriler',
-          description: 'Gizli tasarruf fırsatlarını keşfedin ve yatırım önerileriyle paranızın değer kazanmasını sağlayın.',
+          description:
+            'Gizli tasarruf fırsatlarını keşfedin ve yatırım önerileriyle paranızın değer kazanmasını sağlayın.',
           color: 'text-purple-600',
         },
       ],
@@ -655,7 +106,8 @@ export default function PremiumPage() {
     {
       id: 'advanced-reporting',
       title: '📊 Gelişmiş Raporlama',
-      description: 'Finansal verilerinizi görselleştirin ve derinlemesine analiz edin. Profesyonel raporlarla finansal durumunuzu her açıdan görün, kararlarınızı veriye dayandırın.',
+      description:
+        'Finansal verilerinizi görselleştirin ve derinlemesine analiz edin. Profesyonel raporlarla finansal durumunuzu her açıdan görün, kararlarınızı veriye dayandırın.',
       color: 'from-blue-500 to-cyan-600',
       bgColor: 'from-blue-50 to-cyan-50',
       borderColor: 'border-blue-200',
@@ -663,25 +115,29 @@ export default function PremiumPage() {
         {
           icon: BarChart3,
           title: 'İnteraktif Grafikler',
-          description: 'Tıklayarak detaylarına inebileceğiniz dinamik grafikler. Finansal verilerinizi görsel olarak keşfedin ve anlamlandırın.',
+          description:
+            'Tıklayarak detaylarına inebileceğiniz dinamik grafikler. Finansal verilerinizi görsel olarak keşfedin ve anlamlandırın.',
           color: 'text-blue-600',
         },
         {
           icon: PieChart,
           title: 'Harcama Dağılımı',
-          description: 'Paranızın nereye gittiğini net bir şekilde görün. Kategori bazlı detaylı analizlerle harcama alışkanlıklarınızı optimize edin.',
+          description:
+            'Paranızın nereye gittiğini net bir şekilde görün. Kategori bazlı detaylı analizlerle harcama alışkanlıklarınızı optimize edin.',
           color: 'text-blue-600',
         },
         {
           icon: LineChart,
           title: 'Trend Analizleri',
-          description: 'Gelir ve harcama trendlerinizi zaman içinde izleyin. Büyüme fırsatlarını yakalayın ve riskleri önceden görün.',
+          description:
+            'Gelir ve harcama trendlerinizi zaman içinde izleyin. Büyüme fırsatlarını yakalayın ve riskleri önceden görün.',
           color: 'text-blue-600',
         },
         {
           icon: FileText,
           title: 'PDF/Excel Raporları',
-          description: 'Muhasebeci, danışman veya banka için hazır profesyonel raporlar. Tek tıkla indirin ve paylaşın.',
+          description:
+            'Muhasebeci, danışman veya banka için hazır profesyonel raporlar. Tek tıkla indirin ve paylaşın.',
           color: 'text-blue-600',
         },
       ],
@@ -689,7 +145,8 @@ export default function PremiumPage() {
     {
       id: 'smart-goals',
       title: '🎯 Akıllı Hedefleme',
-      description: 'Hayallerinizi gerçeğe dönüştürün. Akıllı hedef takip sistemiyle tasarruf, yatırım ve finansal bağımsızlık hedeflerinize adım adım ulaşın.',
+      description:
+        'Hayallerinizi gerçeğe dönüştürün. Akıllı hedef takip sistemiyle tasarruf, yatırım ve finansal bağımsızlık hedeflerinize adım adım ulaşın.',
       color: 'from-orange-500 to-red-600',
       bgColor: 'from-orange-50 to-red-50',
       borderColor: 'border-orange-200',
@@ -697,25 +154,29 @@ export default function PremiumPage() {
         {
           icon: Target,
           title: 'Kişisel Hedefler',
-          description: 'Ev, araba, tatil veya emeklilik için hedefler belirleyin. Sistem sizin için en uygun planı oluşturur ve ilerlemenizi takip eder.',
+          description:
+            'Ev, araba, tatil veya emeklilik için hedefler belirleyin. Sistem sizin için en uygun planı oluşturur ve ilerlemenizi takip eder.',
           color: 'text-orange-600',
         },
         {
           icon: Calendar,
           title: 'Mevsimsel Analiz',
-          description: 'Yaz tatili, bayram alışverişi gibi mevsimsel harcamalarınızı önceden tahmin edin ve bütçenizi buna göre ayarlayın.',
+          description:
+            'Yaz tatili, bayram alışverişi gibi mevsimsel harcamalarınızı önceden tahmin edin ve bütçenizi buna göre ayarlayın.',
           color: 'text-orange-600',
         },
         {
           icon: Bell,
           title: 'Akıllı Bildirimler',
-          description: 'Hedefinize yaklaştığınızda kutlayın, sapma olduğunda uyarı alın. Her zaman rotada kalın.',
+          description:
+            'Hedefinize yaklaştığınızda kutlayın, sapma olduğunda uyarı alın. Her zaman rotada kalın.',
           color: 'text-orange-600',
         },
         {
           icon: Award,
           title: 'Başarı Takibi',
-          description: 'Her hedefe ulaştığınızda başarı rozetleri kazanın. Motivasyonunuzu yüksek tutun ve finansal başarılarınızı kutlayın.',
+          description:
+            'Her hedefe ulaştığınızda başarı rozetleri kazanın. Motivasyonunuzu yüksek tutun ve finansal başarılarınızı kutlayın.',
           color: 'text-orange-600',
         },
       ],
@@ -723,7 +184,8 @@ export default function PremiumPage() {
     {
       id: 'automation',
       title: '⚡ Otomasyon & Verimlilik',
-      description: 'Finansal işlemlerinizi otomatikleştirin ve zamandan tasarruf edin. Tekrarlayan görevleri sisteme bırakın, siz sadece kararlarınıza odaklanın.',
+      description:
+        'Finansal işlemlerinizi otomatikleştirin ve zamandan tasarruf edin. Tekrarlayan görevleri sisteme bırakın, siz sadece kararlarınıza odaklanın.',
       color: 'from-green-500 to-emerald-600',
       bgColor: 'from-green-50 to-emerald-50',
       borderColor: 'border-green-200',
@@ -731,25 +193,29 @@ export default function PremiumPage() {
         {
           icon: Activity,
           title: 'Otomatik Takip',
-          description: 'Tüm nakit akışınızı ve harcamalarınızı arka planda izler. Hiçbir işlemi kaçırmadan finansal durumunuzu anlık takip edin.',
+          description:
+            'Tüm nakit akışınızı ve harcamalarınızı arka planda izler. Hiçbir işlemi kaçırmadan finansal durumunuzu anlık takip edin.',
           color: 'text-green-600',
         },
         {
           icon: Zap,
           title: 'Akıllı Tekrarlar',
-          description: 'Kira, faturalar, abonelikler gibi düzenli ödemeleri otomatik tanır ve kaydeder. Unutma derdi olmadan rahat edin.',
+          description:
+            'Kira, faturalar, abonelikler gibi düzenli ödemeleri otomatik tanır ve kaydeder. Unutma derdi olmadan rahat edin.',
           color: 'text-green-600',
         },
         {
           icon: Clock,
           title: 'Zaman Tasarrufu',
-          description: 'Manuel işlemler yerine otomasyon kullanarak haftada saatlerce zaman kazanın. Finansal yönetimi kolaylaştırın.',
+          description:
+            'Manuel işlemler yerine otomasyon kullanarak haftada saatlerce zaman kazanın. Finansal yönetimi kolaylaştırın.',
           color: 'text-green-600',
         },
         {
           icon: Settings,
           title: 'Özelleştirilebilir',
-          description: 'Kendi otomasyon kurallarınızı oluşturun. İhtiyaçlarınıza göre sisteminizi şekillendirin ve maksimum verimlilik sağlayın.',
+          description:
+            'Kendi otomasyon kurallarınızı oluşturun. İhtiyaçlarınıza göre sisteminizi şekillendirin ve maksimum verimlilik sağlayın.',
           color: 'text-green-600',
         },
       ],
@@ -757,7 +223,8 @@ export default function PremiumPage() {
     {
       id: 'premium-support',
       title: '🛡️ Premium Destek',
-      description: 'Premium üyelikle birlikte öncelikli destek, gelişmiş güvenlik ve özel özellikler. Finansal verileriniz güvende, her zaman yanınızdayız.',
+      description:
+        'Premium üyelikle birlikte öncelikli destek, gelişmiş güvenlik ve özel özellikler. Finansal verileriniz güvende, her zaman yanınızdayız.',
       color: 'from-slate-500 to-gray-600',
       bgColor: 'from-slate-50 to-gray-50',
       borderColor: 'border-slate-200',
@@ -765,25 +232,29 @@ export default function PremiumPage() {
         {
           icon: Headphones,
           title: '7/24 Premium Destek',
-          description: 'Herhangi bir sorunuzda anında yanınızdayız. Öncelikli müşteri hizmetleri ve uzman teknik destek ekibimizle tanışın.',
+          description:
+            'Herhangi bir sorunuzda anında yanınızdayız. Öncelikli müşteri hizmetleri ve uzman teknik destek ekibimizle tanışın.',
           color: 'text-slate-600',
         },
         {
           icon: Shield,
           title: 'Gelişmiş Güvenlik',
-          description: 'Bankacılık seviyesinde şifreleme ve güvenlik protokolleri. Finansal verileriniz en üst düzey koruma altında.',
+          description:
+            'Bankacılık seviyesinde şifreleme ve güvenlik protokolleri. Finansal verileriniz en üst düzey koruma altında.',
           color: 'text-slate-600',
         },
         {
           icon: Palette,
           title: 'Premium Tema',
-          description: 'Göz yormayan koyu mod ve ferah açık tema seçenekleri. Arayüzü kendi zevkinize göre özelleştirin.',
+          description:
+            'Göz yormayan koyu mod ve ferah açık tema seçenekleri. Arayüzü kendi zevkinize göre özelleştirin.',
           color: 'text-slate-600',
         },
         {
           icon: Cloud,
           title: 'Bulut Yedekleme',
-          description: 'Tüm finansal verileriniz otomatik olarak bulutta yedeklenir. Cihaz değiştirseniz bile verileriniz her zaman erişilebilir.',
+          description:
+            'Tüm finansal verileriniz otomatik olarak bulutta yedeklenir. Cihaz değiştirseniz bile verileriniz her zaman erişilebilir.',
           color: 'text-slate-600',
         },
       ],
@@ -860,36 +331,78 @@ export default function PremiumPage() {
       return
     }
 
+    // Free plan için direkt aktif et
+    if (planId === 'free') {
+      setIsProcessing(true)
+      try {
+        const response = await fetch('/api/subscription/upgrade', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ planId }),
+        })
+
+        const data = (await response.json()) as { success: boolean; message?: string }
+
+        if (response.ok && data.success) {
+          router.push('/dashboard?upgraded=true')
+        } else {
+          alert(data.message || 'Bir hata oluştu. Lütfen tekrar deneyin.')
+        }
+      } catch (error) {
+        console.error('Upgrade error:', error)
+        alert('Bir hata oluştu. Lütfen tekrar deneyin.')
+      } finally {
+        setIsProcessing(false)
+      }
+      return
+    }
+
+    // Premium/Enterprise için banka havalesi modalını aç
+    const planPrices: { [key: string]: number } = {
+      premium: 250,
+      enterprise: 450,
+    }
+    setCurrentPlanId(planId)
+    setPaymentAmount(planPrices[planId].toString())
+    setPaymentDescription(`${user?.email || ''} - BAĞIŞ`)
+    setShowPaymentModal(true)
+  }
+
+  const handlePaymentSubmit = async () => {
+    if (!currentPlanId || !paymentAmount || !paymentDescription) {
+      alert('Lütfen tüm alanları doldurun.')
+      return
+    }
+
     setIsProcessing(true)
     try {
-      const response = await fetch('/api/subscription/upgrade', {
+      const response = await fetch('/api/payment-request/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ planId }),
+        body: JSON.stringify({
+          planId: currentPlanId,
+          amount: parseFloat(paymentAmount),
+          description: paymentDescription,
+        }),
       })
 
-      const data = await response.json()
+      const data = (await response.json()) as { success: boolean; message?: string }
 
       if (response.ok && data.success) {
-        // Free plan için direkt dashboard'a git
-        if (planId === 'free') {
-          router.push('/dashboard?upgraded=true')
-          return
-        }
-
-        // Premium/Enterprise için PayTR ödeme linkine yönlendir
-        if (data.paymentUrl) {
-          window.location.href = data.paymentUrl
-        } else {
-          throw new Error('Ödeme linki oluşturulamadı')
-        }
+        alert('Ödeme talebiniz alındı. Admin onayından sonra premium üyeliğiniz aktif olacaktır.')
+        setShowPaymentModal(false)
+        setPaymentAmount('')
+        setPaymentDescription('')
+        setCurrentPlanId(null)
       } else {
         alert(data.message || 'Bir hata oluştu. Lütfen tekrar deneyin.')
       }
     } catch (error) {
-      console.error('Upgrade error:', error)
+      console.error('Payment request error:', error)
       alert('Bir hata oluştu. Lütfen tekrar deneyin.')
     } finally {
       setIsProcessing(false)
@@ -1116,7 +629,9 @@ export default function PremiumPage() {
 
                     {plan.id === 'premium' && (
                       <Button
-                        onClick={handleUpgrade}
+                        onClick={() => {
+                          void handleUpgrade()
+                        }}
                         disabled={isProcessing}
                         size="lg"
                         className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300"
@@ -1129,7 +644,7 @@ export default function PremiumPage() {
                         ) : (
                           <div className="flex items-center space-x-3">
                             <Crown className="h-5 w-5" />
-                            <span>Premium'a Yükselt</span>
+                            <span>Premium&apos;a Yükselt</span>
                           </div>
                         )}
                       </Button>
@@ -1137,7 +652,9 @@ export default function PremiumPage() {
 
                     {plan.id === 'enterprise' && (
                       <Button
-                        onClick={() => handleUpgrade('enterprise')}
+                        onClick={() => {
+                          void handleUpgrade('enterprise')
+                        }}
                         disabled={isProcessing}
                         size="lg"
                         className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300"
@@ -1150,7 +667,7 @@ export default function PremiumPage() {
                         ) : (
                           <div className="flex items-center space-x-3">
                             <Building2 className="h-5 w-5" />
-                            <span>Enterprise'a Yükselt</span>
+                            <span>Enterprise&apos;a Yükselt</span>
                           </div>
                         )}
                       </Button>
@@ -1192,7 +709,9 @@ export default function PremiumPage() {
 
                 <div className="flex items-center justify-center space-x-4">
                   <Button
-                    onClick={handleUpgrade}
+                    onClick={() => {
+                      void handleUpgrade()
+                    }}
                     disabled={isProcessing}
                     size="lg"
                     className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
@@ -1205,7 +724,7 @@ export default function PremiumPage() {
                     ) : (
                       <div className="flex items-center space-x-2">
                         <Crown className="h-5 w-5" />
-                        <span>Premium'a Yükselt</span>
+                        <span>Premium&apos;a Yükselt</span>
                       </div>
                     )}
                   </Button>
@@ -1215,6 +734,130 @@ export default function PremiumPage() {
           </div>
         )}
       </div>
+
+      {/* Payment Modal */}
+      <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Banka Havalesi ile Ödeme</DialogTitle>
+            <DialogDescription>
+              Aşağıdaki bilgileri kullanarak ödemenizi yapın ve ardından ödeme bilgilerinizi
+              gönderin.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 mt-4">
+            {/* Bank Account Info */}
+            <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
+              <CardHeader>
+                <CardTitle className="text-lg">Banka Hesap Bilgileri</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-slate-600">IBAN</Label>
+                  <div className="flex items-center space-x-2">
+                    <Input value={BANK_IBAN} readOnly className="font-mono text-lg bg-white" />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        void navigator.clipboard.writeText(BANK_IBAN)
+                        alert('IBAN kopyalandı!')
+                      }}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-slate-600">Hesap Sahibi</Label>
+                  <Input value={BANK_ACCOUNT_HOLDER} readOnly className="bg-white" />
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-slate-600">Açıklama (Önemli!)</Label>
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      value={`${user?.email || ''} - BAĞIŞ`}
+                      readOnly
+                      className="font-mono bg-white"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        void navigator.clipboard.writeText(`${user?.email || ''} - BAĞIŞ`)
+                        alert('Açıklama kopyalandı!')
+                      }}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    Lütfen ödeme yaparken açıklama kısmına bu metni yazın.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Payment Form */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="amount">Ödeme Tutarı (₺)</Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  value={paymentAmount}
+                  onChange={e => setPaymentAmount(e.target.value)}
+                  placeholder="250"
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="description">Açıklama</Label>
+                <Textarea
+                  id="description"
+                  value={paymentDescription}
+                  onChange={e => setPaymentDescription(e.target.value)}
+                  placeholder="Ödeme açıklaması"
+                  rows={3}
+                />
+                <p className="text-xs text-slate-500">
+                  Ödeme yaparken kullandığınız açıklamayı buraya yazın.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end space-x-3 pt-4 border-t">
+              <Button variant="outline" onClick={() => setShowPaymentModal(false)}>
+                İptal
+              </Button>
+              <Button
+                onClick={() => {
+                  void handlePaymentSubmit()
+                }}
+                disabled={isProcessing || !paymentAmount || !paymentDescription}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+              >
+                {isProcessing ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span>Gönderiliyor...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-2">
+                    <MessageSquare className="h-4 w-4" />
+                    <span>Admin&apos;e Mesaj Gönder</span>
+                  </div>
+                )}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

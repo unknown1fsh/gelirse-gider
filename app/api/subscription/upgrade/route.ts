@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentUser } from '@/lib/auth-refactored'
 import { PrismaClient } from '@prisma/client'
-import { createPaymentLink } from '@/lib/paytr'
 import { ExceptionMapper } from '@/server/errors'
 import { BadRequestError } from '@/server/errors'
 
 const prisma = new PrismaClient()
 
 // Bu metot subscription upgrade işlemini başlatır.
-// Premium/Enterprise planlar için PayTR ödeme linki oluşturur
 // Free plan için direkt aktif eder
+// Premium/Enterprise planlar için banka havalesi sistemi kullanılır (frontend'de modal açılır)
 export const POST = ExceptionMapper.asyncHandler(async (request: NextRequest) => {
   const user = await getCurrentUser(request)
 
@@ -17,10 +16,11 @@ export const POST = ExceptionMapper.asyncHandler(async (request: NextRequest) =>
     throw new BadRequestError('Oturum bulunamadı')
   }
 
-  const { planId } = await request.json()
+  const body = (await request.json()) as { planId: string }
+  const { planId } = body
 
   // Validation
-  if (!planId) {
+  if (!planId || typeof planId !== 'string') {
     throw new BadRequestError('Plan ID gerekli')
   }
 
@@ -95,30 +95,10 @@ export const POST = ExceptionMapper.asyncHandler(async (request: NextRequest) =>
     })
   }
 
-  // Premium/Enterprise planlar için PayTR ödeme linki oluştur
-  // Email doğrulama kontrolü
-  if (!user.emailVerified) {
-    throw new BadRequestError('Ödeme yapmak için e-posta adresinizi doğrulamanız gerekiyor')
-  }
-
-  const paymentResult = await createPaymentLink({
-    email: user.email,
-    name: user.name,
-    amount,
-    planId,
-    userId: user.id,
-    description: `${planId} plan abonelik ücreti`,
-  })
-
-  if (!paymentResult.success || !paymentResult.paymentUrl) {
-    console.error('PayTR payment link creation failed:', paymentResult.error)
-    throw new BadRequestError(paymentResult.error || 'Ödeme linki oluşturulamadı')
-  }
-
-  return NextResponse.json({
-    success: true,
-    message: 'Ödeme linki oluşturuldu',
-    paymentUrl: paymentResult.paymentUrl,
-    paymentLinkId: paymentResult.paymentLinkId,
-  })
+  // Premium/Enterprise planlar için banka havalesi sistemi kullanılır
+  // Frontend'de modal açılacak ve kullanıcı ödeme talebi oluşturacak
+  // Bu endpoint sadece free plan için kullanılır, diğer planlar için frontend modal açılır
+  throw new BadRequestError(
+    'Premium ve Enterprise planlar için banka havalesi ile ödeme yapmanız gerekmektedir. Lütfen premium sayfasından devam edin.'
+  )
 })

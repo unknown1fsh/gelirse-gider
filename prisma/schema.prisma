@@ -202,6 +202,7 @@ model User {
   // Relations
   sessions           UserSession[]
   subscriptions      UserSubscription[]
+  paymentRequests    PaymentRequest[]
   periods            Period[]
   accounts           Account[]
   creditCards        CreditCard[]
@@ -255,6 +256,30 @@ model UserSubscription {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_subscription")
+}
+
+model PaymentRequest {
+  id          Int       @id @default(autoincrement())
+  userId      Int       @map("user_id")
+  planId      String    @map("plan_id") @db.VarChar(50)
+  amount      Decimal   @db.Decimal(10, 2)
+  currency    String    @default("TRY") @db.VarChar(3)
+  description String?   @db.Text
+  status      String    @default("pending") @db.VarChar(20) // pending, approved, rejected
+  adminNotes  String?   @map("admin_notes") @db.Text
+  approvedBy  Int?      @map("approved_by")
+  approvedAt  DateTime? @map("approved_at")
+  rejectedAt  DateTime? @map("rejected_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("payment_request")
 }
 
 // Period Management Tables

@@ -21,14 +21,19 @@ const Dialog = React.forwardRef<
     onOpenChange?.(newOpen)
   }
 
-  if (!isOpen) {return null}
+  if (!isOpen) {
+    return null
+  }
 
   return (
-    <div
-      ref={ref}
-      className={cn('fixed inset-0 z-50 flex items-center justify-center', className)}
-      {...props}
-    />
+    <>
+      <div className="fixed inset-0 z-40 bg-black/50" onClick={() => handleOpenChange(false)} />
+      <div
+        ref={ref}
+        className={cn('fixed inset-0 z-50 flex items-center justify-center', className)}
+        {...props}
+      />
+    </>
   )
 })
 Dialog.displayName = 'Dialog'
