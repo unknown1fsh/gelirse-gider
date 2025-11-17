@@ -4,10 +4,12 @@ const nextConfig = {
   // output: 'standalone',
 
   serverExternalPackages: ['@prisma/client'],
-  
-  // Railway için
+
+  // Environment variables to expose to the client
   env: {
     PORT: process.env.PORT || '3000',
+    NEXT_PUBLIC_APP_URL:
+      process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   },
 
   typescript: {
@@ -20,12 +22,6 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  // Environment variables to expose to the client
-  env: {
-    NEXT_PUBLIC_APP_URL:
-      process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-  },
-
   // Image optimization
   images: {
     domains: [],
@@ -35,7 +31,7 @@ const nextConfig = {
   // Production optimizations
   compress: true,
   poweredByHeader: false,
-  
+
   // Railway için SSL bypass
   experimental: {
     serverActions: {
@@ -75,7 +71,8 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;",
+            value:
+              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;",
           },
         ],
       },
