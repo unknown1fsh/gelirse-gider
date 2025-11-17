@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -8,7 +8,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { CheckCircle2, XCircle, Mail, Loader2, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'idle'>('idle')
@@ -29,14 +29,15 @@ export default function VerifyEmailPage() {
       } else if (error === 'already-verified') {
         setErrorMessage('E-posta adresiniz zaten doğrulanmış')
       } else if (error === 'no-token') {
-        setErrorMessage('Doğrulama token\'ı bulunamadı')
+        setErrorMessage("Doğrulama token'ı bulunamadı")
       } else {
         setErrorMessage('Bir hata oluştu')
       }
     } else if (token) {
       // Token varsa otomatik doğrula
-      verifyEmail(token)
+      void verifyEmail(token)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, error, success])
 
   const verifyEmail = async (tokenToVerify: string) => {
@@ -50,7 +51,7 @@ export default function VerifyEmailPage() {
         body: JSON.stringify({ token: tokenToVerify }),
       })
 
-      const data = await response.json()
+      const data = (await response.json()) as { success?: boolean; message?: string }
 
       if (response.ok && data.success) {
         setStatus('success')
@@ -74,7 +75,7 @@ export default function VerifyEmailPage() {
       // Email'i local storage'dan veya başka bir yerden al (örnek: form'dan)
       // Şimdilik kullanıcıdan email isteyeceğiz
       const email = prompt('E-posta adresinizi girin:')
-      
+
       if (!email) {
         setResending(false)
         return
@@ -88,7 +89,7 @@ export default function VerifyEmailPage() {
         body: JSON.stringify({ email }),
       })
 
-      const data = await response.json()
+      const data = (await response.json()) as { success?: boolean; message?: string }
 
       if (response.ok && data.success) {
         alert('Doğrulama e-postası gönderildi. Lütfen e-posta kutunuzu kontrol edin.')
@@ -124,7 +125,8 @@ export default function VerifyEmailPage() {
             <Alert className="border-green-200 bg-green-50">
               <CheckCircle2 className="h-5 w-5 text-green-600" />
               <AlertDescription className="text-green-800">
-                <strong>Başarılı!</strong> E-posta adresiniz doğrulandı. Dashboard'a yönlendiriliyorsunuz...
+                <strong>Başarılı!</strong> E-posta adresiniz doğrulandı. Dashboard&apos;a
+                yönlendiriliyorsunuz...
               </AlertDescription>
             </Alert>
           )}
@@ -138,7 +140,9 @@ export default function VerifyEmailPage() {
 
               <div className="space-y-2">
                 <Button
-                  onClick={resendVerification}
+                  onClick={() => {
+                    void resendVerification()
+                  }}
                   disabled={resending}
                   className="w-full"
                   variant="outline"
@@ -179,3 +183,23 @@ export default function VerifyEmailPage() {
   )
 }
 
+export default function VerifyEmailPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-pink-50 p-4">
+          <Card className="w-full max-w-md">
+            <CardContent className="py-8">
+              <div className="text-center">
+                <Loader2 className="h-12 w-12 animate-spin text-purple-600 mx-auto mb-4" />
+                <p className="text-gray-600">Yükleniyor...</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      }
+    >
+      <VerifyEmailContent />
+    </Suspense>
+  )
+}
