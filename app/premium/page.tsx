@@ -45,7 +45,6 @@ import {
   Award,
   Cloud,
   MessageSquare,
-  Copy,
 } from 'lucide-react'
 
 export default function PremiumPage() {
@@ -59,9 +58,6 @@ export default function PremiumPage() {
   const [currentPlanId, setCurrentPlanId] = useState<string | null>(null)
 
   const isAlreadyPremium = user?.plan === 'premium'
-
-  const BANK_IBAN = 'TR22 0015 7000 0000 0062 3324 07'
-  const BANK_ACCOUNT_HOLDER = 'SELİM SERCAN ÇINAR'
 
   const premiumCategories = [
     {
@@ -739,68 +735,14 @@ export default function PremiumPage() {
       <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Banka Havalesi ile Ödeme</DialogTitle>
+            <DialogTitle>Admin&apos;e Mesaj Gönder</DialogTitle>
             <DialogDescription>
-              Aşağıdaki bilgileri kullanarak ödemenizi yapın ve ardından ödeme bilgilerinizi
-              gönderin.
+              Premium üyelik için ödeme talebinizi admin&apos;e gönderin. Admin onayından sonra
+              premium üyeliğiniz aktif olacaktır.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-6 mt-4">
-            {/* Bank Account Info */}
-            <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
-              <CardHeader>
-                <CardTitle className="text-lg">Banka Hesap Bilgileri</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-600">IBAN</Label>
-                  <div className="flex items-center space-x-2">
-                    <Input value={BANK_IBAN} readOnly className="font-mono text-lg bg-white" />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        void navigator.clipboard.writeText(BANK_IBAN)
-                        alert('IBAN kopyalandı!')
-                      }}
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-600">Hesap Sahibi</Label>
-                  <Input value={BANK_ACCOUNT_HOLDER} readOnly className="bg-white" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-600">Açıklama (Önemli!)</Label>
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      value={`${user?.email || ''} - BAĞIŞ`}
-                      readOnly
-                      className="font-mono bg-white"
-                    />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        void navigator.clipboard.writeText(`${user?.email || ''} - BAĞIŞ`)
-                        alert('Açıklama kopyalandı!')
-                      }}
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <p className="text-xs text-slate-500">
-                    Lütfen ödeme yaparken açıklama kısmına bu metni yazın.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
             {/* Payment Form */}
             <div className="space-y-4">
               <div className="space-y-2">
@@ -822,11 +764,12 @@ export default function PremiumPage() {
                   id="description"
                   value={paymentDescription}
                   onChange={e => setPaymentDescription(e.target.value)}
-                  placeholder="Ödeme açıklaması"
-                  rows={3}
+                  placeholder="Ödeme ile ilgili açıklamalarınızı buraya yazın..."
+                  rows={4}
                 />
                 <p className="text-xs text-slate-500">
-                  Ödeme yaparken kullandığınız açıklamayı buraya yazın.
+                  Admin&apos;e iletmek istediğiniz ödeme bilgilerini ve açıklamalarınızı buraya
+                  yazabilirsiniz.
                 </p>
               </div>
             </div>
