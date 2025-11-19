@@ -10,9 +10,13 @@ interface CreatePaymentLinkParams {
   email: string
   name: string
   amount: number // TL cinsinden (örn: 250.00)
-  planId: string
+  productType: string // 'subscription', 'premium', 'enterprise', vb.
+  productId?: string // Opsiyonel: spesifik ürün ID'si
   userId: number
   description?: string
+  successUrl?: string // Opsiyonel: başarılı ödeme sonrası yönlendirme URL'i
+  failUrl?: string // Opsiyonel: başarısız ödeme sonrası yönlendirme URL'i
+  userIp?: string // Opsiyonel: kullanıcı IP adresi
 }
 
 interface PaymentLinkResponse {
@@ -27,7 +31,7 @@ interface PaymentLinkResponse {
  * PayTR API dokümantasyonuna göre: https://www.paytr.com/odeme/api
  */
 export async function createPaymentLink(
-  params: CreatePaymentLinkParams
+  _params: CreatePaymentLinkParams
 ): Promise<PaymentLinkResponse> {
   if (!MERCHANT_ID || !MERCHANT_KEY || !MERCHANT_SALT) {
     return {
@@ -41,17 +45,31 @@ export async function createPaymentLink(
       email,
       name,
       amount,
-      planId,
+      productType,
+      productId,
       userId,
-      description = `${planId} plan abonelik ücreti`,
-    } = params
+      description,
+      successUrl,
+      failUrl,
+      userIp = '127.0.0.1',
+    } = _params
 
     // PayTR için ödeme linki oluşturma parametreleri
     // PayTR'nin ödeme linki API'si için gerekli alanlar
-    const merchantOrderId = `sub_${userId}_${Date.now()}`
-    const userIp = '127.0.0.1' // Production'da gerçek IP alınmalı
-    const userBasket = `${planId} plan|${amount}|1`
+    const timestamp = Date.now()
+    const merchantOrderId = `pay_${userId}_${productType}_${timestamp}${productId ? `_${productId}` : ''}`
+    const userBasket = `${productType}${productId ? ` ${productId}` : ''}|${amount}|1`
     const currency = 'TL'
+
+    // Varsayılan açıklama
+    const paymentDescription = description || `${productType} ödeme`
+
+    // Varsayılan success/fail URL'leri
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const defaultSuccessUrl = `${baseUrl}/premium/payment-success?merchant_oid=${merchantOrderId}`
+    const defaultFailUrl = `${baseUrl}/premium/payment-failed?merchant_oid=${merchantOrderId}`
+    const finalSuccessUrl = successUrl || defaultSuccessUrl
+    const finalFailUrl = failUrl || defaultFailUrl
 
     // PayTR hash oluşturma (PayTR dokümantasyonuna göre)
     const hashString = `${MERCHANT_ID}${merchantOrderId}${amount}${userBasket}${MERCHANT_SALT}`
@@ -60,25 +78,25 @@ export async function createPaymentLink(
     // PayTR API çağrısı - ödeme linki oluşturma
     // Not: PayTR'nin gerçek API endpoint'i ve formatı dokümantasyonda belirtilmelidir
     // Burada genel bir yapı oluşturulmuştur
-    const paymentData = {
-      merchant_id: MERCHANT_ID,
-      merchant_key: MERCHANT_KEY,
-      merchant_salt: MERCHANT_SALT,
+    const paymentData: Record<string, string> = {
+      merchant_id: MERCHANT_ID ?? '',
+      merchant_key: MERCHANT_KEY ?? '',
+      merchant_salt: MERCHANT_SALT ?? '',
       merchant_oid: merchantOrderId,
       email: email,
-      payment_amount: amount * 100, // PayTR kuruş cinsinden istiyor
+      payment_amount: String(amount * 100), // PayTR kuruş cinsinden istiyor
       user_basket: Buffer.from(userBasket).toString('base64'),
       user_name: name,
       user_address: '', // Şahıs için opsiyonel
       user_phone: '', // Şahıs için opsiyonel
-      merchant_ok_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/premium/payment-success?merchant_oid=${merchantOrderId}`,
-      merchant_fail_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/premium/payment-failed?merchant_oid=${merchantOrderId}`,
+      merchant_ok_url: finalSuccessUrl,
+      merchant_fail_url: finalFailUrl,
       user_ip: userIp,
-      timeout_limit: 30,
+      timeout_limit: '30',
       currency: currency,
       test_mode: process.env.NODE_ENV !== 'production' ? '1' : '0',
       hash: hash,
-      description: description,
+      description: paymentDescription,
     }
 
     // PayTR API'ye POST isteği
@@ -94,12 +112,12 @@ export async function createPaymentLink(
       ),
     })
 
-    const responseData = await response.text()
+    const responseData: string = await response.text()
 
     // PayTR response parse etme (genellikle "status=success&token=xxx" formatında)
     const params = new URLSearchParams(responseData)
-    const status = params.get('status')
-    const token = params.get('token')
+    const status: string | null = params.get('status')
+    const token: string | null = params.get('token')
 
     if (status === 'success' && token) {
       // PayTR ödeme sayfası URL'i
@@ -111,10 +129,10 @@ export async function createPaymentLink(
         paymentLinkId: merchantOrderId,
       }
     } else {
-      const errorMessage = params.get('reason') || 'Ödeme linki oluşturulamadı'
+      const errorMessage: string | null = params.get('reason')
       return {
         success: false,
-        error: errorMessage,
+        error: errorMessage || 'Ödeme linki oluşturulamadı',
       }
     }
   } catch (error) {
@@ -146,10 +164,7 @@ export function verifyPaytrWebhook(data: Record<string, string>): boolean {
     // PayTR webhook hash doğrulama
     // PayTR dokümantasyonuna göre hash oluşturma
     const hashString = `${MERCHANT_ID}${merchant_oid}${MERCHANT_SALT}${status}${total_amount}`
-    const calculatedHash = crypto
-      .createHash('sha256')
-      .update(hashString)
-      .digest('base64')
+    const calculatedHash = crypto.createHash('sha256').update(hashString).digest('base64')
 
     return calculatedHash === hash
   } catch (error) {
@@ -213,4 +228,3 @@ export async function checkPaymentStatus(
     }
   }
 }
-

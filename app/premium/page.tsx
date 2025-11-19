@@ -5,16 +5,6 @@ import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import { useUser } from '@/lib/user-context'
 import {
   Crown,
@@ -44,7 +34,6 @@ import {
   Clock,
   Award,
   Cloud,
-  MessageSquare,
 } from 'lucide-react'
 
 export default function PremiumPage() {
@@ -52,10 +41,6 @@ export default function PremiumPage() {
   const { user } = useUser()
   const [_selectedPlan, setSelectedPlan] = useState('premium')
   const [isProcessing, setIsProcessing] = useState(false)
-  const [showPaymentModal, setShowPaymentModal] = useState(false)
-  const [paymentAmount, setPaymentAmount] = useState('')
-  const [paymentDescription, setPaymentDescription] = useState('')
-  const [currentPlanId, setCurrentPlanId] = useState<string | null>(null)
 
   const isAlreadyPremium = user?.plan === 'premium'
 
@@ -355,54 +340,17 @@ export default function PremiumPage() {
       return
     }
 
-    // Premium/Enterprise için banka havalesi modalını aç
+    // Premium/Enterprise için PayTR ödeme sayfasına yönlendir
     const planPrices: { [key: string]: number } = {
       premium: 250,
       enterprise: 450,
     }
-    setCurrentPlanId(planId)
-    setPaymentAmount(planPrices[planId].toString())
-    setPaymentDescription(`${user?.email || ''} - BAĞIŞ`)
-    setShowPaymentModal(true)
-  }
+    const amount = planPrices[planId]
 
-  const handlePaymentSubmit = async () => {
-    if (!currentPlanId || !paymentAmount || !paymentDescription) {
-      alert('Lütfen tüm alanları doldurun.')
-      return
-    }
-
-    setIsProcessing(true)
-    try {
-      const response = await fetch('/api/payment-request/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          planId: currentPlanId,
-          amount: parseFloat(paymentAmount),
-          description: paymentDescription,
-        }),
-      })
-
-      const data = (await response.json()) as { success: boolean; message?: string }
-
-      if (response.ok && data.success) {
-        alert('Ödeme talebiniz alındı. Admin onayından sonra premium üyeliğiniz aktif olacaktır.')
-        setShowPaymentModal(false)
-        setPaymentAmount('')
-        setPaymentDescription('')
-        setCurrentPlanId(null)
-      } else {
-        alert(data.message || 'Bir hata oluştu. Lütfen tekrar deneyin.')
-      }
-    } catch (error) {
-      console.error('Payment request error:', error)
-      alert('Bir hata oluştu. Lütfen tekrar deneyin.')
-    } finally {
-      setIsProcessing(false)
-    }
+    // PayTR ödeme sayfasına yönlendir
+    router.push(
+      `/payment?planId=${planId}&productType=${planId}&amount=${amount}&description=${encodeURIComponent(`${planId} plan abonelik ücreti`)}`
+    )
   }
 
   const handleBack = () => {
@@ -730,77 +678,6 @@ export default function PremiumPage() {
           </div>
         )}
       </div>
-
-      {/* Payment Modal */}
-      <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Admin&apos;e Mesaj Gönder</DialogTitle>
-            <DialogDescription>
-              Premium üyelik için ödeme talebinizi admin&apos;e gönderin. Admin onayından sonra
-              premium üyeliğiniz aktif olacaktır.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-6 mt-4">
-            {/* Payment Form */}
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="amount">Ödeme Tutarı (₺)</Label>
-                <Input
-                  id="amount"
-                  type="number"
-                  value={paymentAmount}
-                  onChange={e => setPaymentAmount(e.target.value)}
-                  placeholder="250"
-                  min="0"
-                  step="0.01"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="description">Açıklama</Label>
-                <Textarea
-                  id="description"
-                  value={paymentDescription}
-                  onChange={e => setPaymentDescription(e.target.value)}
-                  placeholder="Ödeme ile ilgili açıklamalarınızı buraya yazın..."
-                  rows={4}
-                />
-                <p className="text-xs text-slate-500">
-                  Admin&apos;e iletmek istediğiniz ödeme bilgilerini ve açıklamalarınızı buraya
-                  yazabilirsiniz.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end space-x-3 pt-4 border-t">
-              <Button variant="outline" onClick={() => setShowPaymentModal(false)}>
-                İptal
-              </Button>
-              <Button
-                onClick={() => {
-                  void handlePaymentSubmit()
-                }}
-                disabled={isProcessing || !paymentAmount || !paymentDescription}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-              >
-                {isProcessing ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Gönderiliyor...</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center space-x-2">
-                    <MessageSquare className="h-4 w-4" />
-                    <span>Admin&apos;e Mesaj Gönder</span>
-                  </div>
-                )}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }
