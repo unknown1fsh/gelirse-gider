@@ -4,13 +4,19 @@ import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { CheckCircle2, Loader2, ArrowRight } from 'lucide-react'
+import { CheckCircle2, Loader2, ArrowRight, Crown, Sparkles, Star, Gift } from 'lucide-react'
+import { useUser } from '@/lib/user-context'
 
 function PaymentSuccessContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { refreshUser } = useUser()
   const [loading, setLoading] = useState(true)
   const [success, setSuccess] = useState(false)
+  const [planInfo, setPlanInfo] = useState<{
+    name: string
+    features: string[]
+  } | null>(null)
 
   const merchantOid = searchParams.get('merchant_oid')
 
@@ -18,14 +24,42 @@ function PaymentSuccessContent() {
     // Ödeme durumunu kontrol et ve subscription'ı güncelle
     if (merchantOid) {
       // PayTR webhook zaten subscription'ı güncellemiş olmalı
-      // Burada sadece kullanıcıyı bilgilendiriyoruz
-      setLoading(false)
-      setSuccess(true)
+      // Kullanıcı bilgilerini yenile
+      void refreshUser().then(() => {
+        setLoading(false)
+        setSuccess(true)
+        
+        // Plan bilgilerini ayarla
+        const planId = merchantOid.split('_')[2] // pay_{userId}_{planId}_{timestamp}
+        if (planId === 'premium') {
+          setPlanInfo({
+            name: 'Premium',
+            features: [
+              'Sınırsız işlem takibi',
+              'AI Finansal Asistan',
+              'Gelişmiş raporlar ve analizler',
+              'PDF/Excel raporları',
+              'Öncelikli destek',
+            ],
+          })
+        } else if (planId === 'enterprise') {
+          setPlanInfo({
+            name: 'Enterprise',
+            features: [
+              'Tüm Premium özellikler',
+              'Çoklu kullanıcı desteği',
+              'API erişimi',
+              'Özel entegrasyonlar',
+              'Dedicated destek',
+            ],
+          })
+        }
+      })
     } else {
       setLoading(false)
       setSuccess(false)
     }
-  }, [merchantOid])
+  }, [merchantOid, refreshUser])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-pink-50 p-4">
@@ -59,33 +93,87 @@ function PaymentSuccessContent() {
             </>
           )}
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           {success && (
             <>
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <p className="text-green-800 text-sm">
-                  Ödemeniz başarıyla tamamlandı. Premium özellikleriniz aktif edildi. Artık tüm
-                  premium özelliklere erişebilirsiniz!
-                </p>
+              {/* Kutlama mesajı */}
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-6">
+                <div className="flex items-start space-x-3">
+                  <Crown className="h-6 w-6 text-green-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-semibold text-green-800 mb-1">Hoş Geldiniz!</h3>
+                    <p className="text-green-700 text-sm">
+                      Ödemeniz başarıyla tamamlandı. {planInfo?.name || 'Premium'} aboneliğiniz aktif
+                      edildi!
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-2">
+              {/* Plan özellikleri */}
+              {planInfo && (
+                <div className="bg-purple-50 border border-purple-200 rounded-xl p-6">
+                  <div className="flex items-center space-x-2 mb-4">
+                    <Sparkles className="h-5 w-5 text-purple-600" />
+                    <h3 className="font-semibold text-purple-900">
+                      {planInfo.name} Özellikleriniz Aktif
+                    </h3>
+                  </div>
+                  <ul className="space-y-2">
+                    {planInfo.features.map((feature, index) => (
+                      <li key={index} className="flex items-start text-sm text-purple-800">
+                        <Star className="h-4 w-4 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Özel bonus bilgisi */}
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <div className="flex items-start space-x-3">
+                  <Gift className="h-5 w-5 text-amber-600 mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-amber-900 text-sm mb-1">Özel Bonus</h4>
+                    <p className="text-amber-800 text-xs">
+                      İlk ay için %20 ekstra AI analiz kredisi hediye! Dashboard&apos;unuzda hemen
+                      kullanmaya başlayın.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Aksiyon butonları */}
+              <div className="space-y-2 pt-2">
                 <Button
                   onClick={() => router.push('/dashboard')}
                   className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                   size="lg"
                 >
-                  Dashboard&apos;a Git
+                  <Crown className="mr-2 h-5 w-5" />
+                  Premium Dashboard&apos;a Git
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
                 <Button
-                  onClick={() => router.push('/premium')}
+                  onClick={() => router.push('/premium-features')}
                   variant="outline"
                   className="w-full"
                   size="lg"
                 >
-                  Premium Özellikleri Keşfet
+                  Tüm Özellikleri Keşfet
                 </Button>
+              </div>
+
+              {/* Yardım */}
+              <div className="text-center pt-2 border-t border-gray-200">
+                <p className="text-xs text-gray-600">
+                  Sorunuz mu var?{' '}
+                  <a href="mailto:support@giderse.com" className="text-purple-600 hover:underline">
+                    7/24 premium destek
+                  </a>{' '}
+                  ile iletişime geçin
+                </p>
               </div>
             </>
           )}

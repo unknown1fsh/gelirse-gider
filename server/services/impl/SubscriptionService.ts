@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { PlanId, SubscriptionStatus } from '../../enums'
 import { NotFoundError, BusinessRuleError } from '../../errors'
+import { PLAN_LIMITS } from '../../../lib/plan-config'
 
 // Bu sınıf abonelik iş mantığını yönetir.
 export class SubscriptionService {
@@ -109,34 +110,9 @@ export class SubscriptionService {
   ): Promise<{ allowed: boolean; current: number; limit: number }> {
     const plan = await this.getUserPlan(userId)
 
-    const limits: Record<string, Record<string, number>> = {
-      [PlanId.FREE]: {
-        transactions: 50,
-        accounts: 3,
-        creditCards: 2,
-        analysis: 10,
-      },
-      [PlanId.PREMIUM]: {
-        transactions: -1,
-        accounts: -1,
-        creditCards: -1,
-        analysis: -1,
-      },
-      [PlanId.ENTERPRISE]: {
-        transactions: -1,
-        accounts: -1,
-        creditCards: -1,
-        analysis: -1,
-      },
-      [PlanId.ENTERPRISE_PREMIUM]: {
-        transactions: -1,
-        accounts: -1,
-        creditCards: -1,
-        analysis: -1,
-      },
-    }
-
-    const limit = limits[plan]?.[feature] ?? -1
+    // Merkezi konfigürasyondan limitleri al
+    const planLimits = PLAN_LIMITS[plan as keyof typeof PLAN_LIMITS] || PLAN_LIMITS.free
+    const limit = (planLimits as Record<string, number>)[feature] ?? -1
 
     if (limit === -1) {
       return { allowed: true, current: 0, limit: -1 }

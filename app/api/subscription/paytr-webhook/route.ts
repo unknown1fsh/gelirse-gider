@@ -153,14 +153,7 @@ export const POST = ExceptionMapper.asyncHandler(async (request: NextRequest) =>
       },
     })
 
-    // Kullanıcının plan bilgisini güncelle (eğer User modelinde plan field'ı varsa)
-    // Not: User modelinde plan field'ı yoksa bu satırı kaldırın
-    // await prisma.user.update({
-    //   where: { id: user.id },
-    //   data: { plan: planId },
-    // })
-
-    // PayTR payment successful
+    // PayTR payment successful - Plan bilgisi UserSubscription'da tutulur
 
     // PayTR'ye başarılı response döndür
     return NextResponse.json({ success: true }, { status: 200 })

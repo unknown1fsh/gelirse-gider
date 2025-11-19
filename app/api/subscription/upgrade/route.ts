@@ -25,19 +25,14 @@ export const POST = ExceptionMapper.asyncHandler(async (request: NextRequest) =>
   }
 
   // Plan kontrolü
-  const validPlans = ['free', 'premium', 'enterprise']
-  if (!validPlans.includes(planId)) {
+  const { isValidPlanId, getPlanPrice } = await import('@/lib/plan-config')
+  
+  if (!isValidPlanId(planId)) {
     throw new BadRequestError('Geçersiz plan')
   }
 
-  // Plan fiyatları
-  const planPrices: { [key: string]: number } = {
-    free: 0,
-    premium: 250,
-    enterprise: 450,
-  }
-
-  const amount = planPrices[planId]
+  // Merkezi konfigürasyondan plan fiyatını al
+  const amount = getPlanPrice(planId)
 
   // Free plan için direkt aktif et
   if (planId === 'free') {

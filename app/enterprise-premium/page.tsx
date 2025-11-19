@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useUser } from '@/lib/user-context'
+import { EnterprisePremiumContactModal } from '@/components/enterprise-premium-contact-modal'
 import {
   Building2,
   Users,
@@ -663,15 +664,7 @@ import {
 export default function EnterprisePremiumPage() {
   const router = useRouter()
   const { user } = useUser()
-  const [selectedPlan, setSelectedPlan] = useState('enterprise_premium')
-  const [isContactFormOpen, setIsContactFormOpen] = useState(false)
-  const [contactForm, setContactForm] = useState({
-    name: '',
-    email: '',
-    company: '',
-    phone: '',
-    message: '',
-  })
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
 
   const isAlreadyEnterprisePremium = user?.plan === 'enterprise_premium'
 
@@ -758,7 +751,7 @@ export default function EnterprisePremiumPage() {
                 size="lg"
                 variant="outline"
                 className="border-2 border-amber-400/50 text-amber-400 hover:bg-amber-400/10 px-16 py-8 text-2xl font-black backdrop-blur-sm"
-                onClick={() => setIsContactFormOpen(true)}
+                onClick={() => setIsContactModalOpen(true)}
               >
                 <MessageSquare className="h-8 w-8 mr-4" />
                 ULTRA DEMO TALEP
@@ -1201,7 +1194,7 @@ export default function EnterprisePremiumPage() {
                   size="lg"
                   variant="outline"
                   className="border-2 border-amber-400/50 text-amber-400 hover:bg-amber-400/10 px-20 py-8 text-2xl font-black backdrop-blur-sm"
-                  onClick={() => setIsContactFormOpen(true)}
+                  onClick={() => setIsContactModalOpen(true)}
                 >
                   <Phone className="h-8 w-8 mr-4" />
                   ULTRA SATIŞ EKİBİ
@@ -1211,6 +1204,12 @@ export default function EnterprisePremiumPage() {
           </div>
         </div>
       </div>
+
+      {/* Enterprise Premium İletişim Modal */}
+      <EnterprisePremiumContactModal
+        open={isContactModalOpen}
+        onOpenChange={setIsContactModalOpen}
+      />
     </div>
   )
 }

@@ -200,23 +200,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Premium kontrolü - Export özelliği sadece premium kullanıcılar için
-    const subscription = await prisma.userSubscription.findFirst({
-      where: {
-        userId: user.id,
-        status: 'active',
-      },
-      orderBy: { createdAt: 'desc' },
-    })
+    const { checkPremiumAccess } = await import('@/lib/premium-middleware')
+    const premiumCheck = await checkPremiumAccess(request, 'premium')
 
-    const currentPlan = subscription?.planId || 'free'
-
-    if (currentPlan === 'free') {
+    if (!premiumCheck.allowed) {
       return NextResponse.json(
         {
-          error:
-            'Veri dışa aktarma özelliği Premium üyelik gerektirir. Premium plana geçerek gelişmiş raporları export edebilirsiniz.',
+          error: 'Veri dışa aktarma özelliği Premium üyelik gerektirir. Premium plana geçerek gelişmiş raporları export edebilirsiniz.',
           requiresPremium: true,
+          requiredPlan: premiumCheck.requiredPlan,
+          currentPlan: premiumCheck.currentPlan,
           feature: 'Veri Dışa Aktarma',
+          upgradeUrl: '/premium',
         },
         { status: 403 }
       )

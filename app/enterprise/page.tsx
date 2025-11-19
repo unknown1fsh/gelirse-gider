@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { useUser } from '@/lib/user-context'
+import { EnterprisePremiumContactModal } from '@/components/enterprise-premium-contact-modal'
 import {
   Building2,
   Users,
@@ -23,15 +24,7 @@ import {
 export default function EnterprisePage() {
   const router = useRouter()
   const { user } = useUser()
-  const [_selectedPlan, _setSelectedPlan] = useState('enterprise')
-  const [isContactFormOpen, setIsContactFormOpen] = useState(false)
-  const [_contactForm, _setContactForm] = useState({
-    name: '',
-    email: '',
-    company: '',
-    phone: '',
-    message: '',
-  })
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
 
   const _isAlreadyEnterprise = user?.plan === 'enterprise'
   const _isAlreadyEnterprisePremium = user?.plan === 'enterprise_premium'
@@ -103,7 +96,7 @@ export default function EnterprisePage() {
                 size="lg"
                 variant="outline"
                 className="border-2 border-white/30 text-white hover:bg-white/10 px-12 py-6 text-xl font-bold backdrop-blur-sm"
-                onClick={() => setIsContactFormOpen(true)}
+                onClick={() => setIsContactModalOpen(true)}
               >
                 <MessageSquare className="h-6 w-6 mr-3" />
                 DEMO TALEP ET
@@ -236,7 +229,7 @@ export default function EnterprisePage() {
                   size="lg"
                   variant="outline"
                   className="border-2 border-white/30 text-white hover:bg-white/10 px-12 py-6 text-xl font-bold backdrop-blur-sm"
-                  onClick={() => setIsContactFormOpen(true)}
+                  onClick={() => setIsContactModalOpen(true)}
                 >
                   <Phone className="h-6 w-6 mr-3" />
                   CONTACT SALES
@@ -246,6 +239,12 @@ export default function EnterprisePage() {
           </div>
         </div>
       </div>
+
+      {/* Enterprise Premium İletişim Modal */}
+      <EnterprisePremiumContactModal
+        open={isContactModalOpen}
+        onOpenChange={setIsContactModalOpen}
+      />
     </div>
   )
 }

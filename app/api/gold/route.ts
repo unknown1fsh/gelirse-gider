@@ -38,6 +38,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Oturum bulunamadı' }, { status: 401 })
     }
 
+    // Premium kontrolü - Altın yönetimi premium kullanıcılar için
+    const { checkPremiumAccess } = await import('@/lib/premium-middleware')
+    const premiumCheck = await checkPremiumAccess(request, 'premium')
+
+    if (!premiumCheck.allowed) {
+      return NextResponse.json(
+        {
+          error: premiumCheck.message,
+          requiresPremium: true,
+          requiredPlan: premiumCheck.requiredPlan,
+          currentPlan: premiumCheck.currentPlan,
+          feature: 'Altın Yönetimi',
+          upgradeUrl: '/premium',
+        },
+        { status: 403 }
+      )
+    }
+
     const body = await request.json()
 
     const goldItem = await prisma.goldItem.create({

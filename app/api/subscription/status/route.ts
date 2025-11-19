@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentUser } from '@/lib/auth-refactored'
 import { PrismaClient } from '@prisma/client'
+import { getPlanById, PLAN_IDS } from '@/lib/plan-config'
 
 const prisma = new PrismaClient()
 
@@ -40,39 +41,15 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    // Plan limitleri
-    const planLimits: { [key: string]: { transactions: number; features: string[] } } = {
-      free: {
-        transactions: 50,
-        features: ['Temel raporlar', 'Mobil erişim', 'E-posta desteği'],
-      },
-      premium: {
-        transactions: -1, // Sınırsız
-        features: ['Sınırsız işlem', 'Gelişmiş analizler', 'Öncelikli destek', 'Veri dışa aktarma'],
-      },
-      enterprise: {
-        transactions: -1,
-        features: [
-          'Tüm Premium özellikler',
-          'Çoklu kullanıcı',
-          'API erişimi',
-          'Özel entegrasyonlar',
-        ],
-      },
-      enterprise_premium: {
-        transactions: -1,
-        features: [
-          'Tüm Enterprise özellikler',
-          'Öncelikli destek 7/24',
-          'Özel raporlama',
-          'Özel eğitim',
-          'SLA garantisi',
-        ],
-      },
-    }
-
-    const currentPlan = subscription?.planId || 'free'
-    const limits = planLimits[currentPlan]
+    // Merkezi konfigürasyondan plan bilgilerini al
+    const currentPlan = subscription?.planId || PLAN_IDS.FREE
+    const planConfig = getPlanById(currentPlan)
+    
+    // Plan özelliklerini düzleştir
+    const features = planConfig?.categories.flatMap(cat => cat.features) || []
+    
+    // Transaction limitini kontrol et
+    const transactionLimit = planConfig?.id === PLAN_IDS.FREE ? 50 : -1
 
     return NextResponse.json({
       success: true,
@@ -91,12 +68,12 @@ export async function GET(request: NextRequest) {
       usage: {
         currentPlan,
         transactionsThisMonth: usageStats,
-        transactionLimit: limits.transactions,
-        isUnlimited: limits.transactions === -1,
+        transactionLimit: transactionLimit,
+        isUnlimited: transactionLimit === -1,
         remainingTransactions:
-          limits.transactions === -1 ? -1 : Math.max(0, limits.transactions - usageStats),
+          transactionLimit === -1 ? -1 : Math.max(0, transactionLimit - usageStats),
       },
-      features: limits.features,
+      features,
       history: subscriptionHistory.map(sub => ({
         id: sub.id,
         planId: sub.planId,
