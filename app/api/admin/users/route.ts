@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/admin'
 import { ExceptionMapper } from '@/server/errors'
 import { UserMapper } from '@/server/mappers/UserMapper'
+import { isValidPlanId, getPlanPrice, PLAN_IDS } from '@/lib/plan-config'
+import { Prisma } from '@prisma/client'
 
 // Kullanıcı listesi
 export const GET = ExceptionMapper.asyncHandler(async (request: NextRequest) => {
@@ -21,7 +23,7 @@ export const GET = ExceptionMapper.asyncHandler(async (request: NextRequest) => 
   const skip = (page - 1) * limit
 
   // Arama ve filtreleme koşulları
-  const where: any = {}
+  const where: Prisma.UserWhereInput = {}
 
   if (search) {
     where.OR = [
@@ -74,21 +76,26 @@ export const GET = ExceptionMapper.asyncHandler(async (request: NextRequest) => 
   })
 })
 
-// Kullanıcı güncelleme (role, isActive vb.)
+// Kullanıcı güncelleme (role, isActive, plan vb.)
 export const PUT = ExceptionMapper.asyncHandler(async (request: NextRequest) => {
   const adminCheck = await requireAdmin(request)
   if (adminCheck.error) {
     return adminCheck.error
   }
 
-  const body = await request.json()
-  const { userId, role, isActive } = body
+  const body = (await request.json()) as {
+    userId?: number
+    role?: string
+    isActive?: boolean
+    planId?: string
+  }
+  const { userId, role, isActive, planId } = body
 
   if (!userId) {
     return NextResponse.json({ error: 'Kullanıcı ID gerekli' }, { status: 400 })
   }
 
-  const updateData: any = {}
+  const updateData: Prisma.UserUpdateInput = {}
 
   if (role !== undefined) {
     updateData.role = role
@@ -96,6 +103,59 @@ export const PUT = ExceptionMapper.asyncHandler(async (request: NextRequest) => 
 
   if (isActive !== undefined) {
     updateData.isActive = isActive
+  }
+
+  // Plan değiştirme işlemi
+  if (planId !== undefined) {
+    if (!planId || !isValidPlanId(planId)) {
+      return NextResponse.json({ error: 'Geçersiz plan ID' }, { status: 400 })
+    }
+
+    // Mevcut aktif aboneliği bul
+    const existingSubscription = await prisma.userSubscription.findFirst({
+      where: {
+        userId,
+        status: 'active',
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    // Eğer kullanıcı zaten bu plandaysa, hata döndürme (sessizce başarılı sayalım)
+    if (existingSubscription && existingSubscription.planId === planId) {
+      // Plan değişikliği yok, sadece user bilgilerini güncelle
+    } else {
+      // Eski aboneliği iptal et (eğer varsa)
+      if (existingSubscription) {
+        await prisma.userSubscription.update({
+          where: { id: existingSubscription.id },
+          data: {
+            status: 'cancelled',
+            cancelledAt: new Date(),
+          },
+        })
+      }
+
+      // Yeni abonelik oluştur
+      const planPrice = getPlanPrice(planId)
+      const startDate = new Date()
+      // 30 gün abonelik (admin manuel değişiklik)
+      const endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+
+      await prisma.userSubscription.create({
+        data: {
+          userId,
+          planId,
+          status: 'active',
+          startDate,
+          endDate,
+          amount: planPrice,
+          currency: 'TRY',
+          paymentMethod: 'admin_manual',
+          transactionId: `admin_${Date.now()}_${userId}`,
+          autoRenew: planId !== PLAN_IDS.FREE,
+        },
+      })
+    }
   }
 
   const updatedUser = await prisma.user.update({
@@ -117,4 +177,3 @@ export const PUT = ExceptionMapper.asyncHandler(async (request: NextRequest) => 
     data: userDTO,
   })
 })
-

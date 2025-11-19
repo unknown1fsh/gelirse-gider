@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import DataTable from './DataTable'
 import UserDetailModal from './UserDetailModal'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import {
   Select,
   SelectContent,
@@ -85,7 +84,7 @@ export default function AdminUsers() {
 
   const handleUpdateUser = async (
     userId: number,
-    updates: { role?: string; isActive?: boolean }
+    updates: { role?: string; isActive?: boolean; planId?: string }
   ) => {
     try {
       const response = await fetch('/api/admin/users', {
@@ -96,7 +95,8 @@ export default function AdminUsers() {
       })
 
       if (!response.ok) {
-        throw new Error('Kullanıcı güncellenemedi')
+        const errorData = (await response.json()) as { error?: string }
+        throw new Error(errorData.error || 'Kullanıcı güncellenemedi')
       }
 
       // Kullanıcı listesini yenile
@@ -104,7 +104,7 @@ export default function AdminUsers() {
       alert('Kullanıcı başarıyla güncellendi')
     } catch (err) {
       console.error('Update user error:', err)
-      alert('Kullanıcı güncellenirken hata oluştu')
+      alert(err instanceof Error ? err.message : 'Kullanıcı güncellenirken hata oluştu')
     }
   }
 
@@ -209,11 +209,22 @@ export default function AdminUsers() {
       key: 'plan',
       header: 'Plan',
       render: (user: User) => (
-        <Badge
-          variant={user.plan === 'premium' || user.plan === 'enterprise' ? 'default' : 'secondary'}
+        <Select
+          value={user.plan}
+          onValueChange={value => {
+            void handleUpdateUser(user.id, { planId: value })
+          }}
         >
-          {user.plan}
-        </Badge>
+          <SelectTrigger className="w-40">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="free">Free</SelectItem>
+            <SelectItem value="premium">Premium</SelectItem>
+            <SelectItem value="enterprise">Enterprise</SelectItem>
+            <SelectItem value="enterprise_premium">Enterprise Premium</SelectItem>
+          </SelectContent>
+        </Select>
       ),
     },
     {
@@ -365,6 +376,9 @@ export default function AdminUsers() {
         open={detailModalOpen}
         onClose={() => setDetailModalOpen(false)}
         user={selectedUser}
+        onUserUpdate={() => {
+          void fetchUsers()
+        }}
       />
     </div>
   )

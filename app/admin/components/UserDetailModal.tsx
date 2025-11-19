@@ -1,8 +1,16 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { X } from 'lucide-react'
 
 interface UserDetail {
@@ -29,9 +37,64 @@ interface UserDetailModalProps {
   onClose: () => void
   user: UserDetail | null
   loading?: boolean
+  onUserUpdate?: () => void
 }
 
-export default function UserDetailModal({ open, onClose, user, loading }: UserDetailModalProps) {
+export default function UserDetailModal({
+  open,
+  onClose,
+  user,
+  loading,
+  onUserUpdate,
+}: UserDetailModalProps) {
+  const [updatingPlan, setUpdatingPlan] = useState(false)
+  const [currentPlan, setCurrentPlan] = useState(user?.plan || 'free')
+
+  // user değiştiğinde currentPlan'i güncelle
+  useEffect(() => {
+    if (user) {
+      setCurrentPlan(user.plan)
+    }
+  }, [user])
+
+  const handlePlanChange = async (newPlanId: string) => {
+    if (!user) {
+      return
+    }
+
+    if (newPlanId === currentPlan) {
+      return // Aynı plan seçilmişse işlem yapma
+    }
+
+    setUpdatingPlan(true)
+    try {
+      const response = await fetch('/api/admin/users', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ userId: user.id, planId: newPlanId }),
+      })
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string }
+        throw new Error(errorData.error || 'Plan güncellenemedi')
+      }
+
+      setCurrentPlan(newPlanId)
+      alert('Plan başarıyla güncellendi')
+      if (onUserUpdate) {
+        onUserUpdate()
+      }
+    } catch (err) {
+      console.error('Plan update error:', err)
+      alert(err instanceof Error ? err.message : 'Plan güncellenirken hata oluştu')
+      // Hata durumunda eski plana geri dön
+      setCurrentPlan(user.plan)
+    } finally {
+      setUpdatingPlan(false)
+    }
+  }
+
   if (!user && !loading) {
     return null
   }
@@ -79,15 +142,23 @@ export default function UserDetailModal({ open, onClose, user, loading }: UserDe
               <div>
                 <label className="text-sm font-medium text-slate-600">Plan</label>
                 <div className="mt-1">
-                  <Badge
-                    variant={
-                      user.plan === 'premium' || user.plan === 'enterprise'
-                        ? 'default'
-                        : 'secondary'
-                    }
+                  <Select
+                    value={currentPlan}
+                    onValueChange={value => {
+                      void handlePlanChange(value)
+                    }}
+                    disabled={updatingPlan}
                   >
-                    {user.plan}
-                  </Badge>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="free">Free</SelectItem>
+                      <SelectItem value="premium">Premium</SelectItem>
+                      <SelectItem value="enterprise">Enterprise</SelectItem>
+                      <SelectItem value="enterprise_premium">Enterprise Premium</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               <div>
