@@ -128,7 +128,9 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
           {/* Kullanıcı Plan Bilgisi */}
           {user && (
             <div className="flex items-center justify-center py-3 px-6">
-              {user.plan === 'premium' || user.plan === 'enterprise' ? (
+              {user.plan === 'premium' ||
+              user.plan === 'enterprise' ||
+              user.plan === 'enterprise_premium' ? (
                 <Link
                   href="/premium-features"
                   onClick={handleLinkClick}
@@ -136,7 +138,11 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                 >
                   <Crown className="h-4 w-4 text-yellow-400 animate-pulse group-hover:animate-bounce" />
                   <span className="text-sm font-bold bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-300 bg-clip-text text-transparent group-hover:from-yellow-200 group-hover:via-yellow-300 group-hover:to-amber-200">
-                    {user.plan === 'enterprise' ? 'Enterprise' : 'Premium'}
+                    {user.plan === 'enterprise_premium'
+                      ? 'Kurumsal Premium'
+                      : user.plan === 'enterprise'
+                        ? 'Enterprise'
+                        : 'Premium'}
                   </span>
                   <Sparkles className="h-3 w-3 text-yellow-400 group-hover:text-yellow-300" />
                 </Link>
