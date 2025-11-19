@@ -15,6 +15,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import PremiumUpgradeModal from '@/components/premium-upgrade-modal'
+import { useUser } from '@/lib/user-context'
+import { isPremiumPlan } from '@/lib/plan-config'
 import {
   Building2,
   TrendingUp,
@@ -131,32 +133,25 @@ const investmentTypes = [
 
 export default function InvestmentsPage() {
   const router = useRouter()
+  const { user, loading: userLoading, refreshUser } = useUser()
   const [investments, setInvestments] = useState<Investment[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedType, setSelectedType] = useState<string>('all')
   const [showPremiumModal, setShowPremiumModal] = useState(false)
   const [activeTab, setActiveTab] = useState('portfolio')
-  const [userPlan, setUserPlan] = useState<string>('free')
-  const [userLoading, setUserLoading] = useState(true)
 
-  // Kullanıcı bilgisini al
+  // Plan değişikliklerini dinle
   useEffect(() => {
-    async function fetchUser() {
-      try {
-        const response = await fetch('/api/auth/me', { credentials: 'include' })
-        if (response.ok) {
-          const data = (await response.json()) as { plan?: string }
-          setUserPlan(data.plan || 'free')
-        }
-      } catch (error) {
-        console.error('Kullanıcı bilgisi alınamadı:', error)
-      } finally {
-        setUserLoading(false)
-      }
+    const handlePlanChange = () => {
+      void refreshUser()
     }
-    void fetchUser()
-  }, [])
+
+    window.addEventListener('plan-changed', handlePlanChange)
+    return () => {
+      window.removeEventListener('plan-changed', handlePlanChange)
+    }
+  }, [refreshUser])
 
   // Gerçek yatırım verilerini getir
   useEffect(() => {
@@ -165,7 +160,10 @@ export default function InvestmentsPage() {
     }
 
     async function fetchInvestments() {
-      if (userPlan === 'free') {
+      const currentPlan = user?.plan || 'free'
+      const isPremium = isPremiumPlan(currentPlan)
+
+      if (!isPremium) {
         // Free kullanıcı - demo veriler göster
         const demoInvestments: Investment[] = [
           {
@@ -240,7 +238,7 @@ export default function InvestmentsPage() {
     }
 
     void fetchInvestments()
-  }, [userPlan, userLoading])
+  }, [user?.plan, userLoading, user])
 
   const filteredInvestments = investments.filter(investment => {
     const matchesSearch =
@@ -260,7 +258,13 @@ export default function InvestmentsPage() {
   }
 
   const handleAddInvestment = (investmentType: string) => {
-    if (userPlan === 'free') {
+    const currentPlan = user?.plan || 'free'
+    const isPremium =
+      currentPlan === 'premium' ||
+      currentPlan === 'enterprise' ||
+      currentPlan === 'enterprise_premium'
+
+    if (!isPremium) {
       setShowPremiumModal(true)
     } else {
       // Premium kullanıcı - doğrudan ekleme sayfasına git

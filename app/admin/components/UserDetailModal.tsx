@@ -81,6 +81,10 @@ export default function UserDetailModal({
       }
 
       setCurrentPlan(newPlanId)
+
+      // Plan değişikliği event'i gönder
+      window.dispatchEvent(new CustomEvent('plan-changed'))
+
       alert('Plan başarıyla güncellendi')
       if (onUserUpdate) {
         onUserUpdate()

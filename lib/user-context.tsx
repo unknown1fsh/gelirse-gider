@@ -224,6 +224,27 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
 
     void fetchUser()
+
+    // Plan değişikliklerini dinle
+    const handlePlanChange = () => {
+      void fetchUser()
+    }
+
+    window.addEventListener('plan-changed', handlePlanChange)
+    // Periyodik olarak user bilgilerini yenile (5 dakikada bir)
+    const interval = setInterval(
+      () => {
+        if (!isPublicPage()) {
+          void fetchUser()
+        }
+      },
+      5 * 60 * 1000
+    )
+
+    return () => {
+      window.removeEventListener('plan-changed', handlePlanChange)
+      clearInterval(interval)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

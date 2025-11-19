@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth-refactored'
+import { isPremiumPlan } from '@/lib/plan-config'
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
     const currentPlan = subscription?.planId || 'free'
 
     // Premium kontrolü - Gelişmiş yatırım araçları sadece premium kullanıcılar için
-    if (currentPlan === 'free') {
+    if (!isPremiumPlan(currentPlan)) {
       return NextResponse.json(
         {
           error:
@@ -89,7 +90,20 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const body = await request.json()
+    const body = (await request.json()) as {
+      investmentType?: string
+      name?: string
+      symbol?: string
+      quantity?: string | number
+      purchasePrice?: string | number
+      currentPrice?: string | number
+      purchaseDate?: string
+      notes?: string
+      category?: string
+      riskLevel?: string
+      currencyId?: number
+      metadata?: Record<string, unknown>
+    }
     const {
       investmentType,
       name,
@@ -120,10 +134,12 @@ export async function POST(request: NextRequest) {
         investmentType,
         name,
         symbol,
-        quantity: parseFloat(quantity),
-        purchasePrice: parseFloat(purchasePrice),
-        currentPrice: currentPrice ? parseFloat(currentPrice) : parseFloat(purchasePrice),
-        purchaseDate: new Date(purchaseDate),
+        quantity: parseFloat(String(quantity)),
+        purchasePrice: parseFloat(String(purchasePrice)),
+        currentPrice: currentPrice
+          ? parseFloat(String(currentPrice))
+          : parseFloat(String(purchasePrice)),
+        purchaseDate: new Date(String(purchaseDate)),
         notes,
         category,
         riskLevel: riskLevel || 'medium',
@@ -136,12 +152,15 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return NextResponse.json({
-      ...investment,
-      quantity: investment.quantity.toString(),
-      purchasePrice: investment.purchasePrice.toString(),
-      currentPrice: investment.currentPrice?.toString() || null,
-    }, { status: 201 })
+    return NextResponse.json(
+      {
+        ...investment,
+        quantity: investment.quantity.toString(),
+        purchasePrice: investment.purchasePrice.toString(),
+        currentPrice: investment.currentPrice?.toString() || null,
+      },
+      { status: 201 }
+    )
   } catch (error) {
     console.error('Yatırım oluşturulurken hata:', error)
     return NextResponse.json({ error: 'Yatırım oluşturulurken hata oluştu' }, { status: 500 })

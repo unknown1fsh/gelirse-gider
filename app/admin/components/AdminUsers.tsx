@@ -101,6 +101,13 @@ export default function AdminUsers() {
 
       // Kullanıcı listesini yenile
       await fetchUsers()
+
+      // Plan değişikliği varsa, kullanıcıya bildir
+      if (updates.planId) {
+        // Plan değişikliği event'i gönder
+        window.dispatchEvent(new CustomEvent('plan-changed'))
+      }
+
       alert('Kullanıcı başarıyla güncellendi')
     } catch (err) {
       console.error('Update user error:', err)

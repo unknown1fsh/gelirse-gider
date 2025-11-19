@@ -53,14 +53,28 @@ interface DashboardData {
 }
 
 export default function DashboardPage() {
-  const { user, loading } = useUser()
+  const { user, loading, refreshUser } = useUser()
   const [data, setData] = useState<DashboardData | null>(null)
   const [dataLoading, setDataLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  // Plan değişikliklerini dinle
+  useEffect(() => {
+    const handlePlanChange = () => {
+      void refreshUser()
+    }
+
+    window.addEventListener('plan-changed', handlePlanChange)
+    return () => {
+      window.removeEventListener('plan-changed', handlePlanChange)
+    }
+  }, [refreshUser])
+
   useEffect(() => {
     async function fetchDashboardData() {
-      if (loading || !user) {return}
+      if (loading || !user) {
+        return
+      }
 
       try {
         setDataLoading(true)
@@ -79,7 +93,7 @@ export default function DashboardPage() {
           throw new Error('Dashboard verileri alınamadı')
         }
 
-        const dashboardData = await response.json()
+        const dashboardData = (await response.json()) as DashboardData
         setData(dashboardData)
       } catch (err) {
         console.error('Dashboard data fetch error:', err)
@@ -126,7 +140,7 @@ export default function DashboardPage() {
                   Hoş geldin, {user?.name || 'Kullanıcı'}! 👋
                 </h2>
                 <p className="text-sm sm:text-base text-slate-600">
-                  {user?.plan === 'free' 
+                  {user?.plan === 'free'
                     ? 'Ücretsiz üyelik ile temel özellikler aktif'
                     : user?.plan === 'enterprise' || user?.plan === 'enterprise_premium'
                       ? 'Kurumsal üyelik ile tüm özellikler aktif'
@@ -164,7 +178,7 @@ export default function DashboardPage() {
                   )}
                 </div>
               )}
-              
+
               {/* Canlı Veri */}
               <div className="flex items-center space-x-2">
                 <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
@@ -283,7 +297,9 @@ export default function DashboardPage() {
 
           <Card className="group hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-rose-50 to-pink-50 hover:from-rose-100 hover:to-pink-100">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-700">Kredi Kartı Borcu</CardTitle>
+              <CardTitle className="text-sm font-medium text-slate-700">
+                Kredi Kartı Borcu
+              </CardTitle>
               <div className="p-2 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 shadow-lg group-hover:scale-110 transition-transform">
                 <CreditCard className="h-4 w-4 text-white" />
               </div>
