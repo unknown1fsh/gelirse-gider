@@ -15,12 +15,8 @@ export const POST = ExceptionMapper.asyncHandler(async (request: NextRequest) =>
     throw new BadRequestError('Oturum bulunamadı')
   }
 
-  // Email doğrulama kontrolü (opsiyonel ama önerilir)
-  if (!user.emailVerified) {
-    throw new BadRequestError('Ödeme yapmak için e-posta adresinizi doğrulamanız gerekiyor')
-  }
-
-  const { planId } = await request.json()
+  const body = (await request.json()) as { planId?: string }
+  const { planId } = body
 
   // Validation
   if (!planId) {
@@ -69,4 +65,3 @@ export const POST = ExceptionMapper.asyncHandler(async (request: NextRequest) =>
     { status: 200 }
   )
 })
-
