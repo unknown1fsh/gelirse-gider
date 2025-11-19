@@ -19,6 +19,10 @@ import {
   Sparkles,
   Users,
   ArrowLeft,
+  Building2,
+  Globe,
+  Star,
+  Rocket,
 } from 'lucide-react'
 
 export default function PremiumPage() {
@@ -85,17 +89,22 @@ export default function PremiumPage() {
     { name: 'Otomatik bulut yedekleme', free: false, premium: true },
   ]
 
-  const handleUpgrade = () => {
-    if (isAlreadyPremium) {
+  const handleUpgrade = (planId: string = 'premium', amount: number = 250) => {
+    if (isAlreadyPremium && planId === 'premium') {
       return
     }
 
     setIsProcessing(true)
 
-    // Premium için PayTR ödeme sayfasına yönlendir
-    const amount = 250
+    // Enterprise Premium için özel iletişim formu
+    if (planId === 'enterprise_premium') {
+      router.push('/enterprise-premium')
+      return
+    }
+
+    // Premium/Enterprise için PayTR ödeme sayfasına yönlendir
     router.push(
-      `/payment?planId=premium&productType=premium&amount=${amount}&description=${encodeURIComponent('Premium plan abonelik ücreti')}`
+      `/payment?planId=${planId}&productType=${planId}&amount=${amount}&description=${encodeURIComponent(`${planId} plan abonelik ücreti`)}`
     )
   }
 
@@ -228,67 +237,327 @@ export default function PremiumPage() {
           </div>
         </div>
 
-        {/* Karşılaştırma Tablosu - Daha basit ve etkili */}
+        {/* Plan Seçenekleri */}
         {!isAlreadyPremium && (
           <div className="mb-20">
             <h2 className="text-3xl font-bold text-center text-slate-900 mb-3">
-              Ücretsiz vs Premium
+              Size Uygun Planı Seçin
             </h2>
             <p className="text-center text-slate-600 mb-12">
-              Premium ile elde edeceğiniz tüm avantajları görün
+              Bireysel kullanıcıdan büyük şirketlere kadar herkes için çözüm
             </p>
 
-            <Card className="max-w-4xl mx-auto overflow-hidden border-2 border-slate-200">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b-2 border-slate-200">
-                      <th className="text-left p-4 font-semibold text-slate-700">Özellik</th>
-                      <th className="text-center p-4 font-semibold text-slate-700 bg-slate-50">
-                        Ücretsiz
-                      </th>
-                      <th className="text-center p-4 font-semibold text-white bg-gradient-to-r from-purple-600 to-pink-600">
-                        Premium
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {comparisonFeatures.map((feature, index) => (
-                      <tr
-                        key={index}
-                        className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
-                      >
-                        <td className="p-4 text-slate-700 font-medium">{feature.name}</td>
-                        <td className="p-4 text-center">
-                          {typeof feature.free === 'boolean' ? (
-                            feature.free ? (
-                              <Check className="h-5 w-5 text-green-500 mx-auto" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
+              {/* Premium Plan */}
+              <Card className="relative overflow-hidden border-2 border-purple-300 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                <div className="absolute top-0 right-0 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1 text-sm font-bold rounded-bl-xl">
+                  <Star className="h-4 w-4 inline mr-1" />
+                  En Popüler
+                </div>
+                <CardContent className="p-8">
+                  <div className="text-center mb-6">
+                    <div className="inline-flex p-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl mb-4">
+                      <Crown className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-slate-900 mb-2">Premium</h3>
+                    <p className="text-slate-600 mb-4">Bireysel kullanıcılar için</p>
+                    <div className="mb-4">
+                      <span className="text-5xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        250₺
+                      </span>
+                      <span className="text-slate-600 text-lg">/ay</span>
+                    </div>
+                  </div>
+
+                  <ul className="space-y-3 mb-8">
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">Sınırsız işlem</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">AI finansal asistan</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">Gelişmiş raporlar</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">Akıllı hedef takibi</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">PDF/Excel raporları</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-purple-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">Öncelikli destek</span>
+                    </li>
+                  </ul>
+
+                  <Button
+                    onClick={() => handleUpgrade('premium', 250)}
+                    disabled={isProcessing}
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-6"
+                  >
+                    {isProcessing ? (
+                      <div className="flex items-center justify-center">
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                        İşleniyor...
+                      </div>
+                    ) : (
+                      <>
+                        Hemen Başla <ArrowRight className="h-5 w-5 ml-2" />
+                      </>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Enterprise Plan */}
+              <Card className="relative overflow-hidden border-2 border-blue-200 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                <CardContent className="p-8">
+                  <div className="text-center mb-6">
+                    <div className="inline-flex p-4 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl mb-4">
+                      <Building2 className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-slate-900 mb-2">Enterprise</h3>
+                    <p className="text-slate-600 mb-4">KOBİ ve şirketler için</p>
+                    <div className="mb-4">
+                      <span className="text-5xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                        450₺
+                      </span>
+                      <span className="text-slate-600 text-lg">/ay</span>
+                    </div>
+                  </div>
+
+                  <ul className="space-y-3 mb-8">
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700 font-semibold">Tüm Premium özellikler</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">Çoklu kullanıcı desteği</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">Departman yönetimi</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">API erişimi</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">Özel entegrasyonlar</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">Dedicated destek</span>
+                    </li>
+                  </ul>
+
+                  <Button
+                    onClick={() => handleUpgrade('enterprise', 450)}
+                    disabled={isProcessing}
+                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-6"
+                  >
+                    Hemen Başla <ArrowRight className="h-5 w-5 ml-2" />
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Enterprise Premium Plan */}
+              <Card className="relative overflow-hidden border-2 border-amber-300 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-gradient-to-br from-amber-50 to-orange-50">
+                <div className="absolute top-0 right-0 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-1 text-sm font-bold rounded-bl-xl">
+                  <Sparkles className="h-4 w-4 inline mr-1" />
+                  Ultra Premium
+                </div>
+                <CardContent className="p-8">
+                  <div className="text-center mb-6">
+                    <div className="inline-flex p-4 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl mb-4">
+                      <Rocket className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-slate-900 mb-2">Enterprise Premium</h3>
+                    <p className="text-slate-600 mb-4">Holding ve büyük kurumlar</p>
+                    <div className="mb-4">
+                      <span className="text-3xl font-black bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                        Özel Fiyat
+                      </span>
+                    </div>
+                  </div>
+
+                  <ul className="space-y-3 mb-8">
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-amber-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700 font-semibold">
+                        Tüm Enterprise özellikler
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-amber-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">Holding/Konsolidasyon</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-amber-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">Global şube ağı</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-amber-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">Quantum güvenlik</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-amber-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">Beyaz etiket çözümü</span>
+                    </li>
+                    <li className="flex items-start">
+                      <Check className="h-5 w-5 text-amber-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-700">VIP dedike ekip</span>
+                    </li>
+                  </ul>
+
+                  <Button
+                    onClick={() => handleUpgrade('enterprise_premium', 0)}
+                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold py-6"
+                  >
+                    İletişime Geç <Globe className="h-5 w-5 ml-2" />
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Karşılaştırma Tablosu */}
+            <div className="mb-12">
+              <h3 className="text-2xl font-bold text-center text-slate-900 mb-8">
+                Detaylı Özellik Karşılaştırması
+              </h3>
+
+              <Card className="max-w-6xl mx-auto overflow-hidden border-2 border-slate-200">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b-2 border-slate-200">
+                        <th className="text-left p-4 font-semibold text-slate-700">Özellik</th>
+                        <th className="text-center p-4 font-semibold text-slate-700 bg-slate-50">
+                          Ücretsiz
+                        </th>
+                        <th className="text-center p-4 font-semibold text-white bg-gradient-to-r from-purple-600 to-pink-600">
+                          Premium
+                        </th>
+                        <th className="text-center p-4 font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600">
+                          Enterprise
+                        </th>
+                        <th className="text-center p-4 font-semibold text-white bg-gradient-to-r from-amber-600 to-orange-600">
+                          Enterprise Premium
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {comparisonFeatures.map((feature, index) => (
+                        <tr
+                          key={index}
+                          className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
+                        >
+                          <td className="p-4 text-slate-700 font-medium">{feature.name}</td>
+                          <td className="p-4 text-center">
+                            {typeof feature.free === 'boolean' ? (
+                              feature.free ? (
+                                <Check className="h-5 w-5 text-green-500 mx-auto" />
+                              ) : (
+                                <X className="h-5 w-5 text-slate-300 mx-auto" />
+                              )
                             ) : (
-                              <X className="h-5 w-5 text-slate-300 mx-auto" />
-                            )
-                          ) : (
-                            <span className="text-sm text-slate-600">{feature.free}</span>
-                          )}
+                              <span className="text-sm text-slate-600">{feature.free}</span>
+                            )}
+                          </td>
+                          <td className="p-4 text-center bg-purple-50/30">
+                            {typeof feature.premium === 'boolean' ? (
+                              feature.premium ? (
+                                <Check className="h-5 w-5 text-purple-600 mx-auto" />
+                              ) : (
+                                <X className="h-5 w-5 text-slate-300 mx-auto" />
+                              )
+                            ) : (
+                              <span className="text-sm font-semibold text-purple-700">
+                                {feature.premium}
+                              </span>
+                            )}
+                          </td>
+                          <td className="p-4 text-center bg-blue-50/30">
+                            <Check className="h-5 w-5 text-blue-600 mx-auto" />
+                          </td>
+                          <td className="p-4 text-center bg-amber-50/30">
+                            <Check className="h-5 w-5 text-amber-600 mx-auto" />
+                          </td>
+                        </tr>
+                      ))}
+                      <tr className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td className="p-4 text-slate-700 font-medium">Çoklu kullanıcı</td>
+                        <td className="p-4 text-center">
+                          <X className="h-5 w-5 text-slate-300 mx-auto" />
                         </td>
                         <td className="p-4 text-center bg-purple-50/30">
-                          {typeof feature.premium === 'boolean' ? (
-                            feature.premium ? (
-                              <Check className="h-5 w-5 text-purple-600 mx-auto" />
-                            ) : (
-                              <X className="h-5 w-5 text-slate-300 mx-auto" />
-                            )
-                          ) : (
-                            <span className="text-sm font-semibold text-purple-700">
-                              {feature.premium}
-                            </span>
-                          )}
+                          <X className="h-5 w-5 text-slate-300 mx-auto" />
+                        </td>
+                        <td className="p-4 text-center bg-blue-50/30">
+                          <Check className="h-5 w-5 text-blue-600 mx-auto" />
+                        </td>
+                        <td className="p-4 text-center bg-amber-50/30">
+                          <Check className="h-5 w-5 text-amber-600 mx-auto" />
                         </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </Card>
+                      <tr className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td className="p-4 text-slate-700 font-medium">API erişimi</td>
+                        <td className="p-4 text-center">
+                          <X className="h-5 w-5 text-slate-300 mx-auto" />
+                        </td>
+                        <td className="p-4 text-center bg-purple-50/30">
+                          <X className="h-5 w-5 text-slate-300 mx-auto" />
+                        </td>
+                        <td className="p-4 text-center bg-blue-50/30">
+                          <Check className="h-5 w-5 text-blue-600 mx-auto" />
+                        </td>
+                        <td className="p-4 text-center bg-amber-50/30">
+                          <Check className="h-5 w-5 text-amber-600 mx-auto" />
+                        </td>
+                      </tr>
+                      <tr className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td className="p-4 text-slate-700 font-medium">Özel entegrasyonlar</td>
+                        <td className="p-4 text-center">
+                          <X className="h-5 w-5 text-slate-300 mx-auto" />
+                        </td>
+                        <td className="p-4 text-center bg-purple-50/30">
+                          <X className="h-5 w-5 text-slate-300 mx-auto" />
+                        </td>
+                        <td className="p-4 text-center bg-blue-50/30">
+                          <Check className="h-5 w-5 text-blue-600 mx-auto" />
+                        </td>
+                        <td className="p-4 text-center bg-amber-50/30">
+                          <Check className="h-5 w-5 text-amber-600 mx-auto" />
+                        </td>
+                      </tr>
+                      <tr className="hover:bg-slate-50 transition-colors">
+                        <td className="p-4 text-slate-700 font-medium">Holding/Global Yönetim</td>
+                        <td className="p-4 text-center">
+                          <X className="h-5 w-5 text-slate-300 mx-auto" />
+                        </td>
+                        <td className="p-4 text-center bg-purple-50/30">
+                          <X className="h-5 w-5 text-slate-300 mx-auto" />
+                        </td>
+                        <td className="p-4 text-center bg-blue-50/30">
+                          <X className="h-5 w-5 text-slate-300 mx-auto" />
+                        </td>
+                        <td className="p-4 text-center bg-amber-50/30">
+                          <Check className="h-5 w-5 text-amber-600 mx-auto" />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            </div>
           </div>
         )}
 
