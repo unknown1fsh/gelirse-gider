@@ -22,6 +22,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function LandingPage() {
   const router = useRouter()
@@ -661,9 +662,19 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-6 text-xs sm:text-sm text-slate-400">
               <span>© 2024 GiderSE-Gelir</span>
               <span className="hidden sm:inline">•</span>
-              <span>Gizlilik Politikası</span>
+              <Link
+                href="/privacy"
+                className="text-purple-400 hover:text-purple-300 transition-colors underline"
+              >
+                Gizlilik Politikası
+              </Link>
               <span className="hidden sm:inline">•</span>
-              <span>Kullanım Şartları</span>
+              <Link
+                href="/terms"
+                className="text-purple-400 hover:text-purple-300 transition-colors underline"
+              >
+                Kullanım Şartları
+              </Link>
             </div>
           </div>
         </div>
