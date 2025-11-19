@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useUser } from '@/lib/user-context'
 import PeriodSelector from '@/components/period-selector'
+import { isPremiumPlan } from '@/lib/plan-config'
 import {
   Wallet,
   Settings,
@@ -18,6 +19,7 @@ import {
   Building2,
   X,
   Shield,
+  Brain,
 } from 'lucide-react'
 
 const navigation = [
@@ -26,6 +28,13 @@ const navigation = [
   { name: 'Hesaplar', href: '/accounts', icon: Wallet, color: 'text-purple-500' },
   { name: 'Diğer Yatırım Araçları', href: '/investments', icon: Building2, color: 'text-cyan-500' },
   { name: 'Analiz ve Raporlar', href: '/analysis', icon: BarChart3, color: 'text-indigo-500' },
+  {
+    name: 'AI Analiz Raporu',
+    href: '/ai-analysis',
+    icon: Brain,
+    color: 'text-pink-500',
+    premium: true,
+  },
 ]
 
 interface SidebarProps {
@@ -182,6 +191,11 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
         {/* Navigasyon - Scrollable */}
         <nav className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 space-y-2 p-6 scrollbar-thin">
           {navigation.map(item => {
+            // Premium özellik kontrolü
+            if (item.premium && user && !isPremiumPlan(user.plan)) {
+              return null
+            }
+
             const isActive = pathname === item.href
             return (
               <Link
@@ -204,6 +218,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                   <item.icon className={`h-4 w-4 ${isActive ? 'text-white' : item.color}`} />
                 </div>
                 <span className="flex-1">{item.name}</span>
+                {item.premium && <Crown className="h-3 w-3 text-yellow-400" />}
                 {isActive && (
                   <div className="h-2 w-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400"></div>
                 )}

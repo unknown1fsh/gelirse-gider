@@ -175,29 +175,29 @@ model RefBank {
 // User Management Tables
 
 model User {
-  id            Int       @id @default(autoincrement())
-  email         String    @unique @db.VarChar(255)
-  name          String    @db.VarChar(100)
-  phone         String?   @db.VarChar(20)
-  passwordHash  String    @map("password_hash") @db.VarChar(255)
-  emailVerified            Boolean    @default(false) @map("email_verified")
-  emailVerificationToken   String?    @map("email_verification_token") @db.VarChar(255)
-  emailVerificationExpiry  DateTime?  @map("email_verification_expiry")
-  phoneVerified            Boolean    @default(false) @map("phone_verified")
-  avatar                   String?    @db.VarChar(500)
-  timezone      String    @default("Europe/Istanbul") @db.VarChar(50)
-  language      String    @default("tr") @db.VarChar(5)
-  currency      String    @default("TRY") @db.VarChar(3)
-  dateFormat    String    @default("DD/MM/YYYY") @map("date_format") @db.VarChar(20)
-  numberFormat  String    @default("1.234,56") @map("number_format") @db.VarChar(20)
-  theme         String    @default("light") @db.VarChar(20)
-  notifications Json      @default("{}")
-  settings      Json      @default("{}")
-  role          String    @default("USER") @db.VarChar(20) // USER, ADMIN, ENTERPRISE
-  lastLoginAt   DateTime? @map("last_login_at")
-  isActive      Boolean   @default(true) @map("is_active")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id                      Int       @id @default(autoincrement())
+  email                   String    @unique @db.VarChar(255)
+  name                    String    @db.VarChar(100)
+  phone                   String?   @db.VarChar(20)
+  passwordHash            String    @map("password_hash") @db.VarChar(255)
+  emailVerified           Boolean   @default(false) @map("email_verified")
+  emailVerificationToken  String?   @map("email_verification_token") @db.VarChar(255)
+  emailVerificationExpiry DateTime? @map("email_verification_expiry")
+  phoneVerified           Boolean   @default(false) @map("phone_verified")
+  avatar                  String?   @db.VarChar(500)
+  timezone                String    @default("Europe/Istanbul") @db.VarChar(50)
+  language                String    @default("tr") @db.VarChar(5)
+  currency                String    @default("TRY") @db.VarChar(3)
+  dateFormat              String    @default("DD/MM/YYYY") @map("date_format") @db.VarChar(20)
+  numberFormat            String    @default("1.234,56") @map("number_format") @db.VarChar(20)
+  theme                   String    @default("light") @db.VarChar(20)
+  notifications           Json      @default("{}")
+  settings                Json      @default("{}")
+  role                    String    @default("USER") @db.VarChar(20) // USER, ADMIN, ENTERPRISE
+  lastLoginAt             DateTime? @map("last_login_at")
+  isActive                Boolean   @default(true) @map("is_active")
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
 
   // Relations
   sessions           UserSession[]
@@ -213,6 +213,7 @@ model User {
   goldItems          GoldItem[]
   investments        Investment[]
   portfolioSnapshots PortfolioSnapshot[]
+  aiReportUsages     AIReportUsage[]
 
   @@map("user")
 }
@@ -625,4 +626,26 @@ model Investment {
   @@index([userId, periodId, active])
   @@index([investmentType])
   @@map("investment")
+}
+
+// AI Analiz Raporu Kullanım Takibi (Premium özelliği)
+model AIReportUsage {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @map("user_id")
+  reportType   String   @map("report_type") @db.VarChar(50) // premium, enterprise, enterprise_premium
+  reportDate   DateTime @map("report_date")
+  monthYear    String   @map("month_year") @db.VarChar(7) // "2024-01" formatında
+  reportData   Json     @map("report_data") // Rapor içeriği (JSON)
+  status       String   @default("processing") @db.VarChar(20) // processing, completed, failed
+  errorMessage String?  @map("error_message") @db.Text
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, monthYear])
+  @@index([userId, reportDate])
+  @@index([status])
+  @@map("ai_report_usage")
 }

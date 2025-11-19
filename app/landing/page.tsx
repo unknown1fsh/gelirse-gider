@@ -41,9 +41,10 @@ export default function LandingPage() {
   }[] = [
     {
       icon: Brain,
-      title: 'AI Destekli Analiz',
-      description: 'Yapay zeka ile akıllı harcama önerileri ve bütçe optimizasyonu',
-      color: 'from-amber-500 to-orange-600',
+      title: 'AI Destekli Analiz Raporu',
+      description:
+        'Ayda 4 kez detaylı finansal analiz. Yapay zeka destekli çeşitlendirilmiş analizler, trend tahminleri, risk analizi ve kişiselleştirilmiş öneriler. Plan türünüze göre 5-30+ AI önerisi ile finansal stratejinizi güçlendirin.',
+      color: 'from-purple-500 to-pink-600',
       highlight: true,
     },
     {
@@ -140,8 +141,10 @@ export default function LandingPage() {
       period: 'ay',
       description: 'Bireysel kullanıcılar için',
       features: [
+        '🤖 AI Analiz Raporu (Ayda 4 kez)',
         'Sınırsız işlem',
         'Gelişmiş analizler',
+        '5-10 AI önerisi',
         'Öncelikli destek',
         'Veri dışa aktarma',
         'Akıllı bildirimler',
@@ -158,6 +161,10 @@ export default function LandingPage() {
       period: 'ay',
       description: 'Şirketler ve tüzel kişilikler için',
       features: [
+        '🤖 AI Analiz Raporu (Ayda 4 kez)',
+        '15-20 AI önerisi',
+        '3 ay tahmin',
+        'Risk analizi',
         'Tüm Premium özellikler',
         'Sınırsız kullanıcı hesabı',
         'Şirket bazlı raporlama',
@@ -178,11 +185,16 @@ export default function LandingPage() {
       period: 'ay',
       description: 'Büyük şirketler ve holdingler için',
       features: [
+        '🤖 AI Analiz Raporu (Ayda 4 kez)',
+        '30+ AI önerisi',
+        '6 ay tahmin',
+        'Benchmark analizi',
+        'Senaryo analizleri',
+        'Çok boyutlu analiz',
         'Tüm Kurumsal özellikler',
         '8 farklı hesap türü',
         '5 premium kredi kartı',
         'Uluslararası işlemler',
-        'AI destekli analizler',
         'Blockchain entegrasyonu',
         'IoT ve akıllı sistemler',
         'Siber güvenlik paketi',
@@ -248,11 +260,13 @@ export default function LandingPage() {
                   <Sparkles className="h-8 w-8 text-amber-300 animate-spin" />
                 </div>
                 <p className="text-lg text-amber-100 font-semibold text-center">
-                  AI destekli akıllı bütçe yönetimi ile enflasyona karşı finansal stratejinizi
-                  güçlendirin!
+                  <span className="text-2xl font-bold text-purple-200 block mb-2">
+                    🤖 AI Analiz Raporu - Ayda 4 Kez Detaylı Finansal Analiz
+                  </span>
+                  Finansal verilerinize göre yapay zeka destekli çeşitlendirilmiş analizler alın
                   <span className="block mt-2 text-amber-200">
-                    🚀 Otomatik harcama analizi • 📊 Akıllı tasarruf önerileri • 💰 Fiyat
-                    karşılaştırma
+                    🚀 Otomatik harcama analizi • 📊 Akıllı tasarruf önerileri • 💰 AI tahminleri •
+                    🎯 Risk analizi • 📈 Benchmark karşılaştırmaları
                   </span>
                 </p>
               </div>
