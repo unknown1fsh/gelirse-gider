@@ -15,6 +15,10 @@ import {
   Rocket,
   Brain,
   TrendingUp,
+  Target,
+  Lightbulb,
+  Sparkles,
+  Zap,
   type LucideIcon,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -215,6 +219,267 @@ export default function LandingPage() {
                   </div>
                 )
               })}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Analizler Section - Merkez Bölüm */}
+      <div className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-purple-900/50 via-pink-900/30 to-slate-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/30 to-pink-600/30 backdrop-blur-sm rounded-full px-4 sm:px-6 py-2 sm:py-3 border border-purple-500/40 mb-4 sm:mb-6">
+              <Brain className="h-5 w-5 sm:h-6 sm:w-6 text-purple-300" />
+              <span className="text-purple-200 font-semibold text-sm sm:text-base">
+                Yapay Zeka Destekli Finansal Analiz
+              </span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6">
+              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+                AI Analizler
+              </span>{' '}
+              ile Finansal Geleceğinizi Şekillendirin
+            </h2>
+            <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto">
+              Ayda 4 kez detaylı finansal analiz raporu alın ve yapay zeka destekli önerilerle
+              finansal kararlarınızı optimize edin
+            </p>
+          </div>
+
+          {/* AI Avantajları Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12 md:mb-16">
+            <Card className="backdrop-blur-sm bg-gradient-to-br from-purple-500/20 to-pink-600/20 border-purple-400/30 hover:border-purple-400/50 transition-all duration-300 hover:scale-105">
+              <CardContent className="p-6">
+                <div className="inline-flex p-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 mb-4">
+                  <Brain className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-white">Akıllı Harcama Analizi</h3>
+                <p className="text-slate-300 text-sm sm:text-base mb-4">
+                  AI, harcama kalıplarınızı analiz ederek gereksiz giderleri tespit eder ve size
+                  tasarruf fırsatları sunar.
+                </p>
+                <ul className="space-y-2">
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-purple-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">
+                      Otomatik harcama kategorilendirme
+                    </span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-purple-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Gereksiz gider tespiti</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-purple-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Tasarruf önerileri</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="backdrop-blur-sm bg-gradient-to-br from-blue-500/20 to-indigo-600/20 border-blue-400/30 hover:border-blue-400/50 transition-all duration-300 hover:scale-105">
+              <CardContent className="p-6">
+                <div className="inline-flex p-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 mb-4">
+                  <TrendingUp className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-white">Trend Tahminleri</h3>
+                <p className="text-slate-300 text-sm sm:text-base mb-4">
+                  Gelecek finansal durumunuzu öngören AI tahminleri ile proaktif kararlar alın ve
+                  riskleri önceden görün.
+                </p>
+                <ul className="space-y-2">
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">3-6 ay finansal tahmin</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Gelir-gider trend analizi</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Risk uyarıları</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="backdrop-blur-sm bg-gradient-to-br from-amber-500/20 to-orange-600/20 border-amber-400/30 hover:border-amber-400/50 transition-all duration-300 hover:scale-105">
+              <CardContent className="p-6">
+                <div className="inline-flex p-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 mb-4">
+                  <Target className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-white">
+                  Kişiselleştirilmiş Öneriler
+                </h3>
+                <p className="text-slate-300 text-sm sm:text-base mb-4">
+                  Finansal durumunuza özel, uygulanabilir öneriler alın. Plan türünüze göre 5-30+ AI
+                  önerisi ile stratejinizi güçlendirin.
+                </p>
+                <ul className="space-y-2">
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-amber-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Size özel finansal strateji</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-amber-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Hedef odaklı öneriler</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-amber-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Eylem planları</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="backdrop-blur-sm bg-gradient-to-br from-green-500/20 to-emerald-600/20 border-green-400/30 hover:border-green-400/50 transition-all duration-300 hover:scale-105">
+              <CardContent className="p-6">
+                <div className="inline-flex p-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 mb-4">
+                  <Lightbulb className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-white">Akıllı Tasarruf Önerileri</h3>
+                <p className="text-slate-300 text-sm sm:text-base mb-4">
+                  Hayat pahalılığına karşı AI destekli tasarruf stratejileri ile bütçenizi optimize
+                  edin ve daha fazla birikim yapın.
+                </p>
+                <ul className="space-y-2">
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-green-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Alternatif harcama önerileri</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-green-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Fiyat karşılaştırmaları</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-green-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Tasarruf hedefleri</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="backdrop-blur-sm bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border-cyan-400/30 hover:border-cyan-400/50 transition-all duration-300 hover:scale-105">
+              <CardContent className="p-6">
+                <div className="inline-flex p-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 mb-4">
+                  <BarChart3 className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-white">Risk Analizi</h3>
+                <p className="text-slate-300 text-sm sm:text-base mb-4">
+                  Finansal risklerinizi önceden tespit edin ve AI destekli çözümlerle güvenli bir
+                  finansal gelecek inşa edin.
+                </p>
+                <ul className="space-y-2">
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Finansal sağlık skoru</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Risk uyarıları</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Önleyici öneriler</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="backdrop-blur-sm bg-gradient-to-br from-pink-500/20 to-rose-600/20 border-pink-400/30 hover:border-pink-400/50 transition-all duration-300 hover:scale-105">
+              <CardContent className="p-6">
+                <div className="inline-flex p-3 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 mb-4">
+                  <Sparkles className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-white">
+                  Benchmark Karşılaştırmaları
+                </h3>
+                <p className="text-slate-300 text-sm sm:text-base mb-4">
+                  Finansal durumunuzu benzer profillerle karşılaştırın ve sektör ortalamalarına göre
+                  performansınızı değerlendirin.
+                </p>
+                <ul className="space-y-2">
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-pink-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Sektör karşılaştırmaları</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-pink-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">Performans metrikleri</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <Check className="h-4 w-4 text-pink-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300 text-sm">İyileştirme fırsatları</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* AI Nasıl Çalışır */}
+          <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-12 border border-purple-500/30">
+            <div className="text-center mb-8 sm:mb-10">
+              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4">
+                AI Analiz Raporu{' '}
+                <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  Nasıl Çalışır?
+                </span>
+              </h3>
+              <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto">
+                Ayda 4 kez otomatik olarak finansal verileriniz analiz edilir ve size detaylı rapor
+                sunulur
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+              <div className="text-center">
+                <div className="inline-flex p-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-600 mb-4">
+                  <Zap className="h-6 w-6 text-white" />
+                </div>
+                <h4 className="text-lg font-semibold text-white mb-2">Veri Toplama</h4>
+                <p className="text-slate-300 text-sm">
+                  Tüm finansal işlemleriniz otomatik olarak toplanır ve kategorize edilir
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="inline-flex p-4 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 mb-4">
+                  <Brain className="h-6 w-6 text-white" />
+                </div>
+                <h4 className="text-lg font-semibold text-white mb-2">AI Analizi</h4>
+                <p className="text-slate-300 text-sm">
+                  Yapay zeka algoritmaları verilerinizi derinlemesine analiz eder
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="inline-flex p-4 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 mb-4">
+                  <Target className="h-6 w-6 text-white" />
+                </div>
+                <h4 className="text-lg font-semibold text-white mb-2">Öneri Üretimi</h4>
+                <p className="text-slate-300 text-sm">
+                  Size özel, uygulanabilir finansal öneriler oluşturulur
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="inline-flex p-4 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 mb-4">
+                  <BarChart3 className="h-6 w-6 text-white" />
+                </div>
+                <h4 className="text-lg font-semibold text-white mb-2">Rapor Sunumu</h4>
+                <p className="text-slate-300 text-sm">
+                  Detaylı rapor ve görselleştirmelerle sonuçlar size sunulur
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-8 sm:mt-10 text-center">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold shadow-2xl"
+                onClick={() => router.push('/auth/register')}
+              >
+                <Rocket className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                AI Analizler ile Başlayın
+              </Button>
             </div>
           </div>
         </div>
